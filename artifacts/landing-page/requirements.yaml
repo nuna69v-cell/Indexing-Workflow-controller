@@ -1,0 +1,16 @@
+packages:
+  "framer-motion": "For high-quality scroll reveals and page animations"
+  "clsx": "For conditional class name joining"
+  "tailwind-merge": "For merging tailwind classes safely"
+
+images:
+  - path: "artifacts/landing-page/public/images/hero-bg.png"
+    description: "Abstract dark cyber tech background with glowing cyan and royal blue neon grid lines, deep space aesthetic, highly polished"
+    aspect_ratio: "16:9"
+  - path: "artifacts/landing-page/public/images/product-mockup.png"
+    description: "Sleek modern dark mode desktop software interface shown on a floating stylized laptop screen, dark space background, vibrant cyan underglow"
+    aspect_ratio: "16:9"
+
+notes:
+  - Static landing page, no backend integration required.
+  - Smooth scrolling implemented via native CSS.

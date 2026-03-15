@@ -6,6 +6,8 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   { ignores: [
+    "external",
+    "eslint.config.js",
     'dist',
     'node_modules',
     'build',

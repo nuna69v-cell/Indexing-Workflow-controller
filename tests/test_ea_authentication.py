@@ -4,7 +4,9 @@ Tests for EA API Key Authentication
 Tests the new authentication system for EA HTTP endpoints.
 """
 
-from datetime import UTC, datetime
+from datetime import timezone, datetime
+
+UTC = timezone.utc
 from unittest.mock import patch
 
 import pytest
@@ -13,7 +15,6 @@ import pytest
 try:
     from fastapi.testclient import TestClient
 
-    from api.config import settings
     from api.main import app
     from api.routers.ea_http import ea_connections, pending_signals, trade_results
 

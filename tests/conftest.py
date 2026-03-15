@@ -14,6 +14,7 @@ try:
 except ImportError:
     sys.modules["talib"] = MagicMock()
 
+
 @pytest.fixture(autouse=True)
 def clear_ea_state():
     """Clear global state in ea_http router between tests."""

@@ -29,7 +29,7 @@ def test_production_settings_exness_login_insecure():
     env_vars = {
         "SECRET_KEY": "secure_secret_key",
         # EXNESS_LOGIN uses default
-        "EXNESS_PASSWORD": "secure_password_123"
+        "EXNESS_PASSWORD": "secure_password_123",
     }
     with patch.dict(os.environ, env_vars):
         with pytest.raises(ValueError, match="EXNESS_LOGIN must be changed"):

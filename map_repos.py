@@ -9,8 +9,9 @@ load_dotenv()
 TOKENS = {
     "mouyleng172": os.getenv("GH_USER_TOKEN"),
     "LengKundee": os.getenv("GH_TOKEN"),
-    "nuna69v-cell": os.getenv("GH_TOKEN_V3")
+    "nuna69v-cell": os.getenv("GH_TOKEN_V3"),
 }
+
 
 def get_repo_map():
     master_map = {}
@@ -32,8 +33,9 @@ def get_repo_map():
                     "name": r["name"],
                     "url": r["clone_url"],
                     "branch": r["default_branch"],
-                    "description": r["description"]
-                } for r in repos
+                    "description": r["description"],
+                }
+                for r in repos
             ]
         else:
             print(f"Failed to fetch {user}: {response.status_code}")
@@ -41,6 +43,7 @@ def get_repo_map():
     with open(".master-map.json", "w") as f:
         json.dump(master_map, f, indent=4)
     print("Master Map created successfully!")
+
 
 if __name__ == "__main__":
     get_repo_map()

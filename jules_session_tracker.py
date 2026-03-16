@@ -2,6 +2,7 @@ import json
 import os
 import datetime
 
+
 class JulesSessionTracker:
     def __init__(self, session_file=".jules-session.json"):
         self.session_file = session_file
@@ -27,11 +28,9 @@ class JulesSessionTracker:
             self.start_session()
 
         current_session = self.session_data["sessions"][-1]
-        current_session["actions"].append({
-            "timestamp": timestamp,
-            "action": action,
-            "details": details
-        })
+        current_session["actions"].append(
+            {"timestamp": timestamp, "action": action, "details": details}
+        )
         self._save_session()
 
     def start_session(self):
@@ -39,17 +38,21 @@ class JulesSessionTracker:
         if "sessions" not in self.session_data:
             self.session_data["sessions"] = []
 
-        self.session_data["sessions"].append({
-            "session_id": session_id,
-            "start_time": datetime.datetime.now().isoformat(),
-            "actions": []
-        })
+        self.session_data["sessions"].append(
+            {
+                "session_id": session_id,
+                "start_time": datetime.datetime.now().isoformat(),
+                "actions": [],
+            }
+        )
         self._save_session()
         print(f"Started Jules session: {session_id}")
         return session_id
 
+
 if __name__ == "__main__":
     import sys
+
     tracker = JulesSessionTracker()
 
     if len(sys.argv) > 1:

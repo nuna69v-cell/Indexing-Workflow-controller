@@ -288,7 +288,10 @@ class ProductionSettings(Settings):
 
     @model_validator(mode="after")
     def validate_production_security(self) -> "ProductionSettings":
-        if getattr(self, "SECRET_KEY", "default_secret_key") == "default_secret_key" or getattr(self, "SECRET_KEY") == "test_secret_key_12345":
+        if (
+            getattr(self, "SECRET_KEY", "default_secret_key") == "default_secret_key"
+            or getattr(self, "SECRET_KEY") == "test_secret_key_12345"
+        ):
             raise ValueError("SECRET_KEY must be changed")
         if getattr(self, "EXNESS_LOGIN", "default_login") == "default_login":
             raise ValueError("EXNESS_LOGIN must be changed")

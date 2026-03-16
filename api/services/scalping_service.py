@@ -91,10 +91,22 @@ class ScalpingService:
 
         # Long Condition
         # Trend: Price > EMA20 > EMA50
-        is_uptrend = bool(np.all(c_close > c_ema20)) and bool(np.all(c_ema20 > c_ema50)) if isinstance(c_close, np.ndarray) or isinstance(c_ema20, np.ndarray) else (c_close > c_ema20 and c_ema20 > c_ema50)
+        is_uptrend = (
+            bool(np.all(c_close > c_ema20)) and bool(np.all(c_ema20 > c_ema50))
+            if isinstance(c_close, np.ndarray) or isinstance(c_ema20, np.ndarray)
+            else (c_close > c_ema20 and c_ema20 > c_ema50)
+        )
         # Pullback/Entry: Stoch Cross Up in Oversold (<20)
-        stoch_cross_up = bool(np.all(k_prev < d_prev)) and bool(np.all(k_curr > d_curr)) if isinstance(k_prev, np.ndarray) else (k_prev < d_prev and k_curr > d_curr)
-        stoch_oversold = bool(np.all(k_curr < 25)) if isinstance(k_curr, np.ndarray) else (k_curr < 25)  # Slightly loose threshold
+        stoch_cross_up = (
+            bool(np.all(k_prev < d_prev)) and bool(np.all(k_curr > d_curr))
+            if isinstance(k_prev, np.ndarray)
+            else (k_prev < d_prev and k_curr > d_curr)
+        )
+        stoch_oversold = (
+            bool(np.all(k_curr < 25))
+            if isinstance(k_curr, np.ndarray)
+            else (k_curr < 25)
+        )  # Slightly loose threshold
 
         if is_uptrend:
             reason.append("Uptrend (Close > EMA20 > EMA50)")
@@ -107,10 +119,22 @@ class ScalpingService:
 
         # Short Condition
         # Trend: Price < EMA20 < EMA50
-        is_downtrend = bool(np.all(c_close < c_ema20)) and bool(np.all(c_ema20 < c_ema50)) if isinstance(c_close, np.ndarray) or isinstance(c_ema20, np.ndarray) else (c_close < c_ema20 and c_ema20 < c_ema50)
+        is_downtrend = (
+            bool(np.all(c_close < c_ema20)) and bool(np.all(c_ema20 < c_ema50))
+            if isinstance(c_close, np.ndarray) or isinstance(c_ema20, np.ndarray)
+            else (c_close < c_ema20 and c_ema20 < c_ema50)
+        )
         # Pullback/Entry: Stoch Cross Down in Overbought (>80)
-        stoch_cross_down = bool(np.all(k_prev > d_prev)) and bool(np.all(k_curr < d_curr)) if isinstance(k_prev, np.ndarray) else (k_prev > d_prev and k_curr < d_curr)
-        stoch_overbought = bool(np.all(k_curr > 75)) if isinstance(k_curr, np.ndarray) else (k_curr > 75)  # Slightly loose threshold
+        stoch_cross_down = (
+            bool(np.all(k_prev > d_prev)) and bool(np.all(k_curr < d_curr))
+            if isinstance(k_prev, np.ndarray)
+            else (k_prev > d_prev and k_curr < d_curr)
+        )
+        stoch_overbought = (
+            bool(np.all(k_curr > 75))
+            if isinstance(k_curr, np.ndarray)
+            else (k_curr > 75)
+        )  # Slightly loose threshold
 
         if is_downtrend:
             reason.append("Downtrend (Close < EMA20 < EMA50)")
@@ -150,7 +174,11 @@ class ScalpingService:
                 close_vals, timeperiod=20, nbdevup=2, nbdevdn=2, matype=0
             )
         except ValueError:
-            upper, middle, lower = np.ones_like(close_vals), np.ones_like(close_vals), np.ones_like(close_vals)
+            upper, middle, lower = (
+                np.ones_like(close_vals),
+                np.ones_like(close_vals),
+                np.ones_like(close_vals),
+            )
         rsi = talib.RSI(close_vals, timeperiod=14)
         if hasattr(rsi, "__class__") and "Mock" in rsi.__class__.__name__:
             rsi = np.ones_like(close_vals) * 50
@@ -214,7 +242,11 @@ class ScalpingService:
                 close_vals, fastperiod=12, slowperiod=26, signalperiod=9
             )
         except ValueError:
-            macd, macd_signal, macd_hist = np.ones_like(close_vals), np.ones_like(close_vals), np.ones_like(close_vals)
+            macd, macd_signal, macd_hist = (
+                np.ones_like(close_vals),
+                np.ones_like(close_vals),
+                np.ones_like(close_vals),
+            )
 
         idx = -1
         # ⚡ Bolt: Switch to direct NumPy indexing

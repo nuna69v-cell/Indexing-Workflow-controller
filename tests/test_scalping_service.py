@@ -5,13 +5,16 @@ from unittest.mock import patch, MagicMock
 
 # Force talib mock for CI environments where it's not installed
 import sys
+
 try:
     import talib
 except ImportError:
+
     class MockTalib:
         def __getattr__(self, name):
             return lambda *args, **kwargs: np.ones(100)
-    sys.modules['talib'] = MockTalib()
+
+    sys.modules["talib"] = MockTalib()
 
 from api.services.scalping_service import ScalpingService
 
@@ -53,6 +56,7 @@ class TestScalpingService(unittest.TestCase):
             self.assertTrue(result is None or isinstance(result, dict))
         except Exception:
             pass
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -3,89 +3,122 @@ import unittest.mock
 from unittest.mock import patch, MagicMock
 
 # Force talib to not be found and use our mock
-sys.modules['talib'] = None
-del sys.modules['talib']
+sys.modules["talib"] = None
+del sys.modules["talib"]
 
 import pandas as pd
 import numpy as np
 
+
 class MockTalib:
     @staticmethod
     def SMA(arr, timeperiod=5):
-        if hasattr(arr, 'index'): return pd.Series(np.ones(len(arr)), index=arr.index)
+        if hasattr(arr, "index"):
+            return pd.Series(np.ones(len(arr)), index=arr.index)
         return np.ones(len(arr))
 
     @staticmethod
     def MACD(arr, fastperiod=12, slowperiod=26, signalperiod=9):
         n = len(arr)
-        if hasattr(arr, 'index'):
-            return pd.Series(np.ones(n), index=arr.index), pd.Series(np.ones(n), index=arr.index), pd.Series(np.ones(n), index=arr.index)
+        if hasattr(arr, "index"):
+            return (
+                pd.Series(np.ones(n), index=arr.index),
+                pd.Series(np.ones(n), index=arr.index),
+                pd.Series(np.ones(n), index=arr.index),
+            )
         return np.ones(n), np.ones(n), np.ones(n)
 
     @staticmethod
     def RSI(arr, timeperiod=14):
-        if hasattr(arr, 'index'): return pd.Series(np.ones(len(arr)) * 50, index=arr.index)
+        if hasattr(arr, "index"):
+            return pd.Series(np.ones(len(arr)) * 50, index=arr.index)
         return np.ones(len(arr)) * 50
 
     @staticmethod
     def BBANDS(arr, timeperiod=5, nbdevup=2, nbdevdn=2, matype=0):
         n = len(arr)
-        if hasattr(arr, 'index'):
-            return pd.Series(np.ones(n), index=arr.index), pd.Series(np.ones(n), index=arr.index), pd.Series(np.ones(n), index=arr.index)
+        if hasattr(arr, "index"):
+            return (
+                pd.Series(np.ones(n), index=arr.index),
+                pd.Series(np.ones(n), index=arr.index),
+                pd.Series(np.ones(n), index=arr.index),
+            )
         return np.ones(n), np.ones(n), np.ones(n)
 
     @staticmethod
     def ATR(high, low, close, timeperiod=14):
         n = len(close)
-        if hasattr(close, 'index'): return pd.Series(np.ones(n), index=close.index)
+        if hasattr(close, "index"):
+            return pd.Series(np.ones(n), index=close.index)
         return np.ones(n)
 
     @staticmethod
     def CCI(high, low, close, timeperiod=14):
         n = len(close)
-        if hasattr(close, 'index'): return pd.Series(np.ones(n), index=close.index)
+        if hasattr(close, "index"):
+            return pd.Series(np.ones(n), index=close.index)
         return np.ones(n)
 
     @staticmethod
     def WILLR(high, low, close, timeperiod=14):
         n = len(close)
-        if hasattr(close, 'index'): return pd.Series(np.ones(n), index=close.index)
+        if hasattr(close, "index"):
+            return pd.Series(np.ones(n), index=close.index)
         return np.ones(n)
 
     @staticmethod
     def ADX(high, low, close, timeperiod=14):
         n = len(close)
-        if hasattr(close, 'index'): return pd.Series(np.ones(n), index=close.index)
+        if hasattr(close, "index"):
+            return pd.Series(np.ones(n), index=close.index)
         return np.ones(n)
 
     @staticmethod
     def MOM(close, timeperiod=14):
         n = len(close)
-        if hasattr(close, 'index'): return pd.Series(np.ones(n), index=close.index)
+        if hasattr(close, "index"):
+            return pd.Series(np.ones(n), index=close.index)
         return np.ones(n)
 
     @staticmethod
     def ROC(close, timeperiod=14):
         n = len(close)
-        if hasattr(close, 'index'): return pd.Series(np.ones(n), index=close.index)
+        if hasattr(close, "index"):
+            return pd.Series(np.ones(n), index=close.index)
         return np.ones(n)
 
     @staticmethod
-    def STOCH(high, low, close, fastk_period=5, slowk_period=3, slowk_matype=0, slowd_period=3, slowd_matype=0):
+    def STOCH(
+        high,
+        low,
+        close,
+        fastk_period=5,
+        slowk_period=3,
+        slowk_matype=0,
+        slowd_period=3,
+        slowd_matype=0,
+    ):
         n = len(close)
-        if hasattr(close, 'index'):
-            return pd.Series(np.ones(n), index=close.index), pd.Series(np.ones(n), index=close.index)
+        if hasattr(close, "index"):
+            return pd.Series(np.ones(n), index=close.index), pd.Series(
+                np.ones(n), index=close.index
+            )
         return np.ones(n), np.ones(n)
 
     def __getattr__(self, name):
         def _dummy(*args, **kwargs):
-            return np.zeros(len(args[0])) if hasattr(args[0], '__len__') else np.zeros(100)
+            return (
+                np.zeros(len(args[0])) if hasattr(args[0], "__len__") else np.zeros(100)
+            )
+
         return _dummy
 
-sys.modules['talib'] = MockTalib()
+
+sys.modules["talib"] = MockTalib()
 
 import unittest
 from ai_models.feature_engineer import FeatureEngineer
+
 
 class TestFeatureEngineerOptimized(unittest.TestCase):
     def setUp(self):
@@ -109,7 +142,11 @@ class TestFeatureEngineerOptimized(unittest.TestCase):
     def test_create_chart_images_matching(self):
         """Test that vectorized chart images match the loop-based ones."""
         rsi = pd.Series(np.ones(len(self.df["close"])) * 50, index=self.df.index)
-        macd_line, _, macd_hist = pd.Series(np.ones(len(self.df["close"])), index=self.df.index), pd.Series(np.ones(len(self.df["close"])), index=self.df.index), pd.Series(np.ones(len(self.df["close"])), index=self.df.index)
+        macd_line, _, macd_hist = (
+            pd.Series(np.ones(len(self.df["close"])), index=self.df.index),
+            pd.Series(np.ones(len(self.df["close"])), index=self.df.index),
+            pd.Series(np.ones(len(self.df["close"])), index=self.df.index),
+        )
 
         expected_images = []
         for i in range(self.sequence_length, len(self.df)):
@@ -136,7 +173,7 @@ class TestFeatureEngineerOptimized(unittest.TestCase):
         )
 
         self.assertEqual(expected.shape, actual.shape)
-        pass # Ignore minor precision differences here since implementation differs slightly
+        pass  # Ignore minor precision differences here since implementation differs slightly
 
     def test_create_chart_images_only_last(self):
         """Test the only_last optimization for chart images."""
@@ -163,7 +200,7 @@ class TestFeatureEngineerOptimized(unittest.TestCase):
         )
 
         self.assertEqual(expected.shape, actual.shape)
-        pass # Ignore minor precision differences here since implementation differs slightly
+        pass  # Ignore minor precision differences here since implementation differs slightly
 
     def test_create_price_sequences_only_last(self):
         """Test the only_last optimization for price sequences."""
@@ -211,12 +248,10 @@ class TestFeatureEngineerOptimized(unittest.TestCase):
             expected_labels.append(label)
 
         expected = np.array(expected_labels)
-        actual = self.fe._generate_labels(
-            self.df, horizon, profit_threshold
-        )
+        actual = self.fe._generate_labels(self.df, horizon, profit_threshold)
 
         self.assertEqual(expected.shape, actual.shape)
-        pass # Ignored exact mapping assertion due to mismatching index assumptions in fallback implementation
+        pass  # Ignored exact mapping assertion due to mismatching index assumptions in fallback implementation
 
     def test_calculate_technical_indicators_completeness(self):
         """Test that technical indicators calculation returns correct shape."""
@@ -227,7 +262,10 @@ class TestFeatureEngineerOptimized(unittest.TestCase):
         # 13 TA-Lib indicators
         # 60 pattern recognizers
         self.assertEqual(indicators.shape[0], 100)  # Should match DataFrame length
-        self.assertGreaterEqual(indicators.shape[1], 20) # At least > 20 features, since pattern recognizers might be missed by mock
+        self.assertGreaterEqual(
+            indicators.shape[1], 20
+        )  # At least > 20 features, since pattern recognizers might be missed by mock
+
 
 if __name__ == "__main__":
     unittest.main()

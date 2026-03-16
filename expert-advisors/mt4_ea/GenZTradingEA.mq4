@@ -11,9 +11,14 @@
 
 #include <WinInet.mqh>
 
+
 //--- Input parameters
-input string ServerURL = "http://localhost:3000"; // Server URL
+input string IPAddress = "127.0.0.1"; // Server IP Address
+input int Port = 5555; // Server Port
+input string API_KEY = "JULES_API_KEY_HERE"; // Jules API Key for authentication
+string ServerURL = "http://" + IPAddress + ":" + IntegerToString(Port); // Dynamically constructed URL
 input string EAName = "GenZ_Scalping_Bot"; // EA identification name
+
 input double LotSize = 0.01; // Trade lot size
 input int MagicNumber = 12345; // Magic number for trades
 input int MaxSpread = 3; // Maximum spread in pips
@@ -93,7 +98,9 @@ void OnTick()
 bool RegisterWithServer()
 {
     string url = ServerURL + "/api/mt45/register";
-    string headers = "Content-Type: application/json\r\n";
+
+    string headers = "Content-Type: application/json\r\nAuthorization: Bearer " + API_KEY;
+
     string data = StringFormat(
         "{\"eaName\":\"%s\",\"connectionId\":\"%s\",\"accountNumber\":%d,\"symbol\":\"%s\",\"timeframe\":%d}",
         EAName, connectionId, AccountNumber(), Symbol(), Period()
@@ -116,7 +123,9 @@ bool RegisterWithServer()
 void UnregisterFromServer()
 {
     string url = ServerURL + "/api/mt45/unregister";
-    string headers = "Content-Type: application/json\r\n";
+
+    string headers = "Content-Type: application/json\r\nAuthorization: Bearer " + API_KEY;
+
     string data = StringFormat("{\"connectionId\":\"%s\"}", connectionId);
     
     HttpRequest(url, "POST", headers, data);
@@ -128,7 +137,9 @@ void UnregisterFromServer()
 void SendHeartbeat()
 {
     string url = ServerURL + "/api/mt45/heartbeat";
-    string headers = "Content-Type: application/json\r\n";
+
+    string headers = "Content-Type: application/json\r\nAuthorization: Bearer " + API_KEY;
+
     string data = StringFormat(
         "{\"connectionId\":\"%s\",\"status\":\"active\",\"balance\":%.2f,\"equity\":%.2f}",
         connectionId, AccountBalance(), AccountEquity()
@@ -266,7 +277,9 @@ void ExecuteSellOrder(double entryPrice, double stopLoss, double takeProfit)
 void SendTradeConfirmation(string originalSignal, string status)
 {
     string url = ServerURL + "/api/mt45/trade-confirmation";
-    string headers = "Content-Type: application/json\r\n";
+
+    string headers = "Content-Type: application/json\r\nAuthorization: Bearer " + API_KEY;
+
     string data = StringFormat(
         "{\"connectionId\":\"%s\",\"originalSignal\":%s,\"status\":\"%s\",\"timestamp\":\"%s\"}",
         connectionId, originalSignal, status, TimeToString(TimeCurrent())

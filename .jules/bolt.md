@@ -127,3 +127,7 @@
 ## 2026-03-16 - Pydantic Validation Error Aggregation
 **Learning:** I encountered a CI failure where tests expecting a specific `ValueError` message (e.g., `match="SECRET_KEY must be changed"`) failed because Pydantic aggregates all validation errors into a single `ValidationError`. When multiple fields fail validation (like in the `ProductionSettings` defaults test), the exception message contains a summary of all errors, making exact string matching for a single field unreliable.
 **Action:** I updated the test assertions to match a substring common to all relevant errors (`match="must be changed"`) instead of the entire string. This ensures the test remains robust even if other fields fail validation simultaneously.
+
+## 2026-03-16 - Handling isort with Automated Code Patches
+**Learning:** I encountered a CI failure because a manual file patch to `tests/test_config_security.py` and `tests/conftest.py` inadvertently resulted in incorrectly sorted imports. Automated file modifications, particularly those dealing with imports, must also respect the codebase's strict import sorting rules.
+**Action:** Before submitting code changes, especially those resulting from script-based patches, always explicitly run the project's formatting tools (`black`, `isort`) locally to ensure the resulting code adheres strictly to CI quality standards.

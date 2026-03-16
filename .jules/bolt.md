@@ -119,3 +119,7 @@
 **Learning:** I identified a significant performance bottleneck in `api/services/scalping_service.py` where Pandas Series were passed directly to `talib` functions and values were accessed using `.iloc`. Benchmarks showed that passing raw NumPy arrays (`.values`) to `talib` is ~8x faster than passing Series, and direct array indexing (`[idx]`) is ~3x faster than `.iloc`.
 
 **Action:** In high-frequency signal generation paths, always extract `.values` from DataFrame columns once and pass these NumPy arrays to `talib` functions. Use positional indexing on the resulting arrays for maximum efficiency. When updating such services, ensure corresponding unit test mocks also return NumPy arrays to maintain compatibility with positional indexing.
+
+## 2026-03-16 - Vectorized Row-wise Min/Max for Price Features
+**Learning:** I identified a performance bottleneck in `core/feature_engineering/technical_features.py` where Pandas row-wise operations (`df[["Open", "Close"]].max(axis=1)`) were used to calculate upper and lower shadows. These operations carry significant overhead due to index alignment and Series validation, especially when called repeatedly during feature generation.
+**Action:** I replaced the Pandas row-wise operations with fully vectorized NumPy operations (`np.maximum(df["Open"].values, df["Close"].values)`). This avoids the series overhead and speeds up the execution significantly. This reinforces the pattern of bypassing Pandas Series abstraction for simple row-wise math in hot code paths.

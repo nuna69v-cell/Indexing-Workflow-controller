@@ -98,8 +98,15 @@ class TechnicalFeatureEngine:
         df["price_change"] = df["Close"].pct_change()
         df["price_range"] = df["High"] - df["Low"]
         df["body_size"] = abs(df["Close"] - df["Open"])
-        df["upper_shadow"] = df["High"] - df[["Open", "Close"]].max(axis=1)
-        df["lower_shadow"] = df[["Open", "Close"]].min(axis=1) - df["Low"]
+        # ---
+        # ⚡ Bolt Optimization: Vectorized row-wise min/max
+        # Replacing df[["Open", "Close"]].max(axis=1) with np.maximum(Open.values, Close.values)
+        # avoids costly index alignment and series overhead, resulting in a measurable speedup.
+        # ---
+        open_vals = df["Open"].values
+        close_vals = df["Close"].values
+        df["upper_shadow"] = df["High"].values - np.maximum(open_vals, close_vals)
+        df["lower_shadow"] = np.minimum(open_vals, close_vals) - df["Low"].values
 
         return df
 

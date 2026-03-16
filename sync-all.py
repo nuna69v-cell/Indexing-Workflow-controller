@@ -9,8 +9,9 @@ load_dotenv()
 # Tokens from your .env
 TOKENS = {
     "mouyleng172": os.getenv("GH_USER_TOKEN"),
-    "LengKundee": os.getenv("GH_TOKEN")
+    "LengKundee": os.getenv("GH_TOKEN"),
 }
+
 
 def get_repo_map():
     master_map = {}
@@ -22,7 +23,10 @@ def get_repo_map():
 
         print(f"Mapping repositories for: {user}...")
         url = f"https://api.github.com/users/{user}/repos"
-        headers = {"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"}
+        headers = {
+            "Authorization": f"token {token}",
+            "Accept": "application/vnd.github.v3+json",
+        }
 
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
@@ -32,8 +36,9 @@ def get_repo_map():
                     "name": r["name"],
                     "url": r["clone_url"],
                     "branch": r["default_branch"],
-                    "description": r["description"]
-                } for r in repos
+                    "description": r["description"],
+                }
+                for r in repos
             ]
         else:
             print(f"Failed to fetch {user}: {response.status_code} - {response.text}")
@@ -41,6 +46,7 @@ def get_repo_map():
     with open(".master-map.json", "w") as f:
         json.dump(master_map, f, indent=4)
     print("Master Map created successfully!")
+
 
 def clone_or_pull_repos():
     if not os.path.exists(".master-map.json"):
@@ -76,6 +82,7 @@ def clone_or_pull_repos():
                     subprocess.run(["git", "clone", repo_url, repo_path], check=True)
                 except subprocess.CalledProcessError as e:
                     print(f"Error cloning {repo_name}: {e}")
+
 
 if __name__ == "__main__":
     print("Starting GitHub Repository Maintenance...")

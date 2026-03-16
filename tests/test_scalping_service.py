@@ -1,10 +1,10 @@
-import unittest
-import pandas as pd
-import numpy as np
-from unittest.mock import patch, MagicMock
-
 # Force talib mock for CI environments where it's not installed
 import sys
+import unittest
+from unittest.mock import MagicMock, patch
+
+import numpy as np
+import pandas as pd
 
 try:
     import talib

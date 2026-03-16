@@ -1,13 +1,13 @@
 import sys
 import unittest.mock
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 # Force talib to not be found and use our mock
 sys.modules["talib"] = None
 del sys.modules["talib"]
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 
 class MockTalib:
@@ -117,6 +117,7 @@ class MockTalib:
 sys.modules["talib"] = MockTalib()
 
 import unittest
+
 from ai_models.feature_engineer import FeatureEngineer
 
 

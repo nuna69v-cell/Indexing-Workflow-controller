@@ -33,3 +33,22 @@ GenX_FX is designed for easy deployment on modern cloud platforms:
 
 ---
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com?referralCode=AHRe-w)
+
+## ⌨️ Cursor/VS Code Keyboard Shortcuts
+
+We have configured custom keyboard shortcuts (F1-F7) to quickly manage and execute common repository tasks directly within the **Cursor** or **VS Code** IDE.
+
+These shortcuts map to predefined tasks in `.vscode/tasks.json` and are bound in `.vscode/keybindings.json`.
+
+| Key | Action | Command Executed |
+|-----|--------|------------------|
+| **F1** | Run GenX Unified CLI | `python genx_unified_cli.py` |
+| **F2** | Stop GenX Unified CLI | `pkill -f genx_unified_cli.py` |
+| **F3** | Run GenX 24/7 Service | `python genx_24_7_service.py` |
+| **F4** | Stop GenX 24/7 Service | `pkill -f genx_24_7_service.py` |
+| **F5** | Run GenX 24/7 Backend | `python genx_24_7_backend.py` |
+| **F6** | Stop GenX 24/7 Backend | `pkill -f genx_24_7_backend.py` |
+| **F7** | Sync and Push to GitHub | `./SYNC-AND-PUSH-GITHUB.bat` |
+
+### 🖱️ Programmatic Keyboard & Mouse Access
+If you need programmatic control or automation of the keyboard and mouse (for example, GUI interactions or MT4/MT5 automation), please refer to `scripts/utils/keyboard_mouse_utils.py` which demonstrates usage of the `pynput` library. *Note: this requires a desktop/GUI environment to run properly.*

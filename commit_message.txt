@@ -1,0 +1,6 @@
+feat: Add F1-F7 VS Code shortcuts and keyboard utils
+
+- Add .vscode/tasks.json and .vscode/keybindings.json for F1-F7 to manage backend scripts (GenX Unified CLI, GenX 24/7 Service, etc.)
+- Add pynput library to requirements.txt
+- Add programmatic keyboard and mouse access utility script in scripts/utils/keyboard_mouse_utils.py
+- Document the new shortcuts and the python script in README.md

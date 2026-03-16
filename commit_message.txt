@@ -1,6 +1,4 @@
-feat: Add F1-F7 VS Code shortcuts and keyboard utils
+fix: resolve CI failures in test_ea_http and test_config_security
 
-- Add .vscode/tasks.json and .vscode/keybindings.json for F1-F7 to manage backend scripts (GenX Unified CLI, GenX 24/7 Service, etc.)
-- Add pynput library to requirements.txt
-- Add programmatic keyboard and mouse access utility script in scripts/utils/keyboard_mouse_utils.py
-- Document the new shortcuts and the python script in README.md
+- Fix AttributeError in `api/routers/ea_http.py` tests by properly initializing `ea_http.pending_signals` as a `deque` instead of a list in `tests/conftest.py`.
+- Fix test `tests/test_config_security.py::test_production_settings_defaults_insecure` by using a more flexible regex string (`match="must be changed from default"`) that covers whichever of the multiple validation errors Pydantic raises first for ProductionSettings defaults.

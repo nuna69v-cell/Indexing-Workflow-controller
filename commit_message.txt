@@ -1,4 +1,0 @@
-fix: resolve CI failures in test_ea_http and test_config_security
-
-- Fix AttributeError in `api/routers/ea_http.py` tests by properly initializing `ea_http.pending_signals` as a `deque` instead of a list in `tests/conftest.py`.
-- Fix test `tests/test_config_security.py::test_production_settings_defaults_insecure` by using a more flexible regex string (`match="must be changed from default"`) that covers whichever of the multiple validation errors Pydantic raises first for ProductionSettings defaults.

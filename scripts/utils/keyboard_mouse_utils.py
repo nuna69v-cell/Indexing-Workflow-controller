@@ -3,7 +3,11 @@ Utility script to demonstrate programmatic access to keyboard and mouse using `p
 Note: This requires a GUI environment (e.g., a real monitor or Xvfb) to function.
 """
 
-from pynput.keyboard import Key, Controller as KeyboardController, Listener as KeyboardListener
+from pynput.keyboard import (
+    Key,
+    Controller as KeyboardController,
+    Listener as KeyboardListener,
+)
 from pynput.mouse import Button, Controller as MouseController
 import time
 import threading
@@ -12,6 +16,7 @@ import threading
 keyboard = KeyboardController()
 mouse = MouseController()
 
+
 def simulate_typing(text):
     """Simulates typing the given text."""
     print(f"Typing: {text}")
@@ -19,6 +24,7 @@ def simulate_typing(text):
         keyboard.press(char)
         keyboard.release(char)
         time.sleep(0.05)
+
 
 def simulate_mouse_movement_and_click():
     """Simulates moving the mouse and clicking."""
@@ -48,6 +54,7 @@ def on_press(key):
     except AttributeError:
         print(f"Special key {key} pressed")
 
+
 def on_release(key):
     """Callback for when a key is released."""
     print(f"Key {key} released")
@@ -56,11 +63,13 @@ def on_release(key):
         print("Escape pressed. Exiting listener.")
         return False
 
+
 def start_keyboard_listener():
     """Starts listening to keyboard events in the background."""
     print("Starting keyboard listener... (Press ESC to stop)")
     with KeyboardListener(on_press=on_press, on_release=on_release) as listener:
         listener.join()
+
 
 if __name__ == "__main__":
     print("Keyboard and Mouse Automation Utils")

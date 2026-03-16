@@ -1,3 +1,4 @@
+import collections
 import os
 import sys
 from unittest.mock import MagicMock
@@ -20,7 +21,7 @@ def clear_ea_state():
     try:
         from api.routers import ea_http
         ea_http.ea_connections = {}
-        ea_http.pending_signals = []
+        ea_http.pending_signals = collections.deque()
         ea_http.trade_results = []
     except ImportError:
         pass

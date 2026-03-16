@@ -1,7 +1,7 @@
 import sys
 import re
 
-with open('scripts/utils/manage_packages.py', 'r') as f:
+with open("scripts/utils/manage_packages.py", "r") as f:
     content = f.read()
 
 new_functions = """
@@ -62,7 +62,9 @@ def generate_ea_config_file(master_map: Dict[str, List[Dict[str, Any]]]):
 """
 
 # Insert the new functions before generate_master_map
-content = content.replace('def generate_master_map', new_functions + '\ndef generate_master_map')
+content = content.replace(
+    "def generate_master_map", new_functions + "\ndef generate_master_map"
+)
 
 # Update main function to call the new functions
 main_update = """
@@ -76,9 +78,14 @@ main_update = """
     generate_master_map(master_map)
     generate_ea_config_file(master_map)
 """
-content = re.sub(r'    master_map = map_repositories\(accounts\).*?generate_master_map\(master_map\)', main_update, content, flags=re.DOTALL)
+content = re.sub(
+    r"    master_map = map_repositories\(accounts\).*?generate_master_map\(master_map\)",
+    main_update,
+    content,
+    flags=re.DOTALL,
+)
 
-with open('scripts/utils/manage_packages.py', 'w') as f:
+with open("scripts/utils/manage_packages.py", "w") as f:
     f.write(content)
 
 print("Patch applied successfully.")

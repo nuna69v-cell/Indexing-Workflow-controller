@@ -7,12 +7,15 @@ import urllib.error
 from typing import Dict, List, Any
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 # Constants
 GITHUB_API_URL = "https://api.github.com"
 MASTER_MAP_FILE = ".master-map.json"
+
 
 def get_headers(token: str) -> Dict[str, str]:
     """Returns headers for GitHub API requests."""
@@ -21,6 +24,7 @@ def get_headers(token: str) -> Dict[str, str]:
         "Authorization": f"token {token}",
         "User-Agent": "GenX-CLI-Manager",
     }
+
 
 def get_accounts() -> Dict[str, str]:
     """Retrieves GitHub accounts and tokens from environment variables."""
@@ -40,11 +44,14 @@ def get_accounts() -> Dict[str, str]:
 
     # Hardcoded fallback for the specific users mentioned in memory if tokens exist
     if not accounts:
-        logger.warning("No GitHub tokens found in environment. Please set GH_TOKEN or specific account tokens.")
+        logger.warning(
+            "No GitHub tokens found in environment. Please set GH_TOKEN or specific account tokens."
+        )
         # Returning mock data for demonstration purposes if needed
         # accounts = {"mock_account": "mock_token"}
 
     return accounts
+
 
 def map_repositories(accounts: Dict[str, str]) -> Dict[str, List[Dict[str, Any]]]:
     """Maps all repositories for the given accounts."""
@@ -65,7 +72,7 @@ def map_repositories(accounts: Dict[str, str]) -> Dict[str, List[Dict[str, Any]]
             try:
                 with urllib.request.urlopen(req, timeout=10) as response:
                     if response.getcode() == 200:
-                        data = json.loads(response.read().decode('utf-8'))
+                        data = json.loads(response.read().decode("utf-8"))
                         if not data:
                             break
 
@@ -73,22 +80,28 @@ def map_repositories(accounts: Dict[str, str]) -> Dict[str, List[Dict[str, Any]]
                             # Calculate a rough "weight" based on size (in KB)
                             size_kb = r.get("size", 0)
 
-                            repos.append({
-                                "name": r["name"],
-                                "full_name": r["full_name"],
-                                "url": r["clone_url"],
-                                "branch": r.get("default_branch", "main"),
-                                "description": r.get("description", ""),
-                                "size_kb": size_kb,
-                                "archived": r.get("archived", False),
-                                "private": r.get("private", False)
-                            })
+                            repos.append(
+                                {
+                                    "name": r["name"],
+                                    "full_name": r["full_name"],
+                                    "url": r["clone_url"],
+                                    "branch": r.get("default_branch", "main"),
+                                    "description": r.get("description", ""),
+                                    "size_kb": size_kb,
+                                    "archived": r.get("archived", False),
+                                    "private": r.get("private", False),
+                                }
+                            )
                         page += 1
                     else:
-                        logger.error(f"Failed to fetch repos for {account}: {response.getcode()}")
+                        logger.error(
+                            f"Failed to fetch repos for {account}: {response.getcode()}"
+                        )
                         break
             except urllib.error.URLError as e:
-                logger.error(f"Connection error while fetching repos for {account}: {e}")
+                logger.error(
+                    f"Connection error while fetching repos for {account}: {e}"
+                )
                 break
 
         master_map[account] = repos
@@ -97,7 +110,9 @@ def map_repositories(accounts: Dict[str, str]) -> Dict[str, List[Dict[str, Any]]
     return master_map
 
 
-def map_ea_environments(master_map: Dict[str, List[Dict[str, Any]]]) -> Dict[str, List[Dict[str, Any]]]:
+def map_ea_environments(
+    master_map: Dict[str, List[Dict[str, Any]]],
+) -> Dict[str, List[Dict[str, Any]]]:
     """Maps EA environment settings including IPs, Ports, and Jules API Keys."""
     logger.info("Mapping EA environments with Jules API Keys...")
 
@@ -116,7 +131,12 @@ def map_ea_environments(master_map: Dict[str, List[Dict[str, Any]]]) -> Dict[str
     for account, repos in master_map.items():
         for i, repo in enumerate(repos):
             name_lower = repo["name"].lower()
-            if "ea" in name_lower or "trade" in name_lower or "genx" in name_lower or "bot" in name_lower:
+            if (
+                "ea" in name_lower
+                or "trade" in name_lower
+                or "genx" in name_lower
+                or "bot" in name_lower
+            ):
                 # Setup specific EA configurations
                 key_index = i % len(jules_keys) if jules_keys else 0
                 selected_key = jules_keys[key_index]["key"] if jules_keys else ""
@@ -129,11 +149,14 @@ def map_ea_environments(master_map: Dict[str, List[Dict[str, Any]]]) -> Dict[str
                     "target_ip": "127.0.0.1",
                     "target_port": assigned_port,
                     "jules_api_key": selected_key,
-                    "status": "Ready for injection"
+                    "status": "Ready for injection",
                 }
-                logger.info(f"  - Mapped EA config for {repo['name']}: Port {assigned_port}")
+                logger.info(
+                    f"  - Mapped EA config for {repo['name']}: Port {assigned_port}"
+                )
 
     return master_map
+
 
 def generate_ea_config_file(master_map: Dict[str, List[Dict[str, Any]]]):
     """Generates a configuration file specifically for EAs based on mapped data."""
@@ -152,6 +175,7 @@ def generate_ea_config_file(master_map: Dict[str, List[Dict[str, Any]]]):
         except IOError as e:
             logger.error(f"Failed to write EA mapping: {e}")
 
+
 def generate_master_map(master_map: Dict[str, List[Dict[str, Any]]]):
     """Saves the master map to a JSON file."""
     try:
@@ -161,7 +185,10 @@ def generate_master_map(master_map: Dict[str, List[Dict[str, Any]]]):
     except IOError as e:
         logger.error(f"Failed to write Master Map: {e}")
 
-def get_heavy_repositories(master_map: Dict[str, List[Dict[str, Any]]], size_threshold_kb: int = 50000) -> List[Dict[str, Any]]:
+
+def get_heavy_repositories(
+    master_map: Dict[str, List[Dict[str, Any]]], size_threshold_kb: int = 50000
+) -> List[Dict[str, Any]]:
     """Identifies repositories that exceed the size threshold."""
     heavy_repos = []
 
@@ -174,7 +201,10 @@ def get_heavy_repositories(master_map: Dict[str, List[Dict[str, Any]]], size_thr
 
     return sorted(heavy_repos, key=lambda x: x["size_kb"], reverse=True)
 
-def apply_blocking_function(repo: Dict[str, Any], accounts: Dict[str, str], dry_run: bool = True):
+
+def apply_blocking_function(
+    repo: Dict[str, Any], accounts: Dict[str, str], dry_run: bool = True
+):
     """
     Applies a 'blocking function' to reduce repository weight.
     This could mean deleting old artifacts, trimming history, or archiving.
@@ -185,10 +215,14 @@ def apply_blocking_function(repo: Dict[str, Any], accounts: Dict[str, str], dry_
     token = accounts.get(account)
     size_mb = repo["size_kb"] / 1024
 
-    logger.info(f"Applying blocking function to heavy repository: {repo_name} ({size_mb:.2f} MB)")
+    logger.info(
+        f"Applying blocking function to heavy repository: {repo_name} ({size_mb:.2f} MB)"
+    )
 
     if not token:
-        logger.error(f"No token found for account {account}, cannot apply blocking function.")
+        logger.error(
+            f"No token found for account {account}, cannot apply blocking function."
+        )
         return
 
     headers = get_headers(token)
@@ -200,13 +234,15 @@ def apply_blocking_function(repo: Dict[str, Any], accounts: Dict[str, str], dry_
     try:
         with urllib.request.urlopen(req) as response:
             if response.getcode() == 200:
-                releases = json.loads(response.read().decode('utf-8'))
+                releases = json.loads(response.read().decode("utf-8"))
                 logger.info(f"  - Found {len(releases)} releases.")
                 # Implementation to delete old assets would go here
                 if not dry_run and releases:
-                     logger.info("  - (Action) Would delete old release assets to save space.")
+                    logger.info(
+                        "  - (Action) Would delete old release assets to save space."
+                    )
     except Exception as e:
-         logger.warning(f"  - Could not check releases: {e}")
+        logger.warning(f"  - Could not check releases: {e}")
 
     # 2. Check if repository is stale and can be archived
     # We would check last commit date here
@@ -219,12 +255,30 @@ def apply_blocking_function(repo: Dict[str, Any], accounts: Dict[str, str], dry_
     else:
         logger.info(f"  - Successfully applied optimizations to {repo_name}")
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Manage packages/repositories across GitHub accounts")
-    parser.add_argument("--map-only", action="store_true", help="Only map repositories, do not apply blocking functions")
-    parser.add_argument("--threshold", type=int, default=50000, help="Size threshold in KB to consider a repository 'heavy' (default: 50000 KB)")
-    parser.add_argument("--apply-blocking", action="store_true", help="Apply blocking function to reduce repository weight")
-    parser.add_argument("--execute", action="store_true", help="Execute changes (default is dry-run)")
+    parser = argparse.ArgumentParser(
+        description="Manage packages/repositories across GitHub accounts"
+    )
+    parser.add_argument(
+        "--map-only",
+        action="store_true",
+        help="Only map repositories, do not apply blocking functions",
+    )
+    parser.add_argument(
+        "--threshold",
+        type=int,
+        default=50000,
+        help="Size threshold in KB to consider a repository 'heavy' (default: 50000 KB)",
+    )
+    parser.add_argument(
+        "--apply-blocking",
+        action="store_true",
+        help="Apply blocking function to reduce repository weight",
+    )
+    parser.add_argument(
+        "--execute", action="store_true", help="Execute changes (default is dry-run)"
+    )
 
     args = parser.parse_args()
 
@@ -232,9 +286,10 @@ def main():
 
     accounts = get_accounts()
     if not accounts:
-        logger.warning("No accounts configured. Please set GH_TOKEN or specific account tokens.")
+        logger.warning(
+            "No accounts configured. Please set GH_TOKEN or specific account tokens."
+        )
         return
-
 
     master_map = map_repositories(accounts)
 
@@ -245,7 +300,6 @@ def main():
     master_map = map_ea_environments(master_map)
     generate_master_map(master_map)
     generate_ea_config_file(master_map)
-
 
     if args.map_only:
         return
@@ -258,12 +312,15 @@ def main():
 
     logger.info(f"Found {len(heavy_repos)} heavy repositories:")
     for r in heavy_repos:
-        logger.info(f"  - {r['full_name']} ({r['account']}): {r['size_kb']/1024:.2f} MB")
+        logger.info(
+            f"  - {r['full_name']} ({r['account']}): {r['size_kb']/1024:.2f} MB"
+        )
 
     if args.apply_blocking:
         logger.info(f"Applying blocking functions (Dry Run: {not args.execute})")
         for repo in heavy_repos:
             apply_blocking_function(repo, accounts, not args.execute)
+
 
 if __name__ == "__main__":
     main()

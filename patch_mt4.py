@@ -1,6 +1,6 @@
 import re
 
-with open('expert-advisors/mt4_ea/GenZTradingEA.mq4', 'r') as f:
+with open("expert-advisors/mt4_ea/GenZTradingEA.mq4", "r") as f:
     content = f.read()
 
 # Replace the single ServerURL with split components
@@ -16,7 +16,7 @@ input string EAName = "GenZ_Scalping_Bot"; // EA identification name
 content = re.sub(
     r'//--- Input parameters\ninput string ServerURL = "http://localhost:3000"; // Server URL\ninput string EAName = "GenZ_Scalping_Bot"; // EA identification name',
     replacement,
-    content
+    content,
 )
 
 # Update the header construction to use the API key
@@ -25,9 +25,11 @@ header_replacement = """
 """
 
 # Replace empty or basic headers with authenticated headers
-content = content.replace('string headers = "Content-Type: application/json\\r\\n";', header_replacement)
+content = content.replace(
+    'string headers = "Content-Type: application/json\\r\\n";', header_replacement
+)
 
-with open('expert-advisors/mt4_ea/GenZTradingEA.mq4', 'w') as f:
+with open("expert-advisors/mt4_ea/GenZTradingEA.mq4", "w") as f:
     f.write(content)
 
 print("MT4 EA patched.")

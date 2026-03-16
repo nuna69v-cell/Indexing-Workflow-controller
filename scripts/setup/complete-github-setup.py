@@ -11,8 +11,8 @@ from nacl import encoding, public
 
 # Configuration
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
-REPO_OWNER = "Mouy-leng"
-REPO_NAME = "GenX_FX"
+REPO_OWNER = "nuna69v-cell"
+REPO_NAME = "Indexing-Workflow-controller"
 BASE_URL = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}"
 
 

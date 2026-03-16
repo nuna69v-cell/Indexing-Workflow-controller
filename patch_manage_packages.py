@@ -1,5 +1,5 @@
-import sys
 import re
+import sys
 
 with open("scripts/utils/manage_packages.py", "r") as f:
     content = f.read()

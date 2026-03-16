@@ -2,9 +2,9 @@ import argparse
 import json
 import logging
 import os
-import urllib.request
 import urllib.error
-from typing import Dict, List, Any
+import urllib.request
+from typing import Any, Dict, List
 
 # Configure logging
 logging.basicConfig(

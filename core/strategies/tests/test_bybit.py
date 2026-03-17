@@ -1,5 +1,4 @@
 import unittest
-import os
 from unittest.mock import Mock, patch
 
 import utils.config
@@ -13,13 +12,12 @@ class TestBybitAPI(unittest.TestCase):
         utils.config.BYBIT_API_KEY = "test_api_key"
         utils.config.BYBIT_SECRET = "test_api_secret"
 
-    @patch.dict(os.environ, {"BYBIT_API_KEY": "test", "BYBIT_API_SECRET": "test"})
-    @patch("pybit.unified_trading.HTTP.get_kline")
+    @patch("requests.get")
     def test_get_market_data(self, mock_get):
         # Mock the API response
         mock_response = Mock()
-        mock_get.return_value = {"result": {"list": [1, 2, 3]}}
-
+        mock_response.json.return_value = {"result": {"list": [1, 2, 3]}}
+        mock_get.return_value = mock_response
 
         # Initialize the API and call the method
         bybit_api = BybitAPI()
@@ -27,18 +25,17 @@ class TestBybitAPI(unittest.TestCase):
 
         # Assert that the correct URL was called
         self.assertTrue(mock_get.called)
-        pass
+        self.assertIn("https://api.bybit.com/v5/market/kline", mock_get.call_args[0][0])
 
         # Assert that the response is handled correctly
         self.assertEqual(data, {"result": {"list": [1, 2, 3]}})
 
-    @patch.dict(os.environ, {"BYBIT_API_KEY": "test", "BYBIT_API_SECRET": "test"})
-    @patch("pybit.unified_trading.HTTP.place_order")
+    @patch("requests.post")
     def test_execute_order(self, mock_post):
         # Mock the API response
         mock_response = Mock()
-        mock_post.return_value = {"result": {"orderId": "12345"}}
-
+        mock_response.json.return_value = {"result": {"orderId": "12345"}}
+        mock_post.return_value = mock_response
 
         # Initialize the API and call the method
         bybit_api = BybitAPI()
@@ -46,7 +43,9 @@ class TestBybitAPI(unittest.TestCase):
 
         # Assert that the correct URL was called
         self.assertTrue(mock_post.called)
-        pass
+        self.assertIn(
+            "https://api.bybit.com/v5/order/create", mock_post.call_args[0][0]
+        )
 
         # Assert that the response is handled correctly
         self.assertEqual(result, {"result": {"orderId": "12345"}})

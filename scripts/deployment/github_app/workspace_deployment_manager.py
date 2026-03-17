@@ -5,18 +5,21 @@ from typing import Optional
 from github_api_manager import GitHubAppManager
 from ssh_deploy_key_manager import SSHKeyManager
 
+
 def deploy_workspace(
     owner: str,
     repo: str,
     workspace_dir: str,
     env_name: str = "production",
     key_name: str = "deploy_key",
-    installation_id: Optional[str] = None
+    installation_id: Optional[str] = None,
 ):
     """
     Sets up a deployment workspace with an SSH deploy key and configures the GitHub repository.
     """
-    print(f"Starting workspace deployment for {owner}/{repo} to {workspace_dir} in environment '{env_name}'...")
+    print(
+        f"Starting workspace deployment for {owner}/{repo} to {workspace_dir} in environment '{env_name}'..."
+    )
 
     github_manager = GitHubAppManager()
     ssh_manager = SSHKeyManager(github_manager)
@@ -42,8 +45,8 @@ def deploy_workspace(
             repo=repo,
             title=key_title,
             public_key=public_key,
-            read_only=False, # Needed if deployment jobs push code/tags
-            installation_id=installation_id
+            read_only=False,  # Needed if deployment jobs push code/tags
+            installation_id=installation_id,
         )
         print(f"Successfully added deploy key '{key_title}'.")
     except Exception as e:
@@ -58,17 +61,20 @@ def deploy_workspace(
         repos = github_manager.list_repositories(installation_id)
         repo_id = None
         for r in repos:
-             if r['name'] == repo and r['owner']['login'] == owner:
-                  repo_id = r['id']
-                  break
+            if r["name"] == repo and r["owner"]["login"] == owner:
+                repo_id = r["id"]
+                break
 
         if not repo_id:
-             # Fallback to fetching specific repo if not in the list (pagination etc)
-             headers = github_manager.get_auth_headers(installation_id)
-             import requests
-             r = requests.get(f"{github_manager.api_base}/repos/{owner}/{repo}", headers=headers)
-             r.raise_for_status()
-             repo_id = r.json()['id']
+            # Fallback to fetching specific repo if not in the list (pagination etc)
+            headers = github_manager.get_auth_headers(installation_id)
+            import requests
+
+            r = requests.get(
+                f"{github_manager.api_base}/repos/{owner}/{repo}", headers=headers
+            )
+            r.raise_for_status()
+            repo_id = r.json()["id"]
 
         # 5. Add Private Key as an Environment Secret
         print("Fetching repository public key for secret encryption...")
@@ -82,7 +88,9 @@ def deploy_workspace(
             from nacl import encoding, public
             import base64
 
-            public_key = public.PublicKey(pub_key_info['key'].encode("utf-8"), encoding.Base64Encoder())
+            public_key = public.PublicKey(
+                pub_key_info["key"].encode("utf-8"), encoding.Base64Encoder()
+            )
             sealed_box = public.SealedBox(public_key)
             encrypted = sealed_box.encrypt(private_key.encode("utf-8"))
             encrypted_value = base64.b64encode(encrypted).decode("utf-8")
@@ -93,17 +101,19 @@ def deploy_workspace(
                 env_name=env_name,
                 secret_name="SSH_DEPLOY_KEY",
                 encrypted_value=encrypted_value,
-                key_id=pub_key_info['key_id'],
+                key_id=pub_key_info["key_id"],
                 repository_id=repo_id,
-                installation_id=installation_id
+                installation_id=installation_id,
             )
             print("Successfully added SSH_DEPLOY_KEY to environment secrets.")
         except ImportError:
-             print("Warning: 'cryptography' library not found. Skipping secret creation. You'll need to manually add the secret.")
-             print(f"The private key is located at: {private_key_path}")
+            print(
+                "Warning: 'cryptography' library not found. Skipping secret creation. You'll need to manually add the secret."
+            )
+            print(f"The private key is located at: {private_key_path}")
 
     except Exception as e:
-         print(f"Warning: Failed to configure environment. Error: {e}")
+        print(f"Warning: Failed to configure environment. Error: {e}")
 
     print("\nWorkspace deployment setup complete!")
     print(f"Private Key Path: {private_key_path}")
@@ -112,11 +122,15 @@ def deploy_workspace(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Set up a deployment workspace for a GitHub repository")
+    parser = argparse.ArgumentParser(
+        description="Set up a deployment workspace for a GitHub repository"
+    )
     parser.add_argument("--owner", required=True, help="GitHub repository owner")
     parser.add_argument("--repo", required=True, help="GitHub repository name")
     parser.add_argument("--dir", required=True, help="Workspace directory path")
-    parser.add_argument("--env", default="production", help="Environment name (default: production)")
+    parser.add_argument(
+        "--env", default="production", help="Environment name (default: production)"
+    )
     parser.add_argument("--installation-id", help="Optional GitHub App Installation ID")
 
     args = parser.parse_args()
@@ -126,5 +140,5 @@ if __name__ == "__main__":
         repo=args.repo,
         workspace_dir=args.dir,
         env_name=args.env,
-        installation_id=args.installation_id
+        installation_id=args.installation_id,
     )

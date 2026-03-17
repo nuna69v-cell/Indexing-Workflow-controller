@@ -1,6 +1,7 @@
 import os
 import subprocess
-from typing import Tuple, Optional, Dict
+from typing import Dict, Optional, Tuple
+
 import requests
 from github_api_manager import GitHubAppManager
 

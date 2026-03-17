@@ -1,8 +1,9 @@
 import os
-import requests
 import time
-import jwt
 from typing import Dict, List, Optional
+
+import jwt
+import requests
 
 
 class GitHubAppManager:

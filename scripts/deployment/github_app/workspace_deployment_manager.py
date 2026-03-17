@@ -1,5 +1,5 @@
-import os
 import argparse
+import os
 from typing import Optional
 
 from github_api_manager import GitHubAppManager
@@ -85,8 +85,9 @@ def deploy_workspace(
         # This requires the pynacl or cryptography library. We'll use the one available in the system
         # Assuming cryptography is available based on other files in the project
         try:
-            from nacl import encoding, public
             import base64
+
+            from nacl import encoding, public
 
             public_key = public.PublicKey(
                 pub_key_info["key"].encode("utf-8"), encoding.Base64Encoder()

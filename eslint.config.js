@@ -20,6 +20,7 @@ export default tseslint.config(
     'logs',
     'signal_output',
     'data',
+    'external',
   ] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],

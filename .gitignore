@@ -76,3 +76,5 @@ id_rsa.pub
 usr/
 exness-credentials.env
 secrets.env
+ta-lib/
+ta-lib-0.4.0-src.tar.gz

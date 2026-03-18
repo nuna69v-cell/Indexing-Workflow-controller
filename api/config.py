@@ -134,6 +134,14 @@ class Settings(BaseSettings):
     MAIL_PORT: int = 587
     MAIL_FROM: Optional[str] = None
 
+    # Gmail API V0
+    GMAIL_LOGIN_V0: Optional[str] = None
+    GMAIL_PASSWORD_V0: Optional[str] = None
+
+    # Gmail API V1
+    GMAIL_LOGIN_V1: Optional[str] = None
+    GMAIL_PASSWORD_V1: Optional[str] = None
+
     # Messaging Configuration
     TELEGRAM_TOKEN: Optional[str] = None
     DISCORD_TOKEN: Optional[str] = None

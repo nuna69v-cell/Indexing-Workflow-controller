@@ -1,9 +1,8 @@
 import os
 import sys
-from collections import deque
 from unittest.mock import MagicMock
-
 import pytest
+from collections import deque
 
 # Set testing environment variables before any application code is imported
 os.environ["TESTING"] = "true"

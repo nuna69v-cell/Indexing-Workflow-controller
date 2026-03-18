@@ -1,0 +1,37 @@
+[
+  {
+    "key": "f1",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Run GenX Unified CLI"
+  },
+  {
+    "key": "f2",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Stop GenX Unified CLI"
+  },
+  {
+    "key": "f3",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Run GenX 24/7 Service"
+  },
+  {
+    "key": "f4",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Stop GenX 24/7 Service"
+  },
+  {
+    "key": "f5",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Run GenX 24/7 Backend"
+  },
+  {
+    "key": "f6",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Stop GenX 24/7 Backend"
+  },
+  {
+    "key": "f7",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Sync and Push to GitHub"
+  }
+]

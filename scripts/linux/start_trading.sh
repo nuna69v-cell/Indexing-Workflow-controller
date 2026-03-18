@@ -4,7 +4,7 @@
 echo "🚀 Starting GenX FX Trading System..."
 
 # Activate virtual environment
-source genx_env/bin/activate
+# source genx_env/bin/activate
 
 # Create necessary directories
 mkdir -p logs
@@ -20,10 +20,10 @@ echo "Web server started (PID: $WEB_PID)"
 echo "📊 Starting automatic signal generation..."
 cat > signal_loop.sh << 'EOF'
 #!/bin/bash
-source genx_env/bin/activate
+# source genx_env/bin/activate
 while true; do
     echo "$(date): Generating signals..." >> logs/signals.log
-    python3 demo_excel_generator.py >> logs/signals.log 2>&1
+    python3 scripts/utils/demo_excel_generator.py >> logs/signals.log 2>&1
     
     # Try to run AMP if available
     python3 amp_cli.py run --once >> logs/amp.log 2>&1 || echo "$(date): AMP run failed" >> logs/amp.log
@@ -117,7 +117,7 @@ chmod +x stop_trading.sh
 
 # Generate initial signals
 echo "📊 Generating initial signals..."
-python3 demo_excel_generator.py
+python3 scripts/utils/demo_excel_generator.py
 
 echo "✅ GenX FX Trading System is now running!"
 echo

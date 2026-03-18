@@ -1,8 +1,9 @@
 import os
 import sys
-from unittest.mock import MagicMock
-import pytest
 from collections import deque
+from unittest.mock import MagicMock
+
+import pytest
 
 # Set testing environment variables before any application code is imported
 os.environ["TESTING"] = "true"
@@ -15,11 +16,13 @@ try:
 except ImportError:
     sys.modules["talib"] = MagicMock()
 
+
 @pytest.fixture(autouse=True)
 def clear_ea_state():
     """Clear global state in ea_http router between tests."""
     try:
         from api.routers import ea_http
+
         ea_http.ea_connections = {}
         ea_http.pending_signals = deque()
         ea_http.trade_results = []

@@ -71,6 +71,7 @@ class GenX24_7Backend:
         # Signal generation settings
         self.min_confidence = 75.0
         self.max_signals_per_hour = 10
+
     def is_trading_hours(self) -> bool:
         """
         Checks if the current UTC time falls within the configured trading hours.
@@ -94,8 +95,6 @@ class GenX24_7Backend:
             logger.error(f"❌ Invalid trading time configuration: {e}")
             # Fallback to trading to avoid blocking the system on misconfiguration
             return True
-
-
 
     async def initialize(self) -> bool:
         """
@@ -346,7 +345,9 @@ class GenX24_7Backend:
                 # Check if within trading hours
                 if not self.is_trading_hours():
                     if not getattr(self, "is_resting", False):
-                        logger.info("⏸️ Outside trading hours. Entering resting/recharging mode.")
+                        logger.info(
+                            "⏸️ Outside trading hours. Entering resting/recharging mode."
+                        )
                         self.is_resting = True
                     await asyncio.sleep(60)  # Check every minute while resting
                     continue

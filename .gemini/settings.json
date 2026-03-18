@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "hostinger-api": {
+      "command": "npx",
+      "args": [
+        "hostinger-api-mcp"
+      ]
+    }
+  }
+}

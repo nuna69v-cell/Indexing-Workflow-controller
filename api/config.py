@@ -288,28 +288,15 @@ class ProductionSettings(Settings):
 
     @model_validator(mode="after")
     def validate_production_security(self) -> "ProductionSettings":
-        """
-        Validates critical security settings for production environment.
-        Ensures default secrets are not used.
-        """
-        # Check SECRET_KEY
-        if self.SECRET_KEY == "default_secret_key":
-            raise ValueError(
-                "SECRET_KEY must be changed from default in production environment"
-            )
-
-        # Check other critical secrets
-        insecure_defaults = [
-            ("EXNESS_LOGIN", "default_login"),
-            ("EXNESS_PASSWORD", "default_password"),
-        ]
-
-        for field_name, default_val in insecure_defaults:
-            if getattr(self, field_name) == default_val:
-                raise ValueError(
-                    f"{field_name} must be changed from default in production environment"
-                )
-
+        if (
+            getattr(self, "SECRET_KEY", "default_secret_key") == "default_secret_key"
+            or getattr(self, "SECRET_KEY") == "test_secret_key_12345"
+        ):
+            raise ValueError("SECRET_KEY must be changed")
+        if getattr(self, "EXNESS_LOGIN", "default_login") == "default_login":
+            raise ValueError("EXNESS_LOGIN must be changed")
+        if getattr(self, "EXNESS_PASSWORD", "default_password") == "default_password":
+            raise ValueError("EXNESS_PASSWORD must be changed")
         return self
 
 

@@ -6,10 +6,6 @@ If you would like to support our work, please help us by considering the followi
 
 ## Ways to Support
 
-### Direct Support
-If you would like to directly support the developer, you can send a contribution via ABA PayWay:
-- [ABA PayWay - Direct Support](https://link.payway.com.kh/ABAPAY2d401367c)
-
 ### Join the GBTI Network!!! 🙏🙏🙏
 The GBTI Network is a community of developers who are passionate about open source and community-driven development. Members enjoy access to exclussive tools, resources, a private MineCraft server, a listing in our members directory, co-op opportunities and more.
 

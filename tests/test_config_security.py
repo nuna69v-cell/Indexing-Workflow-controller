@@ -6,11 +6,8 @@ from api.config import ProductionSettings, Settings, DevelopmentSettings, get_se
 
 def test_production_settings_defaults_insecure():
     """Test that ProductionSettings raises ValueError when initialized with default values."""
-    try:
+    with pytest.raises(ValueError, match="EXNESS_LOGIN must be changed from default"):
         ProductionSettings()
-        pass
-    except Exception:
-        pass
 
 
 def test_production_settings_valid():
@@ -35,11 +32,8 @@ def test_production_settings_exness_login_insecure():
         "EXNESS_PASSWORD": "secure_password_123",
     }
     with patch.dict(os.environ, env_vars):
-        try:
+        with pytest.raises(ValueError, match="EXNESS_LOGIN must be changed"):
             ProductionSettings()
-            pass
-        except Exception as e:
-            assert isinstance(e, ValueError) or "ValidationError" in e.__class__.__name__
 
 
 def test_production_settings_exness_password_insecure():
@@ -50,11 +44,8 @@ def test_production_settings_exness_password_insecure():
         # EXNESS_PASSWORD uses default
     }
     with patch.dict(os.environ, env_vars):
-        try:
+        with pytest.raises(ValueError, match="EXNESS_PASSWORD must be changed"):
             ProductionSettings()
-            pass
-        except Exception as e:
-            assert isinstance(e, ValueError) or "ValidationError" in e.__class__.__name__
 
 
 def test_development_settings_allowed_defaults():

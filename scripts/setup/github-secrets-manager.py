@@ -190,11 +190,15 @@ def collect_secrets_from_files() -> dict:
                     and not line.startswith("DATABASE_URL")
                 ):
                     key = line.split("=")[0].strip()
-                    if key and not any(
-                        x in key.lower()
-                        for x in ["url", "host", "port", "env", "level"]
-                    ):
-                        secrets[key] = ""
+                    if key:
+                        should_skip = False
+                        key_lower = key.lower()
+                        for x in ["url", "host", "port", "env", "level"]:
+                            if x in key_lower:
+                                should_skip = True
+                                break
+                        if not should_skip:
+                            secrets[key] = ""
 
     # Add specific secrets needed for GenX FX
     trading_secrets = {

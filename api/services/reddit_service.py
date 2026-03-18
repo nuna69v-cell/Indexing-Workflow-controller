@@ -329,8 +329,10 @@ class RedditService:
         for post in posts:
             text = f"{post['title']} {post['selftext']}".lower()
 
-            if any(keyword in text for keyword in keywords):
-                filtered_posts.append(post)
+            for keyword in keywords:
+                if keyword in text:
+                    filtered_posts.append(post)
+                    break
 
         return filtered_posts
 

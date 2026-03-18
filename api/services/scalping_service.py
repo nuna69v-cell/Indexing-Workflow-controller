@@ -1,7 +1,6 @@
 import logging
 from typing import Any, Dict
 
-import numpy as np
 import pandas as pd
 import talib
 
@@ -56,19 +55,16 @@ class ScalpingService:
         # ⚡ Bolt: Passing NumPy arrays to TA-Lib is ~8x faster than passing Pandas Series
         ema20 = talib.EMA(close_vals, timeperiod=20)
         ema50 = talib.EMA(close_vals, timeperiod=50)
-        try:
-            stoch_k, stoch_d = talib.STOCH(
-                high_vals,
-                low_vals,
-                close_vals,
-                fastk_period=5,
-                slowk_period=3,
-                slowk_matype=0,
-                slowd_period=3,
-                slowd_matype=0,
-            )
-        except ValueError:
-            stoch_k, stoch_d = np.ones_like(close_vals), np.ones_like(close_vals)
+        stoch_k, stoch_d = talib.STOCH(
+            high_vals,
+            low_vals,
+            close_vals,
+            fastk_period=5,
+            slowk_period=3,
+            slowk_matype=0,
+            slowd_period=3,
+            slowd_matype=0,
+        )
 
         # Get latest values (assume last row is the current candle)
         # We need the completed previous candle for confirmation, but for real-time we might check current.
@@ -91,22 +87,10 @@ class ScalpingService:
 
         # Long Condition
         # Trend: Price > EMA20 > EMA50
-        is_uptrend = (
-            bool(np.all(c_close > c_ema20)) and bool(np.all(c_ema20 > c_ema50))
-            if isinstance(c_close, np.ndarray) or isinstance(c_ema20, np.ndarray)
-            else (c_close > c_ema20 and c_ema20 > c_ema50)
-        )
+        is_uptrend = c_close > c_ema20 and c_ema20 > c_ema50
         # Pullback/Entry: Stoch Cross Up in Oversold (<20)
-        stoch_cross_up = (
-            bool(np.all(k_prev < d_prev)) and bool(np.all(k_curr > d_curr))
-            if isinstance(k_prev, np.ndarray)
-            else (k_prev < d_prev and k_curr > d_curr)
-        )
-        stoch_oversold = (
-            bool(np.all(k_curr < 25))
-            if isinstance(k_curr, np.ndarray)
-            else (k_curr < 25)
-        )  # Slightly loose threshold
+        stoch_cross_up = k_prev < d_prev and k_curr > d_curr
+        stoch_oversold = k_curr < 25  # Slightly loose threshold
 
         if is_uptrend:
             reason.append("Uptrend (Close > EMA20 > EMA50)")
@@ -119,22 +103,10 @@ class ScalpingService:
 
         # Short Condition
         # Trend: Price < EMA20 < EMA50
-        is_downtrend = (
-            bool(np.all(c_close < c_ema20)) and bool(np.all(c_ema20 < c_ema50))
-            if isinstance(c_close, np.ndarray) or isinstance(c_ema20, np.ndarray)
-            else (c_close < c_ema20 and c_ema20 < c_ema50)
-        )
+        is_downtrend = c_close < c_ema20 and c_ema20 < c_ema50
         # Pullback/Entry: Stoch Cross Down in Overbought (>80)
-        stoch_cross_down = (
-            bool(np.all(k_prev > d_prev)) and bool(np.all(k_curr < d_curr))
-            if isinstance(k_prev, np.ndarray)
-            else (k_prev > d_prev and k_curr < d_curr)
-        )
-        stoch_overbought = (
-            bool(np.all(k_curr > 75))
-            if isinstance(k_curr, np.ndarray)
-            else (k_curr > 75)
-        )  # Slightly loose threshold
+        stoch_cross_down = k_prev > d_prev and k_curr < d_curr
+        stoch_overbought = k_curr > 75  # Slightly loose threshold
 
         if is_downtrend:
             reason.append("Downtrend (Close < EMA20 < EMA50)")
@@ -169,19 +141,10 @@ class ScalpingService:
 
         # Indicators
         # ⚡ Bolt: Passing NumPy arrays to TA-Lib is ~8x faster than passing Pandas Series
-        try:
-            upper, middle, lower = talib.BBANDS(
-                close_vals, timeperiod=20, nbdevup=2, nbdevdn=2, matype=0
-            )
-        except ValueError:
-            upper, middle, lower = (
-                np.ones_like(close_vals),
-                np.ones_like(close_vals),
-                np.ones_like(close_vals),
-            )
+        upper, middle, lower = talib.BBANDS(
+            close_vals, timeperiod=20, nbdevup=2, nbdevdn=2, matype=0
+        )
         rsi = talib.RSI(close_vals, timeperiod=14)
-        if hasattr(rsi, "__class__") and "Mock" in rsi.__class__.__name__:
-            rsi = np.ones_like(close_vals) * 50
 
         idx = -1
         # ⚡ Bolt: Removed redundant close.iloc[idx] and switched to direct NumPy indexing
@@ -237,16 +200,9 @@ class ScalpingService:
         # Indicators
         # ⚡ Bolt: Passing NumPy arrays to TA-Lib is ~8x faster than passing Pandas Series
         ema50 = talib.EMA(close_vals, timeperiod=50)
-        try:
-            macd, macd_signal, macd_hist = talib.MACD(
-                close_vals, fastperiod=12, slowperiod=26, signalperiod=9
-            )
-        except ValueError:
-            macd, macd_signal, macd_hist = (
-                np.ones_like(close_vals),
-                np.ones_like(close_vals),
-                np.ones_like(close_vals),
-            )
+        macd, macd_signal, macd_hist = talib.MACD(
+            close_vals, fastperiod=12, slowperiod=26, signalperiod=9
+        )
 
         idx = -1
         # ⚡ Bolt: Switch to direct NumPy indexing

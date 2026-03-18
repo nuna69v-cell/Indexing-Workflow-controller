@@ -1,8 +1,8 @@
 import os
 import sys
 from unittest.mock import MagicMock
+
 import pytest
-from collections import deque
 
 # Set testing environment variables before any application code is imported
 os.environ["TESTING"] = "true"
@@ -23,6 +23,8 @@ def clear_ea_state():
         from api.routers import ea_http
 
         ea_http.ea_connections = {}
+        from collections import deque
+
         ea_http.pending_signals = deque()
         ea_http.trade_results = []
     except ImportError:

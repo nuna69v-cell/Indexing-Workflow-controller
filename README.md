@@ -1,8 +1,5 @@
 # GenX_FX Trading System
 
-<a href="https://trendshift.io/repositories/17415" target="_blank"><img src="https://trendshift.io/api/badge/repositories/17415" alt="obra%2Fsuperpowers | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-
-
 Advanced AI-Powered Forex Signal Generator for MT4/5 Expert Advisors.
 
 ## 🚀 Overview

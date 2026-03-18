@@ -6,7 +6,7 @@ import { BrokerAccounts } from "@/components/broker-accounts";
 import { motion } from "framer-motion";
 
 export default function Dashboard() {
-  const containerany: any = {
+  const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -16,7 +16,7 @@ export default function Dashboard() {
     }
   };
 
-  const itemany: any = {
+  const itemVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
@@ -32,13 +32,13 @@ export default function Dashboard() {
   return (
     <Layout>
       <motion.div 
-        variants={containerany}
+        variants={containerVariants}
         initial="hidden"
         animate="visible"
         className="space-y-6"
       >
         {/* Page Header */}
-        <motion.div variants={itemany} className="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
+        <motion.div variants={itemVariants} className="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
           <div>
             <h1 className="text-3xl font-bold tracking-tight mb-2">Dashboard</h1>
             <p className="text-muted-foreground">
@@ -60,13 +60,13 @@ export default function Dashboard() {
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left column - Chart + Config */}
-          <motion.div variants={itemany} className="lg:col-span-2 space-y-6">
+          <motion.div variants={itemVariants} className="lg:col-span-2 space-y-6">
             <ActivityChart />
             <ConfigForm />
           </motion.div>
 
           {/* Right column - Status + Brokers */}
-          <motion.div variants={itemany} className="space-y-6">
+          <motion.div variants={itemVariants} className="space-y-6">
             <StatusCard />
             <BrokerAccounts />
           </motion.div>

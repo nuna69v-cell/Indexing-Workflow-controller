@@ -1,6 +1,3 @@
-from core.data_sources.fxcm_forexconnect_provider import (
-    FXCMForexConnectProvider,
-)
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -11,6 +8,10 @@ import core.data_sources.fxcm_forexconnect_provider as provider_module
 # so that the test can find it.
 mock_fx = MagicMock()
 provider_module.fx = mock_fx
+
+from core.data_sources.fxcm_forexconnect_provider import (
+    FXCMForexConnectProvider,
+)
 
 
 @pytest.mark.asyncio

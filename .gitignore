@@ -76,4 +76,3 @@ id_rsa.pub
 usr/
 exness-credentials.env
 secrets.env
-ta-lib/

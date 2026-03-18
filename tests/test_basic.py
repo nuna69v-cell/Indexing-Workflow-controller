@@ -11,6 +11,9 @@ def test_python_version():
 def test_imports():
     """Test that basic imports work"""
     try:
+        import asyncio
+        import json
+        import os
 
         assert True
     except ImportError as e:

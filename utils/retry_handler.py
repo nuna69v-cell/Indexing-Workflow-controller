@@ -69,6 +69,7 @@ def mt5_retry(max_retries: int = 5, initial_delay: float = 0.5):
     """
     # Import here to avoid hard dependency if not used
     try:
+        import MetaTrader5 as mt5
 
         mt5_exceptions = (
             Exception,

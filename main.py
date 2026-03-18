@@ -109,14 +109,14 @@ def start_bridge_server():
                 logger.error(f"Error handling client connection: {e}")
                 try:
                     client_socket.close()
-                except Exception:
+                except:
                     pass
     except Exception as e:
         logger.error(f"Bridge server error: {e}")
     finally:
         try:
             server_socket.close()
-        except Exception:
+        except:
             pass
 
 

@@ -11,6 +11,7 @@ import pytest
 try:
     from fastapi.testclient import TestClient
 
+    from api.config import settings
     from api.main import app
 
     FASTAPI_AVAILABLE = True

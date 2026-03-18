@@ -181,7 +181,7 @@ class FXCMForexConnectProvider:
         }
 
         reachable_servers = {
-            s: lat for s, lat in server_latencies.items() if lat != float("inf")
+            s: l for s, l in server_latencies.items() if l != float("inf")
         }
 
         if not reachable_servers:

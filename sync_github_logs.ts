@@ -79,7 +79,7 @@ async function getCommits(username: string, repoName: string): Promise<Commit[]>
 
 async function main() {
   console.log(`Syncing logs for GitHub account: ${USERNAME}`);
-  const repos = await getRepos(USERNAME);
+  let repos = await getRepos(USERNAME);
   if (!repos || repos.length === 0) {
     console.log('No repositories found or error occurred.');
     return;

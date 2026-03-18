@@ -2,10 +2,10 @@
 # GenX FX - Push to GitHub
 # Run this in the Replit Shell: bash push-to-github.sh
 
-REPO="https://$GITHUB_TOKEN@github.com/nuna69v-cell/Indexing-Workflow-controller.git"
+REPO="https://$GITHUB_TOKEN@github.com/nuna69v-cell/A6..9V-GenX_FX.main.git"
 
 echo "=== GenX FX GitHub Push ==="
-echo "Target: github.com/nuna69v-cell/Indexing-Workflow-controller"
+echo "Target: github.com/nuna69v-cell/A6..9V-GenX_FX.main"
 
 # Remove stale lock if present
 [ -f .git/index.lock ] && rm -f .git/index.lock && echo "Cleared git lock"
@@ -28,4 +28,4 @@ git commit -m "GenX FX Dashboard update - $TIMESTAMP" || echo "Nothing new to co
 # Push
 echo "Pushing to GitHub..."
 git push github HEAD:main --force
-echo "Done! View at: https://github.com/nuna69v-cell/Indexing-Workflow-controller"
+echo "Done! View at: https://github.com/nuna69v-cell/A6..9V-GenX_FX.main"

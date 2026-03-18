@@ -81,7 +81,7 @@ class FXCMConnectionTest:
                 try:
                     self.session.logout()
                     print("✓ Successfully logged out from FXCM")
-                except Exception:
+                except:
                     print("- Logout method not available or already disconnected")
 
             else:

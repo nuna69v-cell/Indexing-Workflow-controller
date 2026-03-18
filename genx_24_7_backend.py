@@ -60,12 +60,41 @@ class GenX24_7Backend:
         self.signal_interval = 30  # Generate signals every 30 seconds
         self.last_signal_time = None
 
+        # Schedule settings
+        self.trading_start_time = os.environ.get("TRADING_START_TIME", "08:00:00")
+        self.trading_end_time = os.environ.get("TRADING_END_TIME", "17:00:00")
+        self.is_resting = False
+
         # Gold pairs to monitor
         self.gold_pairs = ["XAUUSD", "XAUEUR", "XAUGBP", "XAUAUD"]
 
         # Signal generation settings
         self.min_confidence = 75.0
         self.max_signals_per_hour = 10
+
+    def is_trading_hours(self) -> bool:
+        """
+        Checks if the current UTC time falls within the configured trading hours.
+
+        Returns:
+            bool: True if within trading hours, False otherwise.
+        """
+        try:
+            # Parse configured times
+            start_time = datetime.strptime(self.trading_start_time, "%H:%M:%S").time()
+            end_time = datetime.strptime(self.trading_end_time, "%H:%M:%S").time()
+            current_time = datetime.utcnow().time()
+
+            # Handle normal schedule (start < end)
+            if start_time < end_time:
+                return start_time <= current_time <= end_time
+            # Handle overnight schedule (start >= end)
+            else:
+                return current_time >= start_time or current_time <= end_time
+        except ValueError as e:
+            logger.error(f"❌ Invalid trading time configuration: {e}")
+            # Fallback to trading to avoid blocking the system on misconfiguration
+            return True
 
     async def initialize(self) -> bool:
         """
@@ -312,6 +341,21 @@ class GenX24_7Backend:
 
         while self.running:
             try:
+
+                # Check if within trading hours
+                if not self.is_trading_hours():
+                    if not getattr(self, "is_resting", False):
+                        logger.info(
+                            "⏸️ Outside trading hours. Entering resting/recharging mode."
+                        )
+                        self.is_resting = True
+                    await asyncio.sleep(60)  # Check every minute while resting
+                    continue
+                else:
+                    if getattr(self, "is_resting", False):
+                        logger.info("▶️ Trading hours started. Resuming operations.")
+                        self.is_resting = False
+
                 # Check for high-impact news before generating signals
                 should_pause, event = await self.news_filter.should_pause_trading()
                 if should_pause:

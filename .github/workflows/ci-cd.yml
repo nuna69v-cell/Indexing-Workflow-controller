@@ -13,7 +13,7 @@ env:
   PYTHON_VERSION: '3.13'
   NODE_VERSION: '18'
   DOCKER_REGISTRY: ghcr.io
-  IMAGE_NAME: genx-fx
+  IMAGE_NAME: genx
 jobs:
   security-scan:
     name: Security Scan
@@ -202,7 +202,7 @@ jobs:
     - name: Cleanup old images from registry
       uses: actions/delete-package-versions@v4
       with:
-        package-name: genx-fx
+        package-name: genx
         package-type: container
         min-versions-to-keep: 10
         delete-only-untagged-versions: false

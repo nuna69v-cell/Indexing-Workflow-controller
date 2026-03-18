@@ -110,7 +110,7 @@ setup_amp_secret() {
 setup_genx_container_digests() {
     print_status "Setting up GenX container digest secrets..."
 
-    gh secret set GENX_GHCR_IMAGE --body "ghcr.io/mouy-leng/genx"
+    gh secret set GENX_GHCR_IMAGE --body "ghcr.io/mouy-leng/genx-fx"
     gh secret set GENX_CONTAINER_DIGEST_MAIN --body "sha256:cbdd7132acf1cc3000d1965ac9ac0f7c8e425f0f2ac5e0080764e87279233f21"
     gh secret set GENX_CONTAINER_DIGEST_2 --body "sha256:3d8a19989bb281c070cc8b478317f904741a52e9ac18a4c3e9d15965715c9372"
     gh secret set GENX_CONTAINER_DIGEST_3 --body "sha256:c253aa7ab5d40949ff74f6aa00925087b212168efe8b7c4b60976c599ed11a76"
@@ -261,7 +261,7 @@ create_secrets_summary() {
 - `AMP_TOKEN` - Your AMP authentication token
 
 ### GenX Container (GHCR / GitHub Packages)
-- `GENX_GHCR_IMAGE` - Image name (e.g. ghcr.io/mouy-leng/genx)
+- `GENX_GHCR_IMAGE` - Image name (e.g. ghcr.io/mouy-leng/genx-fx)
 - `GENX_CONTAINER_DIGEST_MAIN` - Main image digest
 - `GENX_CONTAINER_DIGEST_2` - Additional image digest
 - `GENX_CONTAINER_DIGEST_3` - Additional image digest

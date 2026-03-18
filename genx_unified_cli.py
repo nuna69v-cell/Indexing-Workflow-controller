@@ -306,7 +306,8 @@ def status():
 @app.command()
 def setup(
     environment: str = typer.Argument(
-        "local", help="Environment to setup: local, aws-free, aws-full, digitalocean, exness-vps"
+        "local",
+        help="Environment to setup: local, aws-free, aws-full, digitalocean, exness-vps",
     ),
     force: bool = typer.Option(
         False, "--force", "-f", help="Force setup even if already configured"
@@ -396,7 +397,8 @@ def setup(
 @app.command()
 def deploy(
     environment: str = typer.Argument(
-        "aws-free", help="Deployment target: aws-free, aws-full, digitalocean, exness-vps, local"
+        "aws-free",
+        help="Deployment target: aws-free, aws-full, digitalocean, exness-vps, local",
     ),
     auto_confirm: bool = typer.Option(
         False, "--yes", "-y", help="Auto-confirm deployment steps"

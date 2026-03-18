@@ -28,8 +28,7 @@ print_status "Authenticating doctl (make sure DIGITALOCEAN_ACCESS_TOKEN is set i
 # doctl auth init (Assuming already authenticated or token provided in env)
 
 # Get SSH keys
-SSH_KEYS=$(doctl compute ssh-key list --format ID --no-header | tr "
-" "," | sed "s/,$//")
+SSH_KEYS=$(doctl compute ssh-key list --format ID --no-header | tr '\n' ',' | sed 's/,$//')
 if [ -z "$SSH_KEYS" ]; then
     print_error "No SSH keys found in DigitalOcean account. Please add an SSH key first."
     exit 1

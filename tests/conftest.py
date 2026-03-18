@@ -21,8 +21,8 @@ def clear_ea_state():
     try:
         from api.routers import ea_http
 
-        ea_http.ea_connections.clear()
+        ea_http.ea_connections = {}
         ea_http.pending_signals.clear()
-        ea_http.trade_results.clear()
+        ea_http.trade_results = []
     except ImportError:
         pass

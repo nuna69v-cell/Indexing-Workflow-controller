@@ -32,7 +32,7 @@ def test_production_settings_exness_login_insecure():
         "EXNESS_PASSWORD": "secure_password_123",
     }
     with patch.dict(os.environ, env_vars):
-        with pytest.raises(ValueError, match="must be changed"):
+        with pytest.raises(ValueError, match="EXNESS_LOGIN must be changed"):
             ProductionSettings()
 
 
@@ -44,7 +44,7 @@ def test_production_settings_exness_password_insecure():
         # EXNESS_PASSWORD uses default
     }
     with patch.dict(os.environ, env_vars):
-        with pytest.raises(ValueError, match="must be changed"):
+        with pytest.raises(ValueError, match="EXNESS_PASSWORD must be changed"):
             ProductionSettings()
 
 

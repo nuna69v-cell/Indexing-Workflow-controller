@@ -209,7 +209,3 @@ def get_scheduler_status() -> Dict[str, Any]:
 def update_scheduler_config(**kwargs):
     """A convenience function to update the global scheduler's configuration."""
     amp_scheduler.update_config(**kwargs)
-
-
-if __name__ == "__main__":
-    start_scheduler()

@@ -14,7 +14,7 @@
 //--- Input parameters
 input group "=== API Configuration ==="
 input bool   UseAI = true;                    // Use AI Server for signals
-input string API_URL = "https://secops.group";
+input string API_URL = "http://203.147.134.90";
 input string API_KEY = "";
 input int    API_TIMEOUT = 5000;
 
@@ -511,11 +511,3 @@ string PeriodToString(ENUM_TIMEFRAMES period) {
         default: return "1h";
     }
 }
-
-//+------------------------------------------------------------------+
-//| SECURITY NOTICE:                                                 |
-//| Following the Jan 2026 security incident, ensure this EA only    |
-//| connects to the authorized API_URL.                              |
-//| Also ensure that WebRequests for https://secops.group are        |
-//| allowed in Tools -> Options -> Expert Advisors.                  |
-//+------------------------------------------------------------------+

@@ -36,3 +36,25 @@
 ## Additional Context
 - **Platform:** MQL5 / Windows (via Docker `dockur/windows` context)
 - **Original Path:** `C:\Users\USER\AppData\Roaming\MetaQuotes\Terminal\53785E099C927DB68A545C249CDBCE06\MQL5\Shared Projects\EXNESS_GenX_Trading\DEPLOY\VPS_6773048_DEPLOYMENT_STATUS.md`
+
+## Deployment Telemetry & Metrics
+- **EA Initialized:** EXNESS GenX Trader v2.0
+- **Configuration:** EURUSD, Strategy MA(10/30) + RSI(14), Risk: 1.0% per trade, Trading: ENABLED
+- **Resource Usage:** 5 charts, 5 EAs, 0 custom indicators
+- **Memory/CPU:** 4330 Mb RAM reserved, EA 0.00% CPU in 5 threads
+
+## Security & Incidents
+### Telegram Incomplete Login Incident (2026-01-21)
+- **Time:** 2026-01-21 13:26:57 UTC
+- **Device:** Telegram Android X, 0.28.3.1785-arm64-v8a, Samsung Galaxy A51, Android, 13 (33)
+- **Location:** Phnom Penh, Cambodia
+- **Status:** Incomplete login. The code was entered correctly, but no correct password was given. Nobody gained access to chats.
+- **Action Required:**
+  1. Terminate the incomplete login in Settings > Devices (or Privacy & Security > Active Sessions).
+  2. Rotate `TELEGRAM_BOT_TOKEN` and any exposed system passwords.
+  3. Ensure 2FA remains active on the Telegram account.
+
+### SSL Certificate Renewal Action
+- **CN:** secops.group
+- **Expires On:** Sunday, February 15, 2026
+- **Action Required:** Schedule certbot renewal before expiry to maintain secure `https://` WebRequest connections from MT5.

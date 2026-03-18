@@ -34,7 +34,7 @@ async function getHeaders() {
 
 async function getRepos(username: string): Promise<Repo[]> {
   const url = `${BASE_URL}/users/${username}/repos`;
-  const repos: Repo[] = [];
+  let repos: Repo[] = [];
   let page = 1;
   const headers = await getHeaders();
   while (true) {

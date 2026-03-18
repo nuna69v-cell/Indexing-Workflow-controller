@@ -7,7 +7,7 @@ import hashlib
 import logging
 from collections import deque
 from datetime import datetime
-from typing import Any, Deque, Dict, List
+from typing import Any, Deque, Dict
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel

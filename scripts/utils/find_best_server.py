@@ -54,7 +54,9 @@ async def find_best_server(servers: List[str]) -> str:
     server_latencies = {servers[i]: latencies[i] for i in range(len(servers))}
 
     # Filter out unreachable servers
-    reachable_servers = {s: l for s, l in server_latencies.items() if l != float("inf")}
+    reachable_servers = {
+        s: lat for s, lat in server_latencies.items() if lat != float("inf")
+    }
 
     if not reachable_servers:
         logging.error("No reachable servers found.")

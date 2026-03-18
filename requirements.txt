@@ -21,3 +21,7 @@ joblib==1.5.3
 httpx==0.26.0
 scikit-learn>=1.5.2
 psutil==7.0.0
+ccxt>=4.2.0
+backtrader>=1.9.78.123
+ruff>=0.1.0
+pytest-cov>=4.1.0

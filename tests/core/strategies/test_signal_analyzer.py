@@ -1,13 +1,15 @@
-import pytest
-import pandas as pd
-from datetime import datetime, timedelta, timezone
-import sys
 import os
+import sys
+from datetime import datetime, timedelta, timezone
+
+import pandas as pd
+import pytest
 
 # Ensure core can be imported
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
 from core.strategies.signal_analyzer import SignalAnalyzer
+
 
 class TestSignalAnalyzer:
     @pytest.fixture
@@ -28,8 +30,8 @@ class TestSignalAnalyzer:
         now_utc = datetime.now(timezone.utc)
         mixed_signals = [
             {"id": 1, "timestamp": now_utc - timedelta(hours=1)},
-            {"id": 2, "timestamp": now_utc - timedelta(hours=25)}, # Stale
-            {"id": 3, "timestamp": now_utc - timedelta(days=2)},   # Stale
+            {"id": 2, "timestamp": now_utc - timedelta(hours=25)},  # Stale
+            {"id": 3, "timestamp": now_utc - timedelta(days=2)},  # Stale
         ]
 
         filtered = analyzer._filter_by_time(mixed_signals)
@@ -55,7 +57,7 @@ class TestSignalAnalyzer:
             {"id": "pd_signal", "timestamp": recent_pd},
             {"id": "stale_signal", "timestamp": stale_str},
             {"id": "invalid_signal", "timestamp": "not-a-timestamp"},
-            {"id": "missing_timestamp", "other_field": "val"}
+            {"id": "missing_timestamp", "other_field": "val"},
         ]
 
         filtered = analyzer._filter_by_time(signals)

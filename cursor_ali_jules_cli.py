@@ -2,8 +2,9 @@ import json
 import os
 import sys
 from pathlib import Path
-from rich.console import Console
+
 import typer
+from rich.console import Console
 
 app = typer.Typer(help="Cursor AI Collaboration CLI module.")
 console = Console()

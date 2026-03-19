@@ -2,12 +2,13 @@ import pytest
 from unittest.mock import patch
 from amp_auth import AMPAuth
 
+
 class TestAMPAuthAuthenticate:
     def setup_method(self):
         self.auth = AMPAuth()
 
-    @patch.object(AMPAuth, 'parse_token')
-    @patch.object(AMPAuth, '_validate')
+    @patch.object(AMPAuth, "parse_token")
+    @patch.object(AMPAuth, "_validate")
     def test_authenticate_success(self, mock_validate, mock_parse_token):
         """Test successful authentication when parse_token and _validate both succeed."""
         mock_parse_token.return_value = {"user_id": "123", "session_hash": "abc"}
@@ -19,8 +20,8 @@ class TestAMPAuthAuthenticate:
         mock_parse_token.assert_called_once_with("valid_token")
         mock_validate.assert_called_once_with({"user_id": "123", "session_hash": "abc"})
 
-    @patch.object(AMPAuth, 'parse_token')
-    @patch.object(AMPAuth, '_validate')
+    @patch.object(AMPAuth, "parse_token")
+    @patch.object(AMPAuth, "_validate")
     def test_authenticate_invalid_token(self, mock_validate, mock_parse_token):
         """Test authentication failure when _validate returns False."""
         mock_parse_token.return_value = {}  # E.g. when token format is invalid
@@ -32,7 +33,7 @@ class TestAMPAuthAuthenticate:
         mock_parse_token.assert_called_once_with("invalid_token")
         mock_validate.assert_called_once_with({})
 
-    @patch.object(AMPAuth, 'parse_token')
+    @patch.object(AMPAuth, "parse_token")
     def test_authenticate_exception(self, mock_parse_token):
         """Test authentication catches and handles exceptions gracefully."""
         # Force parse_token to raise an Exception

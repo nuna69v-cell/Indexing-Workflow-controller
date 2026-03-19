@@ -14,7 +14,7 @@ from datetime import datetime
 from queue import Empty, Queue
 from typing import Any, Callable, Dict, List, Optional
 
-from ..config.settings import get_settings
+from ..config import get_settings
 
 settings = get_settings()
 logger = logging.getLogger(__name__)

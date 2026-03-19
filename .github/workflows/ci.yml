@@ -40,7 +40,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install "numpy<2.0.0"
           if [ -f requirements.txt ]; then TA_INCLUDE_PATH=/usr/include TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install -r requirements.txt; fi
-          TA_INCLUDE_PATH=/usr/include TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install ruff pytest pytest-cov
+          TA_INCLUDE_PATH=/usr/include TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install ruff pytest pytest-cov pytest-asyncio httpx pybit pytest-mock
 
       - name: Lint with Ruff
         run: |
@@ -48,6 +48,7 @@ jobs:
 
       - name: Run Tests with Coverage
         run: |
+          export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
           PYTHONPATH=. pytest --cov=src/ tests/ --cov-report=xml
 
       - name: Upload Coverage Report

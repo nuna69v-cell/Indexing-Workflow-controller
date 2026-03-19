@@ -6,6 +6,7 @@ from getstream import Stream
 
 logger = logging.getLogger(__name__)
 
+
 class StreamService:
     def __init__(self):
         self.api_key = os.getenv("STREAM_API_KEY")
@@ -15,12 +16,16 @@ class StreamService:
 
     def initialize(self):
         if not self.api_key or not self.api_secret:
-            logger.warning("Stream API credentials not found. Stream services disabled.")
+            logger.warning(
+                "Stream API credentials not found. Stream services disabled."
+            )
             return False
 
         try:
             # Initialize Chat Client
-            self.chat_client = StreamChat(api_key=self.api_key, api_secret=self.api_secret)
+            self.chat_client = StreamChat(
+                api_key=self.api_key, api_secret=self.api_secret
+            )
 
             # Initialize Feeds Client
             self.feed_client = Stream(api_key=self.api_key, api_secret=self.api_secret)
@@ -66,5 +71,6 @@ class StreamService:
         except Exception as e:
             logger.error(f"Error upserting user {user_id}: {e}")
             return False
+
 
 stream_service = StreamService()

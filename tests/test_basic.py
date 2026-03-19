@@ -13,7 +13,8 @@ def test_python_version():
 def test_imports():
     """Test that basic imports work"""
     try:
-
+        import os  # noqa: F401
+        import json  # noqa: F401
         assert True
     except ImportError as e:
         pytest.fail(f"Basic imports failed: {e}")

@@ -36,7 +36,7 @@ EOF
 # It also pings an API endpoint with the hash in a header.
 device_identity() {
   echo "[*] Device hash: $HASHED_ID"
-  curl -H "X-Device-ID: $HASHED_ID" https://genxfx.org/api/agent-status || true
+  curl -k -H "X-Device-ID: $HASHED_ID" https://genxfx.org/api/agent-status || true
 }
 
 # === STEP 3: Firebase Session Schema ===
@@ -47,7 +47,7 @@ firebase_session() {
   cat > session.json <<EOF
 {
   "deviceid": "$HASHED_ID",
-  "session_token": "$(uuidgen)",
+  "session_token": "$(python3 -c "import uuid; print(uuid.uuid4())")",
   "timestamp": "$(date -Iseconds)",
   "notes_synced": true
 }
@@ -74,11 +74,11 @@ JS
 # It requires davfs2 to be installed and configured.
 note_sync() {
   echo "[*] Mounting LiteWriter WebDAV and syncing tasks"
-  mkdir -p /mnt/litewriter
+  mkdir -p ~/.local/share/litewriter
   echo "[!] Mount command is commented out. You will need to configure /etc/davfs2/secrets."
-  # sudo mount -t davfs http://$DOMAIN /mnt/litewriter || true
+  # mount -t davfs http://$DOMAIN ~/.local/share/litewriter || true
   echo "[!] Note sync logic is commented out."
-  # grep -r "\[ \]" /mnt/litewriter | awk '{print $2}' > tasks.txt
+  # grep -r "\[ \]" ~/.local/share/litewriter | awk '{print $2}' > tasks.txt
   # while read -r task; do
     # gh issue create --title "New Task" --body "$task"
   # done < tasks.txt

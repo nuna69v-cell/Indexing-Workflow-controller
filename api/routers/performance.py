@@ -88,22 +88,21 @@ async def get_performance(
         )
         rows = cursor.fetchall()
 
-        results = []
-        for row in rows:
-            results.append(
-                AccountPerformance(
-                    id=row["id"],
-                    account_number=row["account_number"],
-                    balance=row["balance"],
-                    equity=row["equity"],
-                    total_profit=row["total_profit"],
-                    total_loss=row["total_loss"],
-                    pnl=row["pnl"],
-                    profit_factor=row["profit_factor"],
-                    currency=row["currency"],
-                    timestamp=datetime.fromisoformat(row["timestamp"]),
-                )
+        results = [
+            AccountPerformance(
+                id=row["id"],
+                account_number=row["account_number"],
+                balance=row["balance"],
+                equity=row["equity"],
+                total_profit=row["total_profit"],
+                total_loss=row["total_loss"],
+                pnl=row["pnl"],
+                profit_factor=row["profit_factor"],
+                currency=row["currency"],
+                timestamp=datetime.fromisoformat(row["timestamp"]),
             )
+            for row in rows
+        ]
 
         return results
     except Exception as e:

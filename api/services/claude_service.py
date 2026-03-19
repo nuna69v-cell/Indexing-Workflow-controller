@@ -3,8 +3,7 @@ Claude AI Service for GenX Trading Platform
 """
 
 import logging
-import os
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 import anthropic
 
@@ -48,15 +47,14 @@ class ClaudeService:
                 # When using Azure, the endpoint and key are configured slightly differently.
                 # For standard anthropic library proxy to azure, base_url is typically modified.
                 self.client = anthropic.AsyncAnthropic(
-                    api_key=azure_key,
-                    base_url=azure_endpoint
+                    api_key=azure_key, base_url=azure_endpoint
                 )
                 self.initialized = True
             elif api_key:
-                logger.info("Initializing Claude Service via standard Anthropic configuration.")
-                self.client = anthropic.AsyncAnthropic(
-                    api_key=api_key
+                logger.info(
+                    "Initializing Claude Service via standard Anthropic configuration."
                 )
+                self.client = anthropic.AsyncAnthropic(api_key=api_key)
                 self.initialized = True
             else:
                 logger.warning("No Anthropic or Azure API keys found in configuration.")
@@ -86,16 +84,16 @@ class ClaudeService:
             response = await self.client.messages.create(
                 model=self.model_name,
                 max_tokens=max_tokens,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ]
+                messages=[{"role": "user", "content": prompt}],
             )
             return response.content[0].text
         except Exception as e:
             logger.error(f"Error generating text with Claude: {str(e)}")
             return f"Error: {str(e)}"
 
-    async def chat_analysis(self, messages: List[Dict[str, str]], max_tokens: int = 1024) -> str:
+    async def chat_analysis(
+        self, messages: List[Dict[str, str]], max_tokens: int = 1024
+    ) -> str:
         """
         Performs analysis given a history of messages.
 
@@ -112,9 +110,7 @@ class ClaudeService:
 
         try:
             response = await self.client.messages.create(
-                model=self.model_name,
-                max_tokens=max_tokens,
-                messages=messages
+                model=self.model_name, max_tokens=max_tokens, messages=messages
             )
             return response.content[0].text
         except Exception as e:
@@ -133,9 +129,7 @@ class ClaudeService:
             await self.client.messages.create(
                 model=self.model_name,
                 max_tokens=10,
-                messages=[
-                    {"role": "user", "content": "Ping"}
-                ]
+                messages=[{"role": "user", "content": "Ping"}],
             )
             return True
         except Exception as e:

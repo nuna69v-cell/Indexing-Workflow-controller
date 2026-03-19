@@ -9,8 +9,8 @@ import core.data_sources.fxcm_forexconnect_provider as provider_module
 mock_fx = MagicMock()
 provider_module.fx = mock_fx
 
-from core.data_sources.fxcm_forexconnect_provider import (
-    FXCMForexConnectProvider,
+from core.data_sources.fxcm_forexconnect_provider import (  # noqa: E402
+    FXCMForexConnectProvider,  # noqa: E402
 )
 
 

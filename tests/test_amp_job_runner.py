@@ -1,7 +1,9 @@
 import json
+
 import pytest
 
 from amp_job_runner import AMPJobRunner
+
 
 def test_load_config_success(tmp_path, monkeypatch):
     """Test load_config when amp_config.json exists and contains valid JSON."""
@@ -23,12 +25,14 @@ def test_load_config_success(tmp_path, monkeypatch):
     config = runner.load_config()
     assert config == config_data
 
+
 def test_load_config_not_found(tmp_path, monkeypatch):
     """Test load_config when amp_config.json does not exist."""
     monkeypatch.chdir(tmp_path)
     runner = AMPJobRunner()
     config = runner.load_config()
     assert config == {}
+
 
 def test_load_config_invalid_json(tmp_path, monkeypatch):
     """Test load_config when amp_config.json exists but contains invalid JSON."""

@@ -151,6 +151,13 @@ class Settings(BaseSettings):
     WEBSOCKET_RECONNECT_INTERVAL: int = 5
     MAX_WEBSOCKET_RETRIES: int = 10
 
+    # Okta AI Agentic Security Configuration
+    # App Instant ID: Lt+yQ1MARFa2x1Ntf4U2Og
+    OKTA_DOMAIN: Optional[str] = None
+    OKTA_CLIENT_ID: Optional[str] = None
+    OKTA_AUDIENCE: str = "api://default"
+    OKTA_APP_ID: str = "Lt+yQ1MARFa2x1Ntf4U2Og"
+
     # EA Authentication
     EA_API_KEY: Optional[str] = Field(
         None, description="API key for Expert Advisor authentication"

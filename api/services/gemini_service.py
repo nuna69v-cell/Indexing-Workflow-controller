@@ -187,10 +187,10 @@ class GeminiService:
             As an expert trading analyst, analyze the following market data and news to generate trading signals.
 
             Market Data:
-            - Symbol: {market_data.get('symbol', 'BTCUSDT')}
-            - Current Price: {market_data.get('price', 'N/A')}
-            - Volume: {market_data.get('volume', 'N/A')}
-            - Technical Indicators: {market_data.get('indicators', {})}
+            - Symbol: {market_data.get("symbol", "BTCUSDT")}
+            - Current Price: {market_data.get("price", "N/A")}
+            - Volume: {market_data.get("volume", "N/A")}
+            - Technical Indicators: {market_data.get("indicators", {})}
 
             Recent News:
             {chr(10).join(news_data[:5])}

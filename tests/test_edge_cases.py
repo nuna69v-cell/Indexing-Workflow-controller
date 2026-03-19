@@ -268,9 +268,9 @@ class TestDataValidation:
                 "postgresql",
             ]  # removed 'sql' and 'table' as they are generic
             for error in sql_errors:
-                assert (
-                    error not in response_text
-                ), f"Potential SQL injection vulnerability detected: {error}"
+                assert error not in response_text, (
+                    f"Potential SQL injection vulnerability detected: {error}"
+                )
 
     def test_sql_injection_prevention_trading_pairs(self):
         """Attempts a basic SQL injection to ensure it's handled."""
@@ -335,9 +335,9 @@ class TestPerformanceEdgeCases:
         final_memory = process.memory_info().rss
         memory_increase = final_memory - initial_memory
 
-        assert (
-            memory_increase < 100 * 1024 * 1024
-        ), f"Memory increased by {memory_increase / 1024 / 1024:.2f}MB"
+        assert memory_increase < 100 * 1024 * 1024, (
+            f"Memory increased by {memory_increase / 1024 / 1024:.2f}MB"
+        )
 
     def test_memory_usage_with_large_query(self):
         """Simulates a request that could lead to high memory usage."""

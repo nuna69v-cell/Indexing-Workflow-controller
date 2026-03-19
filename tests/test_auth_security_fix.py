@@ -8,7 +8,6 @@ from api.utils.auth import get_current_user
 
 
 class TestAuthLogic(unittest.TestCase):
-
     @patch.dict(os.environ, {"TESTING": "1"})
     def test_testing_mode_bypass(self):
         # When TESTING is set, missing credentials should return mock user

@@ -70,10 +70,7 @@ jobs:
 
         pip install -r requirements.txt
 
-        TA_INCLUDE_PATH=/usr/include/ta-lib \
-        TA_LIBRARY_PATH=/usr/lib \
-        LDFLAGS="-L/usr/lib" \
-        pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock
+        TA_INCLUDE_PATH=/usr/include TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock
 
         '
     - name: Run tests with coverage

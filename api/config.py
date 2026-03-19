@@ -102,6 +102,11 @@ class Settings(BaseSettings):
     # AI Services
     GEMINI_API_KEY: Optional[str] = None
 
+    # Anthropic / Azure Claude Configuration
+    ANTHROPIC_API_KEY: Optional[str] = None
+    AZURE_ANTHROPIC_ENDPOINT: Optional[str] = None
+    AZURE_ANTHROPIC_API_KEY: Optional[str] = None
+
     # FXCM Configuration
     FXCM_API_KEY: Optional[str] = None
     FXCM_ACCESS_TOKEN: Optional[str] = None

@@ -1,9 +1,10 @@
-import pytest
 import backtrader as bt
-from src.mouy_leng.trading.strategy import RSIMACDStrategy
-from src.mouy_leng.trading.backtest import run_backtest
-import pandas as pd
 import numpy as np
+import pandas as pd
+import pytest
+
+from src.mouy_leng.trading.backtest import run_backtest
+from src.mouy_leng.trading.strategy import RSIMACDStrategy
 
 
 @pytest.fixture

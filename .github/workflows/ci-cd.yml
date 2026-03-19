@@ -68,7 +68,7 @@ jobs:
         rm -rf ta-lib-0.4.0-src.tar.gz ta-lib/
     - name: Install dependencies
       env:
-        TA_INCLUDE_PATH: /usr/include/ta-lib
+        TA_INCLUDE_PATH: /usr/include
         TA_LIBRARY_PATH: /usr/lib
         LDFLAGS: "-L/usr/lib"
       run: |

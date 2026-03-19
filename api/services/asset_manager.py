@@ -14,7 +14,7 @@ from google.oauth2.service_account import Credentials
 from gspread_asyncio import AsyncioGspreadClientManager
 from openpyxl.styles import Font, PatternFill
 
-from ..config.settings import get_settings
+from ..config import get_settings
 
 settings = get_settings()
 logger = logging.getLogger(__name__)

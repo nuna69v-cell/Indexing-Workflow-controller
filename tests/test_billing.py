@@ -132,8 +132,9 @@ def test_payment_method_valid():
 
 def test_payment_method_cardholder_name_validation():
     """Test direct validation of cardholder_name."""
-    from api.main import PaymentMethod
     from pydantic import ValidationError
+
+    from api.main import PaymentMethod
 
     # Valid name
     pm = PaymentMethod(

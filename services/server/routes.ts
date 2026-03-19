@@ -157,7 +157,7 @@ export function registerRoutes(app: Express) {
           {
             accountName: 'FxPro MT5 Live',
             broker: 'fxpro',
-            accountId: '530142568',
+            accountId: '514832489',
             platform: 'MT5',
             balance: '0.00',
             currency: 'USD',
@@ -279,14 +279,14 @@ export function registerRoutes(app: Express) {
     lastHeartbeat: new Date(),
     connectedAt: new Date()
   });
-  eaConnections.set('fxpro_530142568_live', {
+  eaConnections.set('fxpro_514832489_live', {
     eaName: 'GenX-FxPro-Live',
-    connectionId: 'fxpro_530142568_live',
-    accountNumber: '530142568',
+    connectionId: 'fxpro_514832489_live',
+    accountNumber: '514832489',
     symbol: 'XAUUSD',
     timeframe: 'H1',
     broker: 'fxpro',
-    server: 'FxPro-MT5 Live02',
+    server: 'FxPro-MT5',
     status: 'registered',
     balance: null,
     equity: null,

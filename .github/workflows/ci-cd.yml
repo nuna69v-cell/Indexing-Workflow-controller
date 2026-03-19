@@ -63,17 +63,10 @@ jobs:
           sudo ln -s /usr/lib/libta-lib.so /usr/lib/libta_lib.so || true
         fi
     - name: Install dependencies
-      run: 'python -m pip install --upgrade pip
-
-        pip install -r requirements.txt
-
-        export TA_INCLUDE_PATH=/usr/include/ta-lib
-        export TA_LIBRARY_PATH=/usr/lib
-        export LDFLAGS="-L/usr/lib"
-
+      run: |
+        python -m pip install --upgrade pip
+        TA_INCLUDE_PATH=/usr/include/ta-lib TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install -r requirements.txt
         pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock
-
-        '
     - name: Run tests with coverage
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

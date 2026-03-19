@@ -5,6 +5,14 @@ echo "🚀 Starting Jules Optimized Setup..."
 
 # 1. Node.js Setup
 echo "📦 Installing Node.js dependencies..."
+
+# Install Cursor CLI (agent)
+echo "Installing Cursor CLI..."
+mkdir -p "$HOME/.cursor/agent"
+curl -fsSL https://downloads.cursor.com/lab/2026.03.18-f6873f7/linux/x64/agent-cli-package.tar.gz | tar -xz -C "$HOME/.cursor/agent"
+export PATH="$HOME/.cursor/agent:$PATH"
+echo 'export PATH="$HOME/.cursor/agent:$PATH"' >> ~/.bashrc
+
 if ! command -v pnpm &> /dev/null; then
     echo "Installing pnpm..."
     npm install -g pnpm

@@ -1,7 +1,7 @@
 //+------------------------------------------------------------------+
 //|  GenX FX - FxPro MT5 EA                                         |
-//|  Broker  : FxPro-MT5 Live02                                     |
-//|  Account : 530142568                                            |
+//|  Broker  : FxPro-MT5                                     |
+//|  Account : 514832489                                            |
 //|  Connects to GenX dashboard via HTTP REST API                   |
 //|  Version : 3.0                                                  |
 //+------------------------------------------------------------------+
@@ -18,11 +18,11 @@
 //--- Server settings (edit ServerURL to match your deployed Replit URL)
 input string   ServerURL        = "https://YOUR-REPLIT-APP.replit.app"; // Dashboard server URL
 input string   BrokerID         = "fxpro";                               // Broker identifier
-input string   AccountNumber    = "530142568";                            // MT5 account number
-input string   BrokerServer     = "FxPro-MT5 Live02";                   // Broker server name
+input string   AccountNumber    = "514832489";                            // MT5 account number
+input string   BrokerServer     = "FxPro-MT5";                   // Broker server name
 
 //--- Trading settings
-input int      MagicNumber      = 530142;   // Magic number for orders
+input int      MagicNumber      = 514832;   // Magic number for orders
 input double   DefaultLotSize   = 0.01;     // Default lot size
 input double   MaxLotSize       = 1.0;      // Maximum lot size
 input double   RiskPercent      = 1.0;      // Risk % per trade (0 = use signal lot)

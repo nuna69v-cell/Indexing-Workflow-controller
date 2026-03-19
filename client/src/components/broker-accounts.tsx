@@ -45,8 +45,8 @@ const ACCOUNTS: BrokerAccount[] = [
   {
     id: "fxpro",
     broker: "FxPro",
-    server: "FxPro-MT5 Live02",
-    accountId: "530142568",
+    server: "FxPro-MT5",
+    accountId: "514832489",
     label: "FxPro MT5 Live",
     color: "blue",
   },

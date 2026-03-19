@@ -4,7 +4,7 @@
 | File | Broker | Account | Server |
 |------|--------|---------|--------|
 | `GenX_Exness_MT5.mq5` | Exness | 169926536 | Exness-MT5Real24 |
-| `GenX_FxPro_MT5.mq5`  | FxPro  | 530142568 | FxPro-MT5 Live02 |
+| `GenX_FxPro_MT5.mq5`  | FxPro  | 514832489 | FxPro-MT5 |
 
 ---
 
@@ -39,7 +39,7 @@ This is **required** or the EA cannot connect to the server.
 4. In MT5, open **MetaEditor** (press F4)
 5. Open the file and click **Compile** (F7) — should show 0 errors
 
-### For FxPro (account 530142568):
+### For FxPro (account 514832489):
 1. Do the same on your FxPro MT5 terminal
 2. Copy **`GenX_FxPro_MT5.mq5`** into `MQL5 → Experts`
 3. Compile it in MetaEditor
@@ -53,7 +53,7 @@ This is **required** or the EA cannot connect to the server.
 3. Drag it onto the chart
 4. In the EA settings dialog:
    - Set **ServerURL** = your Replit dashboard URL
-   - **AccountNumber** is pre-filled (169926536 or 530142568)
+   - **AccountNumber** is pre-filled (169926536 or 514832489)
    - **BrokerServer** is pre-filled
    - Set **EnableAutoTrade** = true
    - Adjust **RiskPercent** (default 1%)

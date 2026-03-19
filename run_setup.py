@@ -1,5 +1,4 @@
 import subprocess
-import time
 import os
 
 if __name__ == "__main__":
@@ -8,10 +7,15 @@ if __name__ == "__main__":
     os.chmod("deploy/setup-exness-vps.sh", 0o755)
 
     # Run the script and write output directly to stdout
-    process = subprocess.Popen(["bash", "deploy/setup-exness-vps.sh"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+    process = subprocess.Popen(
+        ["bash", "deploy/setup-exness-vps.sh"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        universal_newlines=True,
+    )
 
     for line in iter(process.stdout.readline, ""):
-         print(line, end="")
+        print(line, end="")
 
     process.stdout.close()
     return_code = process.wait()

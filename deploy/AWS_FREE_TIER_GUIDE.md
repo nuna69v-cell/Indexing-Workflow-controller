@@ -365,3 +365,128 @@ aws cloudformation delete-stack --stack-name production-genx-fx-free-tier --regi
 
 - In your CloudFormation template, update the repository URL to your actual GitHub username.
 - Always use Dockerfile.free-tier for AWS Free Tier deployments.
+---
+
+## 🛡️ Free VPN Setup (WireGuard)
+
+Adding a VPN adds an extra layer of security, allowing you to access your trading platform as if you were on the same local network, without exposing it to the public internet. We recommend **WireGuard** as it is fast, modern, and lightweight—perfect for a free tier `t2.micro` instance.
+
+### 1. Install WireGuard via PiVPN (Easiest Method)
+PiVPN is a script that automates the installation and configuration of WireGuard.
+
+\`\`\`shell
+# SSH into your EC2 instance
+ssh -i genx-fx-key.pem ec2-user@YOUR_INSTANCE_IP
+
+# Run the PiVPN installer
+curl -L https://install.pivpn.io | bash
+\`\`\`
+
+**During the installation:**
+*   **Network Interface:** Select `eth0`.
+*   **Local IP:** Choose the static IP option (it uses the internal IP of the EC2 instance).
+*   **Local Users:** Choose `ec2-user`.
+*   **Installation Mode:** Select **WireGuard**.
+*   **Port:** The default is `51820`. *Important: You must open this port in your AWS Security Group!*
+*   **DNS Provider:** Choose a public DNS provider like `Quad9` or `Cloudflare` (1.1.1.1).
+*   **Public IP or DNS:** Select your EC2 instance's Public IP address.
+*   **Unattended Upgrades:** Enable them for security updates.
+*   **Reboot:** Allow the system to reboot when finished.
+
+### 2. Update AWS Security Group
+You need to allow incoming UDP traffic on the WireGuard port.
+
+\`\`\`shell
+# Allow UDP traffic on port 51820 from anywhere
+aws ec2 authorize-security-group-ingress \
+  --group-id YOUR_SECURITY_GROUP_ID \
+  --protocol udp \
+  --port 51820 \
+  --cidr 0.0.0.0/0
+\`\`\`
+
+### 3. Create a Client Configuration
+After the EC2 instance reboots, reconnect and create a configuration for your personal device (laptop, phone, etc.).
+
+\`\`\`shell
+# Re-connect via SSH
+ssh -i genx-fx-key.pem ec2-user@YOUR_INSTANCE_IP
+
+# Add a new client
+pivpn add
+# Enter a name for the client (e.g., 'mylaptop')
+
+# The configuration file will be saved in /home/ec2-user/configs/mylaptop.conf
+\`\`\`
+
+### 4. Connect from Your Device
+1.  Download the WireGuard client for your device (Windows, macOS, iOS, Android) from [wireguard.com](https://www.wireguard.com/install/).
+2.  Transfer the \`mylaptop.conf\` file from your EC2 instance to your personal device.
+    \`\`\`shell
+    # Run this on your local machine (not the EC2 instance)
+    scp -i genx-fx-key.pem ec2-user@YOUR_INSTANCE_IP:/home/ec2-user/configs/mylaptop.conf ./
+    \`\`\`
+3.  Import the \`.conf\` file into the WireGuard application and click **Connect**.
+
+*You are now connected to your AWS instance via VPN!*
+
+---
+
+## 🔒 Enhanced Security Practices
+
+When exposing your trading platform, security is paramount. Since we are using an EC2 instance, you should implement these extra measures to prevent unauthorized access.
+
+### 1. Configure AWS Security Groups (Network Level Firewall)
+Ensure your Security Group ONLY allows traffic on necessary ports.
+
+1.  Go to the **EC2 Dashboard** -> **Security Groups**.
+2.  Select your Security Group (\`YOUR_SECURITY_GROUP_ID\`).
+3.  Click **Edit inbound rules**.
+4.  Configure the rules as follows:
+    *   **SSH (Port 22):** Change "Source" from \`0.0.0.0/0\` to your specific IP address, OR restrict it to the VPN's IP range if you configured your VPN to allow internal network access.
+    *   **HTTP (Port 80) / HTTPS (Port 443):** Allow \`0.0.0.0/0\` ONLY if you want the public internet to reach the web interface. *If you use a VPN, you can remove these public rules.*
+    *   **Custom TCP (Port 8000):** This is the application port. Allow \`0.0.0.0/0\` only if the public needs access, otherwise restrict it.
+    *   **Custom UDP (Port 51820):** Allow \`0.0.0.0/0\` (This is required for the VPN to connect).
+
+### 2. Set Up UFW (Uncomplicated Firewall) on the Instance
+While AWS Security Groups provide network-level protection, a local firewall provides defense-in-depth.
+
+\`\`\`shell
+# SSH into your EC2 instance
+ssh -i genx-fx-key.pem ec2-user@YOUR_INSTANCE_IP
+
+# Install UFW
+sudo yum install ufw -y # Or apt-get install ufw on Ubuntu
+
+# Allow necessary ports
+sudo ufw allow 22/tcp    # SSH
+sudo ufw allow 51820/udp # WireGuard VPN
+sudo ufw allow 8000/tcp  # Application port
+
+# Enable the firewall
+sudo ufw enable
+\`\`\`
+
+### 3. Install Fail2ban to Prevent Brute Force Attacks
+Fail2ban monitors logs (like SSH) and temporarily bans IP addresses that show malicious signs, such as too many password failures.
+
+\`\`\`shell
+# Install Fail2ban
+sudo amazon-linux-extras install epel -y # For Amazon Linux 2
+sudo yum install fail2ban -y
+
+# Enable and start the service
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+
+# Verify it is running
+sudo fail2ban-client status
+\`\`\`
+
+### 4. Keep the System Updated
+Regularly update your system to patch vulnerabilities.
+
+\`\`\`shell
+# Update all packages
+sudo yum update -y
+\`\`\`

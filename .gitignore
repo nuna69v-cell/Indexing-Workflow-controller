@@ -86,3 +86,5 @@ setup_python3.py
 setup_talib.sh
 fix_ci.py
 update_pkg.js
+fix_fxcm.py
+fix_lint.py

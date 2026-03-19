@@ -1,6 +1,7 @@
 import subprocess
 import os
 
+
 def run_cmd(cmd):
     print(f"Running: {cmd}")
     env = os.environ.copy()
@@ -12,5 +13,6 @@ def run_cmd(cmd):
     if result.stderr:
         print(result.stderr)
     return result.returncode
+
 
 run_cmd(".venv/bin/pip install openpyxl")

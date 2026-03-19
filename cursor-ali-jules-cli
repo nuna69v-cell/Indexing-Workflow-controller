@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+python cursor_ali_jules_cli.py "$@"

@@ -3,13 +3,15 @@ Utility script to demonstrate programmatic access to keyboard and mouse using `p
 Note: This requires a GUI environment (e.g., a real monitor or Xvfb) to function.
 """
 
+import time
+
+from pynput.keyboard import Controller as KeyboardController
 from pynput.keyboard import (
     Key,
-    Controller as KeyboardController,
-    Listener as KeyboardListener,
 )
-from pynput.mouse import Button, Controller as MouseController
-import time
+from pynput.keyboard import Listener as KeyboardListener
+from pynput.mouse import Button
+from pynput.mouse import Controller as MouseController
 
 # Initialize controllers
 keyboard = KeyboardController()

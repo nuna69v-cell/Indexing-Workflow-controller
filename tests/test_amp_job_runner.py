@@ -2,8 +2,6 @@ import json
 from pathlib import Path
 from unittest.mock import mock_open, patch
 
-import pytest
-
 from amp_job_runner import AMPJobRunner
 
 

@@ -64,7 +64,7 @@ jobs:
     - name: Install dependencies
       run: 'python -m pip install --upgrade pip
 
-        export TA_INCLUDE_PATH=/usr/include/ta-lib
+        export TA_INCLUDE_PATH=/usr/include
         export TA_LIBRARY_PATH=/usr/lib
         export LDFLAGS="-L/usr/lib"
         export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH

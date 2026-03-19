@@ -11,7 +11,7 @@ import pytest
 try:
     from fastapi.testclient import TestClient
 
-    from api.config import settings
+    from api.config import settings  # noqa: F401
     from api.main import app
 
     FASTAPI_AVAILABLE = True

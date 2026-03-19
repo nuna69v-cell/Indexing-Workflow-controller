@@ -1,8 +1,9 @@
-import os
 import logging
-from typing import Optional, Dict, Any
-from stream_chat import StreamChat
+import os
+from typing import Any, Dict, Optional
+
 from getstream import Stream
+from stream_chat import StreamChat
 
 logger = logging.getLogger(__name__)
 

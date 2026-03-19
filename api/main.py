@@ -41,9 +41,9 @@ from api.routers import (
     market_data,
     performance,
     predictions,
+    stream_router,
     system,
     trading,
-    stream_router,
 )
 
 predictor = None

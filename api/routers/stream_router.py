@@ -1,6 +1,7 @@
+from typing import Any, Dict, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
-from typing import Dict, Any, Optional
 
 # Import Stream Service
 from api.services.stream_service import stream_service

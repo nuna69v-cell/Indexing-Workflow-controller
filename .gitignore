@@ -84,3 +84,5 @@ setup_python.py
 setup_python2.py
 setup_python3.py
 setup_talib.sh
+fix_ci.py
+update_pkg.js

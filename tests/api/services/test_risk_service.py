@@ -1,6 +1,8 @@
 import pytest
-from api.services.risk_service import RiskService
+
 from api.models.schemas import OrderRequest, OrderType
+from api.services.risk_service import RiskService
+
 
 @pytest.mark.asyncio
 async def test_check_order_risk_approved():
@@ -8,13 +10,12 @@ async def test_check_order_risk_approved():
     service = RiskService()
     # By default, max_position_size is 0.1
     order_request = OrderRequest(
-        symbol="XAUUSD",
-        order_type=OrderType.BUY,
-        quantity=0.05
+        symbol="XAUUSD", order_type=OrderType.BUY, quantity=0.05
     )
     result = await service.check_order_risk(order_request)
     assert result["approved"] is True
     assert result["reason"] == ""
+
 
 @pytest.mark.asyncio
 async def test_check_order_risk_rejected():
@@ -22,13 +23,12 @@ async def test_check_order_risk_rejected():
     service = RiskService()
     # By default, max_position_size is 0.1
     order_request = OrderRequest(
-        symbol="XAUUSD",
-        order_type=OrderType.BUY,
-        quantity=0.2
+        symbol="XAUUSD", order_type=OrderType.BUY, quantity=0.2
     )
     result = await service.check_order_risk(order_request)
     assert result["approved"] is False
     assert result["reason"] == "Position size too large"
+
 
 @pytest.mark.asyncio
 async def test_check_order_risk_exact_limit():
@@ -36,9 +36,7 @@ async def test_check_order_risk_exact_limit():
     service = RiskService()
     # By default, max_position_size is 0.1
     order_request = OrderRequest(
-        symbol="XAUUSD",
-        order_type=OrderType.BUY,
-        quantity=0.1
+        symbol="XAUUSD", order_type=OrderType.BUY, quantity=0.1
     )
     result = await service.check_order_risk(order_request)
     assert result["approved"] is True

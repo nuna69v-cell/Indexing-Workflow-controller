@@ -1,6 +1,6 @@
+import os
 import unittest
 from unittest.mock import Mock, patch
-import os
 
 from core.execution.bybit import BybitAPI
 

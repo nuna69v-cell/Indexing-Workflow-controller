@@ -36,8 +36,8 @@ except ImportError:
 
 import api.redis
 from api.database import get_db
-from api.utils.auth import get_current_user
 from api.routers import ea_http, market_data, performance, predictions, system, trading
+from api.utils.auth import get_current_user
 
 predictor = None
 scalping_service = None
@@ -649,7 +649,9 @@ async def get_users_deprecated(db: sqlite3.Connection = Depends(get_db)):
 @app.get("/api/v2/users")
 async def get_users(
     current_user: dict = Depends(get_current_user),
-    db: sqlite3.Connection = Depends(get_db), skip: int = 0, limit: int = 10
+    db: sqlite3.Connection = Depends(get_db),
+    skip: int = 0,
+    limit: int = 10,
 ):
     """
     Retrieves a list of users from the database with pagination.

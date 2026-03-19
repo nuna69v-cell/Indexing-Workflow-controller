@@ -1,6 +1,8 @@
+from typing import Optional
+
 import backtrader as bt
 import pandas as pd
-from typing import Optional
+
 from .strategy import RSIMACDStrategy
 
 

@@ -71,7 +71,7 @@ jobs:
 
         pip install -r requirements.txt
 
-        TA_INCLUDE_PATH=/usr/include/ta-lib TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock
+        TA_INCLUDE_PATH=/usr/include TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock
 
         '
     - name: Run tests with coverage
@@ -79,8 +79,7 @@ jobs:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         BYBIT_API_KEY: ${{ secrets.BYBIT_API_KEY }}
         FXCM_API_TOKEN: ${{ secrets.FXCM_API_TOKEN }}
-      run: 'export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
-        python -m pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
+      run: 'LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH python -m pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
 
         '
     - name: Upload coverage reports

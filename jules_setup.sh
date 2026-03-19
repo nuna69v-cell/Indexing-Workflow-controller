@@ -57,4 +57,12 @@ if [ -f "package.json" ]; then
     pnpm exec vitest run || echo "⚠️ Frontend tests failed"
 fi
 
+# 5. GUI Terminal Setup
+echo "🖥️  Starting GUI Terminal..."
+if [ -x "./start_gui_terminal.sh" ]; then
+    ./start_gui_terminal.sh || echo "⚠️ Failed to start GUI Terminal"
+else
+    echo "⚠️ start_gui_terminal.sh not found or not executable"
+fi
+
 echo "✅ Setup Complete! Environment is ready for snapshot."

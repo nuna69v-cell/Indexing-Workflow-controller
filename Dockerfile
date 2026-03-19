@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     make \
     curl \
     wget \
+    ttyd \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy and install Python dependencies

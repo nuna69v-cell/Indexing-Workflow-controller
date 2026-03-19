@@ -61,3 +61,15 @@ services:
       - .env
     volumes:
       - .:/app
+
+  gui_terminal:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ttyd -p 7681 bash
+    ports:
+      - "7681:7681"
+    env_file:
+      - .env
+    volumes:
+      - .:/app

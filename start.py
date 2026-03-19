@@ -1,5 +1,5 @@
-import subprocess
 import os
+import subprocess
 
 activate_script = os.path.join("venv", "bin", "activate_this.py")
 if os.path.exists(activate_script):

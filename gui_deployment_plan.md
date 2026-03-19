@@ -10,7 +10,7 @@ This plan outlines how to deploy the GenX Indexing-Workflow-controller with an i
 ## 2. Updated Architecture Summary
 The deployment now includes a `gui_terminal` service configured in `docker-compose.yml`:
 - **Base image:** Reuses the environment defined in the root `Dockerfile`.
-- **Port mapping:** Exposes the terminal on `7681:7681`.
+- **Port mapping:** Exposes the terminal strictly to localhost via `127.0.0.1:7681:7681` for security.
 - **Entrypoint:** `start_gui_terminal.sh` script, which launches `ttyd -p 7681 bash` inside the container.
 - **Integration:** The `ttyd` installation and setup is automated via `jules_setup.sh`.
 
@@ -35,6 +35,7 @@ docker-compose up --build -d
 Once the containers are successfully running, you can access the services:
 - **FastAPI Backend (Swagger UI):** http://localhost:8000/docs
 - **GUI Terminal:** http://localhost:7681
+  - *Note: Default login is `admin` / `password123`. You can override this by setting `TTYD_USER` and `TTYD_PASSWORD` in your environment.*
 
 ### Step 4: AI Agent Collaboration
 The web terminal gives all Jules AI (or other collaborative agents) an interactive bash shell running in the same networked environment as the backend services. They can execute scripts, view real-time logs, or manage configurations directly via the `gui_terminal` service container.

@@ -1,6 +1,13 @@
 #!/bin/bash
-# Start ttyd (GUI terminal) in the background on port 7681
-# It shares the bash shell over the web
-echo "🚀 Starting GUI Terminal (ttyd) on port 7681..."
-ttyd -p 7681 bash > ttyd.log 2>&1 &
-echo "✅ GUI Terminal started. Access it at http://localhost:7681"
+set -e
+
+# Default to a generic user/password if not provided in environment variables
+TTYD_USER=${TTYD_USER:-admin}
+TTYD_PASSWORD=${TTYD_PASSWORD:-password123}
+
+echo "Starting ttyd on port 7681 with Basic Auth..."
+echo "Access URL: http://localhost:7681"
+echo "Login with username: ${TTYD_USER}"
+
+# Start ttyd with Basic Auth (-c)
+ttyd -p 7681 -c "${TTYD_USER}:${TTYD_PASSWORD}" bash

@@ -22,20 +22,36 @@ jobs:
           python-version: '3.13'
 
       - name: Install System Dependencies
-        run: sudo apt-get update && sudo apt-get install -y sqlite3
+        run: sudo apt-get update && sudo apt-get install -y sqlite3 wget build-essential
+
+      - name: Build TA-Lib from source
+        run: |
+          wget https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+          tar -xzf ta-lib-0.4.0-src.tar.gz
+          cd ta-lib
+          ./configure --prefix=/usr
+          make
+          sudo make install
 
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          export TA_INCLUDE_PATH=/usr/include/ta-lib; export TA_LIBRARY_PATH=/usr/lib; export LDFLAGS="-L/usr/lib"; pip install ruff pytest pytest-cov
+          if [ -f requirements.txt ]; then TA_INCLUDE_PATH=/usr/include/ta-lib TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install -r requirements.txt; fi
+          TA_INCLUDE_PATH=/usr/include/ta-lib TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install ruff pytest pytest-cov black flake8 isort bandit safety mypy
 
       - name: Lint with Ruff
         run: |
           ruff check src/ tests/
 
+      - name: Run Black formatter check
+        run: black --check --diff . --exclude="forexconnect_env_37|venv|.venv|node_modules"
+
+      - name: Run import sorting check
+        run: isort --check-only --diff --profile black --skip forexconnect_env_37 --skip venv --skip .venv --skip node_modules .
+
       - name: Run Tests with Coverage
         run: |
+          export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
           PYTHONPATH=. pytest --cov=src/ tests/ --cov-report=xml
 
       - name: Upload Coverage Report

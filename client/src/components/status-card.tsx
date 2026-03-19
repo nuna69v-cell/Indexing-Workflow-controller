@@ -4,15 +4,15 @@ import {
   Play, 
   Clock, 
   Server, 
-  CheckCircle2, 
-  AlertCircle 
+
+
 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 
 export function StatusCard() {
   const { data: status, isLoading, refetch } = useBotStatus();
-  const { mutate: runJob, isPending: isRunning } = useRunJob();
+  const { mutate: runJob, isPending: is_running } = useRunJob();
 
   const handleRunJob = () => {
     runJob(undefined, {
@@ -23,7 +23,7 @@ export function StatusCard() {
         });
         refetch();
       },
-      onError: (error) => {
+      onError: (error: any) => {
         toast({
           title: "Job Failed",
           description: error.message,
@@ -51,12 +51,12 @@ export function StatusCard() {
             <p className="text-sm text-muted-foreground mt-1">Current operational metrics</p>
           </div>
           <div className={`px-3 py-1 rounded-full border text-xs font-mono flex items-center gap-2 ${
-            status?.isRunning 
+            status?.is_running
               ? "bg-green-500/10 border-green-500/20 text-green-500" 
               : "bg-yellow-500/10 border-yellow-500/20 text-yellow-500"
           }`}>
-            <span className={`w-2 h-2 rounded-full ${status?.isRunning ? "bg-green-500 animate-pulse" : "bg-yellow-500"}`} />
-            {status?.isRunning ? "ACTIVE" : "IDLE"}
+            <span className={`w-2 h-2 rounded-full ${status?.is_running ? "bg-green-500 animate-pulse" : "bg-yellow-500"}`} />
+            {status?.is_running ? "ACTIVE" : "IDLE"}
           </div>
         </div>
 
@@ -67,9 +67,9 @@ export function StatusCard() {
               <span className="text-xs font-medium uppercase tracking-wider">Last Execution</span>
             </div>
             <div className="text-lg font-mono font-medium">
-              {status?.lastRun ? format(new Date(status.lastRun), "HH:mm:ss") : "--:--:--"}
+              {status?.last_run ? format(new Date(status.last_run), "HH:mm:ss") : "--:--:--"}
               <span className="text-xs text-muted-foreground ml-2">
-                 {status?.lastRun ? format(new Date(status.lastRun), "MMM dd") : ""}
+                 {status?.last_run ? format(new Date(status.last_run), "MMM dd") : ""}
               </span>
             </div>
           </div>
@@ -80,17 +80,17 @@ export function StatusCard() {
               <span className="text-xs font-medium uppercase tracking-wider">Next Scheduled</span>
             </div>
             <div className="text-lg font-mono font-medium">
-              {status?.nextJob || "Not scheduled"}
+              {status?.next_job || "Not scheduled"}
             </div>
           </div>
         </div>
 
         <Button 
           onClick={handleRunJob}
-          disabled={isRunning}
+          disabled={is_running}
           className="w-full bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 hover:border-primary/50 shadow-lg shadow-primary/5 transition-all duration-300"
         >
-          {isRunning ? (
+          {is_running ? (
             <>
               <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin mr-2" />
               Initializing Pipeline...

@@ -36,7 +36,7 @@ except ImportError:
 
 import api.redis
 from api.database import get_db
-from api.routers import ea_http, market_data, performance, predictions, system, trading
+from api.routers import ea_http, market_data, performance, predictions, system, trading, stream_router
 
 predictor = None
 scalping_service = None
@@ -160,6 +160,8 @@ app.include_router(market_data.router, prefix="/api/v1")
 app.include_router(predictions.router, prefix="/api/v1")
 app.include_router(system.router, prefix="/api/v1")
 app.include_router(trading.router, prefix="/api/v1")
+app.include_router(stream_router.router, prefix="/api/v1")
+
 app.include_router(
     ea_http.router
 )  # EA HTTP endpoints (no /api/v1 prefix for compatibility)

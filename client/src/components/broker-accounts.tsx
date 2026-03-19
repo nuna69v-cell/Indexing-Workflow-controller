@@ -8,7 +8,6 @@ import { toast } from "@/hooks/use-toast";
 import {
   RefreshCw,
   Send,
-  Shield,
   TrendingUp,
   Wifi,
   WifiOff,
@@ -418,7 +417,7 @@ export function BrokerAccounts() {
               <Label className="text-xs text-muted-foreground uppercase tracking-wider">Symbol</Label>
               <select
                 value={signal.symbol}
-                onChange={(e) => setSignal({ ...signal, symbol: e.target.value })}
+                onChange={(e: any) => setSignal({ ...signal, symbol: e.target.value })}
                 className="w-full h-8 rounded-md bg-secondary/20 border border-border/50 text-sm font-mono px-2 text-foreground"
                 data-testid="select-signal-symbol"
               >
@@ -439,7 +438,7 @@ export function BrokerAccounts() {
                 <Label className="text-xs text-muted-foreground uppercase tracking-wider">{label}</Label>
                 <Input
                   value={(signal as any)[key]}
-                  onChange={(e) => setSignal({ ...signal, [key]: e.target.value })}
+                  onChange={(e: any) => setSignal({ ...signal, [key]: e.target.value })}
                   placeholder="0.00"
                   className="bg-secondary/20 border-border/50 font-mono text-sm h-8"
                   data-testid={`input-signal-${id}`}

@@ -35,6 +35,8 @@ except ImportError:
     has_scalping_service = False
 
 import api.redis
+
+from api.middleware.agent_security import AgentSecurity
 from api.database import get_db
 from api.routers import ea_http, market_data, performance, predictions, system, trading
 
@@ -417,7 +419,7 @@ def _create_prediction_dataframe(historical_data: list) -> pd.DataFrame:
 
 
 @app.post("/api/v1/predictions")
-async def get_predictions(request: Request):
+async def get_predictions(request: Request, _agent_auth: dict = Depends(AgentSecurity.require_roles(["ai_agent_read", "ai_user"]))):
     """
     Endpoint to get trading predictions.
 
@@ -486,7 +488,7 @@ async def get_predictions(request: Request):
 
 
 @app.post("/api/v1/scalping/signals")
-async def get_scalping_signals(request: Request):
+async def get_scalping_signals(request: Request, _agent_auth: dict = Depends(AgentSecurity.require_roles(["ai_agent_execute_scalp"]))):
     """
     Endpoint to get scalping signals for 5m, 15m, and 30m timeframes.
 

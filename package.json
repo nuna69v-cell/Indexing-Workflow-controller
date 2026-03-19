@@ -23,7 +23,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.1.1",
+    "@neondatabase/serverless": "^1.0.2",
     "@tailwindcss/typography": "^0.5.13",
     "@tanstack/react-query": "^5.35.1",
     "@vercel/analytics": "^1.2.2",
@@ -68,5 +68,11 @@
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
     "vitest": "^1.6.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "tar": "^7.5.11",
+      "@tootallnate/once": "^3.0.1"
+    }
   }
 }

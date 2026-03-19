@@ -76,3 +76,15 @@ id_rsa.pub
 usr/
 exness-credentials.env
 secrets.env
+ta-lib-0.4.0-src.tar.gz
+ta-lib/
+install_test_deps.py
+run_excel_generator.py
+setup_python.py
+setup_python2.py
+setup_python3.py
+setup_talib.sh
+fix_ci.py
+update_pkg.js
+fix_fxcm.py
+fix_lint.py

@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import patch
 from amp_auth import AMPAuth
 

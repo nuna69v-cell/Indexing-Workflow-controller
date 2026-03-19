@@ -4,6 +4,8 @@ import sqlite3
 from unittest.mock import MagicMock, patch
 
 import pytest
+import pandas as pd
+from api.main import _create_prediction_dataframe
 
 # Skip tests if FastAPI is not available
 try:
@@ -90,7 +92,6 @@ async def test_data_service():
 
 def test_technical_indicators():
     """Test technical indicators"""
-    import pandas as pd
 
     from core.indicators import TechnicalIndicators
 
@@ -116,7 +117,6 @@ def test_technical_indicators():
 
 def test_pattern_detector():
     """Test pattern detector"""
-    import pandas as pd
 
     from core.patterns import PatternDetector
 
@@ -278,3 +278,39 @@ async def test_trading_pairs_caching(mock_redis_client):
 
     # 7. Cleanup
     app.dependency_overrides.clear()
+
+
+
+
+
+
+
+
+
+
+
+def test_create_prediction_dataframe_empty():
+    """Test _create_prediction_dataframe with empty list"""
+    df = _create_prediction_dataframe([])
+    assert isinstance(df, pd.DataFrame)
+    assert df.empty
+
+def test_create_prediction_dataframe_valid_data():
+    """Test _create_prediction_dataframe with valid data"""
+    data = [
+        {"open": 100, "high": 105, "low": 95, "close": 102, "volume": 1000},
+        {"open": 102, "high": 106, "low": 101, "close": 105, "volume": 1100}
+    ]
+    df = _create_prediction_dataframe(data)
+    assert isinstance(df, pd.DataFrame)
+    assert not df.empty
+    assert len(df) == 2
+    assert list(df.columns) == ["open", "high", "low", "close", "volume"]
+    assert df.iloc[0]["open"] == 100
+
+def test_create_prediction_dataframe_missing_columns():
+    """Test _create_prediction_dataframe with missing required columns"""
+    # Missing 'volume'
+    data = [{"open": 100, "high": 105, "low": 95, "close": 102}]
+    with pytest.raises(ValueError, match="Missing required columns in historical data."):
+        _create_prediction_dataframe(data)

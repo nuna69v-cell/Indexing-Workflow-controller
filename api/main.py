@@ -407,6 +407,8 @@ def _create_prediction_dataframe(historical_data: list) -> pd.DataFrame:
     This is a CPU-bound operation that should be run in a separate thread
     to avoid blocking the asyncio event loop.
     """
+    if not historical_data:
+        return pd.DataFrame()
     df = pd.DataFrame(historical_data)
     # Basic data validation
     required_columns = ["open", "high", "low", "close", "volume"]

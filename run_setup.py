@@ -1,5 +1,5 @@
-import subprocess
 import os
+import subprocess
 
 if __name__ == "__main__":
     print("Running setup-exness-vps.sh locally...")

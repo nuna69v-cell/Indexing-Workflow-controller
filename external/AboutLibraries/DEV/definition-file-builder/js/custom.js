@@ -28,7 +28,6 @@ function generateXmlFile() {
 	var authorWebsite = fixString(document.getElementsByName("authorWebsite")[0].value);
 	var libraryName = fixString(document.getElementsByName("libraryName")[0].value);
 	var libraryDescription = fixString(document.getElementsByName("libraryDescription")[0].value);
-	//var libraryDescription = document.getElementsByName("libraryDescription")[0].value;
 	var libraryVersion = fixString(document.getElementsByName("libraryVersion")[0].value);
 	var libraryWebsite = fixString(document.getElementsByName("libraryWebsite")[0].value);
 

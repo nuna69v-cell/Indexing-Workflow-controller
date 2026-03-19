@@ -1,8 +1,8 @@
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, patch
 import json
 import os
 import sqlite3
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -202,9 +202,6 @@ def test_v2_users_pagination():
     # Clean up the dependency override
     app.dependency_overrides.clear()
     conn.close()
-
-
-
 
 
 @pytest.mark.asyncio

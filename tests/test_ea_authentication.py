@@ -13,7 +13,6 @@ import pytest
 try:
     from fastapi.testclient import TestClient
 
-
     from api.main import app
     from api.routers.ea_http import ea_connections, pending_signals, trade_results
 

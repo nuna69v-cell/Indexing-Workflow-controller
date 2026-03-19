@@ -1,7 +1,9 @@
+
 import pytest
-from datetime import datetime
-from api.services.trading_service import TradingService
+
 from api.models.schemas import SignalType
+from api.services.trading_service import TradingService
+
 
 @pytest.mark.asyncio
 async def test_get_active_signals_no_symbol():
@@ -14,6 +16,7 @@ async def test_get_active_signals_no_symbol():
     assert signals[0].signal_type == SignalType.LONG
     assert signals[0].entry_price == 50000.0
 
+
 @pytest.mark.asyncio
 async def test_get_active_signals_with_matching_symbol():
     """Test that get_active_signals returns the mock signal when the correct symbol is provided."""
@@ -22,6 +25,7 @@ async def test_get_active_signals_with_matching_symbol():
 
     assert len(signals) == 1
     assert signals[0].symbol == "BTCUSDT"
+
 
 @pytest.mark.asyncio
 async def test_get_active_signals_empty():

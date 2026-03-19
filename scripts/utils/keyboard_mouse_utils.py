@@ -10,7 +10,6 @@ from pynput.keyboard import (
 )
 from pynput.mouse import Button, Controller as MouseController
 import time
-import threading
 
 # Initialize controllers
 keyboard = KeyboardController()

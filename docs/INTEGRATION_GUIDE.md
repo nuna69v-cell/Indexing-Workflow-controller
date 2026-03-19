@@ -47,6 +47,10 @@ REDDIT_CLIENT_SECRET=your-reddit-client-secret-here
 REDDIT_USERNAME=your-reddit-username-here
 REDDIT_PASSWORD=your-reddit-password-here
 
+# Stream Integration
+STREAM_API_KEY=your-stream-api-key-here
+STREAM_API_SECRET=your-stream-api-secret-here
+
 # Feature Flags
 ENABLE_NEWS_ANALYSIS=true
 ENABLE_REDDIT_ANALYSIS=true
@@ -176,3 +180,8 @@ await ws.subscribe_to_symbol("bybit", "BTCUSDT")
 ✅ **Production-ready deployment**
 
 Your GenX Trading Platform is now a comprehensive, AI-powered trading system with real-time data integration and advanced market analysis capabilities!
+
+### 5. **Stream Integration (Chat & Feeds)**
+- **Service**: `api/services/stream_service.py`
+- **Features**: Trading chat rooms, messaging, social trading activity feed
+- **API Keys**: `STREAM_API_KEY`, `STREAM_API_SECRET`

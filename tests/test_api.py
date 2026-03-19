@@ -278,3 +278,28 @@ async def test_trading_pairs_caching(mock_redis_client):
 
     # 7. Cleanup
     app.dependency_overrides.clear()
+
+def test_is_safe_string():
+    """Test is_safe_string utility"""
+    from api.main import is_safe_string
+
+    # Safe strings
+    assert is_safe_string("hello world") is True
+    assert is_safe_string("user123@example.com") is True
+    assert is_safe_string("normal text") is True
+    assert is_safe_string("") is True
+
+    # Unsafe strings containing ; " ' < >
+    assert is_safe_string("DROP TABLE;") is False
+    assert is_safe_string("alert('xss')") is False
+    assert is_safe_string('<script>alert("test")</script>') is False
+    assert is_safe_string('admin" OR 1=1') is False
+    assert is_safe_string("SELECT * FROM users>") is False
+
+    # Non-string inputs - function handles them gracefully or raises TypeError depending on implementation
+    try:
+        assert is_safe_string(None) is False
+        assert is_safe_string(123) is False
+        assert is_safe_string(["a", "b"]) is False
+    except TypeError:
+        pass

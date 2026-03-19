@@ -102,8 +102,8 @@ class DataService:
             "volume": [1000.0],
         }
 
-        # Simulate partial failures: In a real batch API, some symbols might not
-        # return data. This logic ensures the mock behaves realistically.
+        # Simulate partial failures: In a real batch API, some symbols might not return data.
+
         results = {}
         for symbol in symbols:
             # ~90% success rate for finding data for a symbol

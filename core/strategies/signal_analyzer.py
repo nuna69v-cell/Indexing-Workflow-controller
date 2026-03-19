@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List
 
 import pandas as pd
@@ -187,12 +187,36 @@ class SignalAnalyzer:
     def _filter_by_time(self, signals: List[Dict]) -> List[Dict]:
         """
         Filters signals to include only those generated within a recent time window.
-
-        FIXME: This filter is currently disabled.
+        Handles timezone-aware and naive datetime objects, as well as string timestamps
+        and pandas Timestamps from various sources (e.g., MT4, AI models).
         """
-        # cutoff_time = datetime.now() - timedelta(hours=24)
-        # return [s for s in signals if s['timestamp'] >= cutoff_time]
-        return signals  # FIXME: Re-enable this filter with proper timezone handling.
+        cutoff_time = datetime.now(timezone.utc) - timedelta(hours=24)
+        filtered_signals = []
+
+        for signal in signals:
+            ts = signal.get("timestamp")
+            if not ts:
+                continue
+
+            if isinstance(ts, pd.Timestamp):
+                ts = ts.to_pydatetime()
+
+            if isinstance(ts, str):
+                try:
+                    ts = pd.to_datetime(ts, utc=True).to_pydatetime()
+                except Exception:
+                    # Skip signal if timestamp cannot be parsed
+                    continue
+
+            if isinstance(ts, datetime):
+                # Ensure timestamp is timezone-aware (UTC)
+                if ts.tzinfo is None:
+                    ts = ts.replace(tzinfo=timezone.utc)
+
+                if ts >= cutoff_time:
+                    filtered_signals.append(signal)
+
+        return filtered_signals
 
     def _filter_by_confluence(self, signals: List[Dict]) -> List[Dict]:
         """

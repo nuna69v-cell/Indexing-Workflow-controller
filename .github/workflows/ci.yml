@@ -22,7 +22,13 @@ jobs:
           python-version: '3.13'
 
       - name: Install System Dependencies
-        run: sudo apt-get update && sudo apt-get install -y sqlite3
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y build-essential wget
+          wget https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+          tar -xzf ta-lib-0.4.0-src.tar.gz
+          cd ta-lib && ./configure --prefix=/usr && make && sudo make install
+          cd .. && rm -rf ta-lib ta-lib-0.4.0-src.tar.gz
 
       - name: Install Python Dependencies
         run: |
@@ -37,7 +43,7 @@ jobs:
 
       - name: Run Tests with Coverage
         run: |
-          PYTHONPATH=. pytest --cov=src/ tests/ --cov-report=xml
+          LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH PYTHONPATH=. pytest --cov=src/ tests/ --cov-report=xml
 
       - name: Upload Coverage Report
         uses: codecov/codecov-action@v4

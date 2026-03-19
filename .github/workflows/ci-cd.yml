@@ -58,10 +58,14 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libopenblas-dev
-        if [ -f ta-lib/ta-lib_0.6.4_amd64.deb ]; then
-          sudo dpkg -i ta-lib/ta-lib_0.6.4_amd64.deb || sudo apt-get install -f -y
-          sudo ln -s /usr/lib/libta-lib.so /usr/lib/libta_lib.so || true
-        fi
+        wget https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+        tar -xzvf ta-lib-0.4.0-src.tar.gz
+        cd ta-lib
+        ./configure --prefix=/usr
+        make
+        sudo make install
+        cd ..
+        rm -rf ta-lib ta-lib-0.4.0-src.tar.gz
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip

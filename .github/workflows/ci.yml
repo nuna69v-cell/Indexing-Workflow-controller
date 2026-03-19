@@ -22,7 +22,17 @@ jobs:
           python-version: '3.13'
 
       - name: Install System Dependencies
-        run: sudo apt-get update && sudo apt-get install -y sqlite3
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sqlite3 build-essential libopenblas-dev
+          wget https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+          tar -xzvf ta-lib-0.4.0-src.tar.gz
+          cd ta-lib
+          ./configure --prefix=/usr
+          make
+          sudo make install
+          cd ..
+          rm -rf ta-lib ta-lib-0.4.0-src.tar.gz
 
       - name: Install Python Dependencies
         run: |

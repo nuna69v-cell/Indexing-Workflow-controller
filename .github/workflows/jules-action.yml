@@ -1,0 +1,48 @@
+name: Jules Action Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  run-jules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install
+          pip install -r requirements.txt
+
+      - name: Install Cursor CLI
+        run: |
+          mkdir -p $HOME/.local/bin
+          mkdir -p $HOME/.cursor/agent
+          wget -qO /tmp/agent.tar.gz https://downloads.cursor.com/lab/2026.03.18-f6873f7/linux/x64/agent-cli-package.tar.gz
+          tar -xzf /tmp/agent.tar.gz -C $HOME/.cursor/agent
+          rm /tmp/agent.tar.gz
+          export PATH="$HOME/.cursor/agent:$PATH"
+          ln -s $HOME/.cursor/agent/agent $HOME/.local/bin/agent
+          echo "PATH=$HOME/.local/bin:$PATH" >> $GITHUB_ENV
+
+      - name: Run Jules Headless
+        run: |
+          chmod +x jules.sh
+          ./jules.sh all
+
+      - name: Start WebApp
+        run: |
+          # Example to start the web application
+          python3 main.py &
+          sleep 5
+          curl http://localhost:8000/health

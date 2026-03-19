@@ -1,5 +1,6 @@
-import backtrader as bt
 from typing import Optional
+
+import backtrader as bt
 
 
 class RSIMACDStrategy(bt.Strategy):

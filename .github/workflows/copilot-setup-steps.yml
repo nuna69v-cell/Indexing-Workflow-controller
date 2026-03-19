@@ -25,9 +25,22 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y sqlite3
+          sudo apt-get install -y sqlite3 build-essential wget
+          wget https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+          tar -xzf ta-lib-0.4.0-src.tar.gz
+          cd ta-lib/
+          ./configure --prefix=/usr
+          make
+          sudo make install
+          cd ..
+          rm -rf ta-lib*
 
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          export TA_INCLUDE_PATH=/usr/include
+          export TA_LIBRARY_PATH=/usr/lib
+          export LDFLAGS="-L/usr/lib"
+          pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock backtrader psutil pydantic-settings redis cryptography
+          TA_INCLUDE_PATH=/usr/include TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install TA-Lib

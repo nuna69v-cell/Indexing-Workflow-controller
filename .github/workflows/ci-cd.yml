@@ -65,7 +65,7 @@ jobs:
     - name: Install dependencies
       run: 'python -m pip install --upgrade pip
 
-        pip install -r requirements.txt
+        TA_INCLUDE_PATH=/usr/include/ta-lib TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install -r requirements.txt
 
         export TA_INCLUDE_PATH=/usr/include/ta-lib
         export TA_LIBRARY_PATH=/usr/lib

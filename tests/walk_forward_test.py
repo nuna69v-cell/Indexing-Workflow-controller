@@ -80,7 +80,7 @@ class WalkForwardOptimization(unittest.TestCase):
             test_start = test_set["timestamp"].min().strftime("%Y-%m-%d")
             test_end = test_set["timestamp"].max().strftime("%Y-%m-%d")
 
-            print(f"Split {i+1}:")
+            print(f"Split {i + 1}:")
             print(f"  Train: {train_start} to {train_end} ({len(train_set)} samples)")
             print(f"  Test:  {test_start} to {test_end} ({len(test_set)} samples)")
 

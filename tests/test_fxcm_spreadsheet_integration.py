@@ -278,7 +278,7 @@ class FXCMSpreadsheetIntegrationTest:
                         if i % 2 == 0
                         else price_data["bid"] - 0.010
                     ),
-                    "Comment": f"GenX Signal {i+1}",
+                    "Comment": f"GenX Signal {i + 1}",
                     "Confidence": round(0.75 + (i * 0.05), 2),
                     "RiskReward": "1:2",
                     "Timeframe": "H1",

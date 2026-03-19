@@ -25,6 +25,7 @@ _jwks_cache = {}
 _jwks_cache_time = 0
 JWKS_CACHE_TTL = 3600  # 1 hour
 
+
 def get_okta_jwks():
     """Fetches the JWKS from Okta to verify JWT signatures."""
     global _jwks_cache, _jwks_cache_time
@@ -40,7 +41,7 @@ def get_okta_jwks():
         # The standard Okta default authorization server JWKS endpoint
         # E.g. https://{yourOktaDomain}/oauth2/default/v1/keys
         jwks_url = f"https://{settings.OKTA_DOMAIN}/oauth2/default/v1/keys"
-        req = Request(jwks_url, headers={'User-Agent': 'Mozilla/5.0'})
+        req = Request(jwks_url, headers={"User-Agent": "Mozilla/5.0"})
         with urlopen(req, timeout=10) as response:
             jwks_data = json.loads(response.read().decode())
             _jwks_cache = jwks_data
@@ -50,7 +51,10 @@ def get_okta_jwks():
         logger.error(f"Failed to fetch Okta JWKS: {e}")
         return None
 
-def get_okta_user(credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)) -> dict:
+
+def get_okta_user(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
+) -> dict:
     """
     FastAPI dependency to verify an Okta access token and extract the user/agent context.
 
@@ -62,14 +66,14 @@ def get_okta_user(credentials: Optional[HTTPAuthorizationCredentials] = Depends(
         return {
             "sub": "local_dev_agent",
             "agent_id": "test_agent_1",
-            "roles": ["ai_agent_read", "ai_agent_write"]
+            "roles": ["ai_agent_read", "ai_agent_write"],
         }
 
     if not settings.OKTA_DOMAIN:
-         raise HTTPException(
-             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-             detail="Okta authentication is required but OKTA_DOMAIN is not configured."
-         )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Okta authentication is required but OKTA_DOMAIN is not configured.",
+        )
 
     if not credentials:
         raise HTTPException(
@@ -81,7 +85,7 @@ def get_okta_user(credentials: Optional[HTTPAuthorizationCredentials] = Depends(
     if jwt is None:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="JWT library not installed. Cannot verify Okta tokens."
+            detail="JWT library not installed. Cannot verify Okta tokens.",
         )
 
     token = credentials.credentials
@@ -90,7 +94,7 @@ def get_okta_user(credentials: Optional[HTTPAuthorizationCredentials] = Depends(
     if not jwks:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve Okta public keys."
+            detail="Failed to retrieve Okta public keys.",
         )
 
     try:
@@ -104,7 +108,7 @@ def get_okta_user(credentials: Optional[HTTPAuthorizationCredentials] = Depends(
                     "kid": key["kid"],
                     "use": key["use"],
                     "n": key["n"],
-                    "e": key["e"]
+                    "e": key["e"],
                 }
                 break
 
@@ -121,7 +125,7 @@ def get_okta_user(credentials: Optional[HTTPAuthorizationCredentials] = Depends(
             rsa_key,
             algorithms=["RS256"],
             audience=settings.OKTA_AUDIENCE,
-            issuer=f"https://{settings.OKTA_DOMAIN}/oauth2/default"
+            issuer=f"https://{settings.OKTA_DOMAIN}/oauth2/default",
         )
 
         return payload
@@ -137,5 +141,5 @@ def get_okta_user(credentials: Optional[HTTPAuthorizationCredentials] = Depends(
         logger.error(f"Unexpected error validating Okta token: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal server error during authentication."
+            detail="Internal server error during authentication.",
         )

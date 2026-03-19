@@ -49,10 +49,12 @@ async def test_get_model_metrics_cache_hit():
 @pytest.mark.asyncio
 async def test_get_model_metrics_lock_acquired():
     """Test Case 2: Lock acquisition success"""
-    with patch(
-        "api.routers.predictions.redis_client", new_callable=AsyncMock
-    ) as mock_redis, patch("api.routers.predictions.ml_service") as mock_ml_service:
-
+    with (
+        patch(
+            "api.routers.predictions.redis_client", new_callable=AsyncMock
+        ) as mock_redis,
+        patch("api.routers.predictions.ml_service") as mock_ml_service,
+    ):
         # 1. Cache miss
         # 2. Lock acquire success
         # 3. Double check cache miss
@@ -92,7 +94,6 @@ async def test_get_model_metrics_lock_contention_immediate_success():
     with patch(
         "api.routers.predictions.redis_client", new_callable=AsyncMock
     ) as mock_redis:
-
         # 1. Cache miss
         # 2. Lock acquire fail
         # 3. Wait (handled by code)
@@ -127,14 +128,13 @@ async def test_get_model_metrics_retry_loop():
     Test Case 4: Lock contention with delayed cache population.
     This test verifies that the code retries multiple times.
     """
-    with patch(
-        "api.routers.predictions.redis_client", new_callable=AsyncMock
-    ) as mock_redis, patch(
-        "api.routers.predictions.ml_service"
-    ) as mock_ml_service, patch(
-        "asyncio.sleep", new_callable=AsyncMock
-    ) as mock_sleep:
-
+    with (
+        patch(
+            "api.routers.predictions.redis_client", new_callable=AsyncMock
+        ) as mock_redis,
+        patch("api.routers.predictions.ml_service") as mock_ml_service,
+        patch("asyncio.sleep", new_callable=AsyncMock) as mock_sleep,
+    ):
         # Scenario: Cache appears only on the 3rd check.
         # Loop 1: Check (Miss), Lock (Fail), Sleep
         # Loop 2: Check (Miss), Lock (Fail), Sleep

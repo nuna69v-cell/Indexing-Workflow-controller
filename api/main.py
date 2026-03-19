@@ -419,7 +419,12 @@ def _create_prediction_dataframe(historical_data: list) -> pd.DataFrame:
 
 
 @app.post("/api/v1/predictions")
-async def get_predictions(request: Request, _agent_auth: dict = Depends(AgentSecurity.require_roles(["ai_agent_read", "ai_user"]))):
+async def get_predictions(
+    request: Request,
+    _agent_auth: dict = Depends(
+        AgentSecurity.require_roles(["ai_agent_read", "ai_user"])
+    ),
+):
     """
     Endpoint to get trading predictions.
 
@@ -488,7 +493,12 @@ async def get_predictions(request: Request, _agent_auth: dict = Depends(AgentSec
 
 
 @app.post("/api/v1/scalping/signals")
-async def get_scalping_signals(request: Request, _agent_auth: dict = Depends(AgentSecurity.require_roles(["ai_agent_execute_scalp"]))):
+async def get_scalping_signals(
+    request: Request,
+    _agent_auth: dict = Depends(
+        AgentSecurity.require_roles(["ai_agent_execute_scalp"])
+    ),
+):
     """
     Endpoint to get scalping signals for 5m, 15m, and 30m timeframes.
 

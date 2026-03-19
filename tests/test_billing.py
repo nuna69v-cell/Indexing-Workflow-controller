@@ -58,9 +58,9 @@ def test_add_payment_method_success(db_override):
         "cvc": "123",
     }
     response = client.post("/api/v1/billing", json=valid_data)
-    assert (
-        response.status_code == 200
-    ), f"Expected 200, got {response.status_code} with body: {response.text}"
+    assert response.status_code == 200, (
+        f"Expected 200, got {response.status_code} with body: {response.text}"
+    )
     response_json = response.json()
     assert response_json["status"] == "success"
 
@@ -112,6 +112,6 @@ def test_add_payment_method_invalid_data(db_override):
 
     for payload, description in invalid_payloads:
         response = client.post("/api/v1/billing", json=payload)
-        assert (
-            response.status_code == 422
-        ), f"Failed on payload: {description}. Got {response.status_code} with body: {response.text}"
+        assert response.status_code == 422, (
+            f"Failed on payload: {description}. Got {response.status_code} with body: {response.text}"
+        )

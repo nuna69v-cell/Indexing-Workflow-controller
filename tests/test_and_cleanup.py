@@ -303,7 +303,7 @@ class SystemTester:
         report_path = (
             self.project_root
             / "logs"
-            / f'test_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
+            / f"test_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
         )
         report_path.parent.mkdir(exist_ok=True)
 

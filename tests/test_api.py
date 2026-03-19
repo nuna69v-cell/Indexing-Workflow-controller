@@ -1,3 +1,5 @@
+from unittest.mock import AsyncMock
+
 import json
 import os
 import sqlite3
@@ -168,7 +170,7 @@ def test_v2_users_pagination():
     for i in range(20):
         cursor.execute(
             "INSERT INTO users (username, email, is_active) VALUES (?, ?, ?)",
-            (f"user{i+1}", f"user{i+1}@test.com", 1),
+            (f"user{i + 1}", f"user{i + 1}@test.com", 1),
         )
     conn.commit()
 
@@ -203,7 +205,6 @@ def test_v2_users_pagination():
     conn.close()
 
 
-from unittest.mock import AsyncMock
 
 
 @pytest.mark.asyncio

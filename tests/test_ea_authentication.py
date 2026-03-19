@@ -13,7 +13,7 @@ import pytest
 try:
     from fastapi.testclient import TestClient
 
-    from api.config import settings
+
     from api.main import app
     from api.routers.ea_http import ea_connections, pending_signals, trade_results
 
@@ -330,10 +330,10 @@ class TestMultipleAPIKeys:
     def test_multiple_keys_config(self):
         """Test that multiple keys can be configured"""
         # Patch keys directly
-        with patch("api.config.settings.EA_API_KEYS", "key1,key2,key3"), patch(
-            "api.config.settings.EA_API_KEY", None
+        with (
+            patch("api.config.settings.EA_API_KEYS", "key1,key2,key3"),
+            patch("api.config.settings.EA_API_KEY", None),
         ):
-
             from api.utils.ea_auth import get_valid_ea_api_keys
 
             valid_keys = get_valid_ea_api_keys()
@@ -345,10 +345,10 @@ class TestMultipleAPIKeys:
 
     def test_keys_with_whitespace(self):
         """Test that keys with whitespace are handled correctly"""
-        with patch("api.config.settings.EA_API_KEYS", "key1, key2 , key3"), patch(
-            "api.config.settings.EA_API_KEY", None
+        with (
+            patch("api.config.settings.EA_API_KEYS", "key1, key2 , key3"),
+            patch("api.config.settings.EA_API_KEY", None),
         ):
-
             from api.utils.ea_auth import get_valid_ea_api_keys
 
             valid_keys = get_valid_ea_api_keys()

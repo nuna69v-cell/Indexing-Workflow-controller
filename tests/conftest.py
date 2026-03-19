@@ -11,9 +11,12 @@ os.environ["SECRET_KEY"] = "test_secret_key"
 os.environ["JWT_SECRET"] = "test_jwt_secret"
 
 try:
-    import talib
+    import talib  # noqa: F401
 except ImportError:
-    sys.modules["talib"] = MagicMock()
+    mock_talib = MagicMock()
+    mock_talib.abstract = MagicMock()
+    sys.modules["talib"] = mock_talib
+    sys.modules["talib.abstract"] = mock_talib.abstract
 
 
 @pytest.fixture(autouse=True)

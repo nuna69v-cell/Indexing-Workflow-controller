@@ -24,3 +24,6 @@ psutil==7.0.0
 python-jose
 backtrader
 backtrader
+pytest-asyncio
+pytest-mock
+httpx

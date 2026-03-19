@@ -72,5 +72,11 @@
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
     "vitest": "^1.6.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "tar": ">=7.5.3",
+      "@tootallnate/once": ">=3.0.1"
+    }
   }
 }

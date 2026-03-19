@@ -4,6 +4,7 @@ import sqlite3
 from unittest.mock import MagicMock, patch
 
 import pytest
+from unittest.mock import AsyncMock
 
 # Skip tests if FastAPI is not available
 try:
@@ -201,9 +202,6 @@ def test_v2_users_pagination():
     # Clean up the dependency override
     app.dependency_overrides.clear()
     conn.close()
-
-
-from unittest.mock import AsyncMock
 
 
 @pytest.mark.asyncio

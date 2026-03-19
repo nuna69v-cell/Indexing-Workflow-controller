@@ -119,7 +119,7 @@ def deploy_workspace(
     print("\nWorkspace deployment setup complete!")
     print(f"Private Key Path: {private_key_path}")
     print(f"Environment: {env_name}")
-    print(f"Secret Name: SSH_DEPLOY_KEY (contains the private key)")
+    print("Secret Name: SSH_DEPLOY_KEY (contains the private key)")
 
 
 if __name__ == "__main__":

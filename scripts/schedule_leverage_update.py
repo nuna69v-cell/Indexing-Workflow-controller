@@ -47,7 +47,7 @@ async def schedule_leverage_update():
     if time_to_wait > 0:
         # In a real system, you might not want to sleep for years, but instead
         # run a cron job that checks the current date. For demonstration purposes:
-        print(f"(Simulation) Sleeping until 5 minutes before the update...")
+        print("(Simulation) Sleeping until 5 minutes before the update...")
         # await asyncio.sleep(time_to_wait) # We won't actually sleep here to avoid hanging the script indefinitely.
 
     print(f"\n--- Fast forwarding to {pre_update_time} ---")

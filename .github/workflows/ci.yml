@@ -27,11 +27,15 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y sqlite3 libopenblas-dev
-          if [ -f ta-lib/ta-lib_0.6.4_amd64.deb ]; then
-            sudo dpkg -i ta-lib/ta-lib_0.6.4_amd64.deb || sudo apt-get install -f -y
-            sudo ln -s /usr/lib/libta-lib.so /usr/lib/libta_lib.so || true
-          fi
+          sudo apt-get install -y sqlite3 libopenblas-dev wget build-essential
+          wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+          tar -xzf ta-lib-0.4.0-src.tar.gz
+          cd ta-lib
+          ./configure --prefix=/usr
+          make
+          sudo make install
+          cd ..
+          rm -rf ta-lib ta-lib-0.4.0-src.tar.gz
 
       - name: Install Python Dependencies
         run: |

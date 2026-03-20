@@ -36,4 +36,4 @@ jobs:
           python -m pip install --upgrade pip
           pip install "numpy<2.0.0"
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          TA_INCLUDE_PATH=/usr/include/ta-lib TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install TA-Lib
+          TA_INCLUDE_PATH=/usr/include TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install TA-Lib

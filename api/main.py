@@ -179,8 +179,8 @@ ROOT_RESPONSE = {
 }
 
 MT5_INFO_RESPONSE = {
-    "login": "411534497",
-    "server": "Exness-MT5Real8",
+    "login": "169926536",
+    "server": "Exness-MT5Real24",
     "status": "configured",
     "account_type": "real",
     "broker": "Exness",
@@ -688,7 +688,7 @@ async def get_users(
 async def get_mt5_info():
     """
     Provides information about the MT5 connection.
-    Updated for account 411534497 on Exness-MT5Real8.
+    Updated for account 169926536 on Exness-MT5Real24.
 
     Returns:
         dict: A dictionary with MT5 login and server details.

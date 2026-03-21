@@ -3,14 +3,14 @@
 **Setup Date**: 2026-02-04
 **Account**: [ACCOUNT_NUMBER]
 **Owner**: Kea MOUYLENG
-**Server**: Exness-MT5Real8
+**Server**: Exness-MT5Real24
 **Type**: REAL ACCOUNT
 
 ## ✅ Cleanup & Setup Status
 
 ### Account Status
 - **Account Number**: [ACCOUNT_NUMBER]
-- **Server**: Exness-MT5Real8
+- **Server**: Exness-MT5Real24
 - **Account Type**: REAL (Hedge)
 - **Current Balance**: [BALANCE] USD
 - **Network Status**: ✅ Scanned (2026.02.04 07:55:00)
@@ -76,7 +76,7 @@ RR: 2.0
 ## 🎯 Account Verification Checklist
 
 - [x] Account number: [ACCOUNT_NUMBER]
-- [x] Server: Exness-MT5Real8
+- [x] Server: Exness-MT5Real24
 - [x] Account type: REAL
 - [x] Balance: [BALANCE] USD
 - [x] VPS connected: Singapore 09

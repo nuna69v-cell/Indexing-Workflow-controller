@@ -6,7 +6,7 @@
 **Status**: ✅ Connected and Launched
 **Location**: Singapore 09
 **Host ID**: 6773048
-**Account**: 411534497 (Exness-MT5Real8)
+**Account**: 169926536 (Exness-MT5Real24)
 **Owner**: Kea MOUYLENG
 
 ## What is VPS for MT5?
@@ -147,9 +147,9 @@ Your EA is now deployed to:
 
 ## Current Configuration
 
-- **Account**: 411534497
+- **Account**: 169926536
 - **Owner**: Kea MOUYLENG
-- **Server**: Exness-MT5Real8
+- **Server**: Exness-MT5Real24
 - **VPS Location**: Singapore 09
 - **VPS Host ID**: 6773048
 - **Status**: ✅ Connected and Active

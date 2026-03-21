@@ -1,3 +1,4 @@
+---
 version: 2
 updates:
   # Python dependencies
@@ -70,6 +71,25 @@ updates:
   # npm dependencies (if any)
   - package-ecosystem: "npm"
     directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "A6-9V"
+    assignees:
+      - "A6-9V"
+    commit-message:
+      prefix: "npm"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "javascript"
+
+  # Chrome DevTools MCP npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/external/chrome-devtools-mcp"
     schedule:
       interval: "weekly"
       day: "monday"

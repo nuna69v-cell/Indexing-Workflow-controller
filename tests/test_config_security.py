@@ -61,7 +61,7 @@ def test_development_settings_allowed_defaults():
 def test_base_settings_allowed_defaults():
     """Test that base Settings allows default values (as it might be used for testing/dev)."""
     try:
-        settings = Settings()
+        Settings()
     except ValueError:
         pytest.fail("Base Settings raised ValueError unexpectedly")
 

@@ -51,3 +51,4 @@ data/
 /tmp/jules_tmp/
 .jules/*.log
 .jules/cache/
+node_modules/

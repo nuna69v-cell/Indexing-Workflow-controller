@@ -7,6 +7,7 @@ on:
   workflow_dispatch:
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   BUCKET_NAME: genx-fx-static-9319
   DISTRIBUTION_ID: E3SP3XU9YMK917
   CLOUDFRONT_URL: https://dfdc34s1qr7cw.cloudfront.net

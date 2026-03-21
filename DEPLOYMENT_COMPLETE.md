@@ -4,8 +4,8 @@
 
 ## Account Information
 
-- **Account**: 411534497
-- **Server**: Exness-MT5Real8
+- **Account**: 169926536
+- **Server**: Exness-MT5Real24
 - **Type**: REAL ACCOUNT
 
 ## ✅ Completed Steps
@@ -33,9 +33,9 @@ Or run: `.\scripts\deploy_exness_live.ps1`
 
 1. In MT5, click **File → Login to Trade Account**
 2. Enter:
-   - **Login**: 411534497
+   - **Login**: 169926536
    - **Password**: [Your Password]
-   - **Server**: Exness-MT5Real8
+   - **Server**: Exness-MT5Real24
 3. Click **Login**
 4. Verify account shows "Real" account type
 
@@ -91,7 +91,7 @@ LowerTF: M5 (if main chart is M15)
 
 - [ ] Files deployed to MT5
 - [ ] Files compiled successfully (no errors)
-- [ ] Logged in to REAL account (411534497)
+- [ ] Logged in to REAL account (169926536)
 - [ ] EA visible in Navigator
 - [ ] EA attached to chart
 - [ ] Risk parameters set conservatively (RiskPercent ≤ 2%)

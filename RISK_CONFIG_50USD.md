@@ -1,7 +1,7 @@
 # Risk Configuration Guide - $50 Account
 
 **Account Balance**: $50.00
-**Account**: 411534497 (Exness-MT5Real8)
+**Account**: 169926536 (Exness-MT5Real24)
 **Type**: REAL ACCOUNT
 
 ## ⚠️ CRITICAL WARNINGS

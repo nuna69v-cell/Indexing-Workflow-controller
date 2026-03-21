@@ -54,16 +54,30 @@ install_github_cli() {
         # Linux
         if command_exists apt-get; then
             # Ubuntu/Debian
-            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-            sudo apt-get update
-            sudo apt-get install gh -y
+            (type -p wget >/dev/null || (sudo apt-get update && sudo apt-get install wget -y)) \
+            && sudo mkdir -p -m 755 /etc/apt/keyrings \
+            && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+            && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+            && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+            && sudo mkdir -p -m 755 /etc/apt/sources.list.d \
+            && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+            && sudo apt-get update \
+            && sudo apt-get install gh -y
         elif command_exists yum; then
-            # CentOS/RHEL
+            # CentOS/RHEL/Amazon Linux
+            type -p yum-config-manager >/dev/null || sudo yum install yum-utils -y
+            sudo yum-config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
             sudo yum install gh -y
         elif command_exists dnf; then
             # Fedora
-            sudo dnf install gh -y
+            sudo dnf install 'dnf-command(config-manager)' -y
+            sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+            sudo dnf install gh --repo gh-cli -y
+        elif command_exists zypper; then
+            # openSUSE/SUSE
+            sudo zypper addrepo https://cli.github.com/packages/rpm/gh-cli.repo
+            sudo zypper ref
+            sudo zypper install gh -y
         else
             print_error "Unsupported Linux distribution"
             return 1

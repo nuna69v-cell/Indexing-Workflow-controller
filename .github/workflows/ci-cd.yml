@@ -12,6 +12,7 @@ name: GenX FX CI/CD Pipeline
 env:
   PYTHON_VERSION: '3.13'
   NODE_VERSION: '18'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   DOCKER_REGISTRY: ghcr.io
   IMAGE_NAME: genx-fx
 jobs:
@@ -65,11 +66,14 @@ jobs:
     - name: Install dependencies
       run: 'python -m pip install --upgrade pip
 
+        pip install "numpy<2.0.0"
+        TA_INCLUDE_PATH=/usr/include/ta-lib TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install TA-Lib==0.4.32
         pip install -r requirements.txt
 
-        export TA_INCLUDE_PATH=/usr/include/ta-lib
-        export TA_LIBRARY_PATH=/usr/lib
-        export LDFLAGS="-L/usr/lib"
+        pip install "numpy<2.0.0"
+        TA_INCLUDE_PATH=/usr/include/ta-lib TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install TA-Lib==0.4.32
+
+
         pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock
 
         '

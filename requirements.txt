@@ -17,3 +17,24 @@ schedule>=1.1.0
 # AI & Data
 google-generativeai>=0.3.0
 yfinance>=0.2.0
+
+# Additional dependencies for tests and core functionalities
+numpy<2.0.0
+pandas
+pytest
+pytest-asyncio
+pytest-mock
+pytest-cov
+fastapi
+pydantic
+pydantic-settings
+joblib
+scikit-learn
+backtrader
+psutil
+supabase
+praw
+aiohttp
+cryptography
+httpx
+redis

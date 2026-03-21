@@ -1,0 +1,52 @@
+{
+  "plugin_name": "Qodo",
+  "provider": "qodo_ai",
+  "api_key_env": "QODO_API_KEY",
+  "features": {
+    "test_generation": true,
+    "code_analysis": true,
+    "bug_detection": true,
+    "documentation": true,
+    "code_review": true
+  },
+  "test_generation": {
+    "framework": "auto-detect",
+    "coverage_threshold": 80,
+    "generate_edge_cases": true,
+    "include_mocks": true,
+    "test_file_suffix": ".test"
+  },
+  "code_analysis": {
+    "check_complexity": true,
+    "check_security": true,
+    "check_performance": true,
+    "check_maintainability": true,
+    "max_complexity": 10
+  },
+  "supported_languages": [
+    "python",
+    "javascript",
+    "typescript",
+    "powershell",
+    "java",
+    "go",
+    "csharp",
+    "ruby",
+    "php"
+  ],
+  "ide_integration": {
+    "vscode": true,
+    "cursor": true,
+    "jetbrains": true
+  },
+  "project_specific": {
+    "powershell": {
+      "test_framework": "pester",
+      "linter": "PSScriptAnalyzer"
+    },
+    "python": {
+      "test_framework": "pytest",
+      "coverage_target": 80
+    }
+  }
+}

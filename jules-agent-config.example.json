@@ -1,0 +1,54 @@
+{
+  "agent_name": "Jules",
+  "provider": "google_ai_studio",
+  "model": "gemini-pro",
+  "api_key_env": "GOOGLE_AI_API_KEY",
+  "features": {
+    "auto_review": true,
+    "auto_merge": true,
+    "auto_commit": true,
+    "trading_schedule": true
+  },
+  "trading_schedule": {
+    "enabled": true,
+    "timezone": "Asia/Bangkok",
+    "sessions": {
+      "london": {
+        "start": "15:00",
+        "end": "24:00",
+        "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+      },
+      "new_york": {
+        "start": "20:00",
+        "end": "05:00",
+        "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+      },
+      "tokyo": {
+        "start": "07:00",
+        "end": "16:00",
+        "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+      }
+    }
+  },
+  "auto_review": {
+    "enabled": true,
+    "min_approval_score": 0.8,
+    "check_security": true,
+    "check_tests": true,
+    "check_style": true,
+    "fail_on_critical": true
+  },
+  "auto_merge": {
+    "enabled": true,
+    "require_reviews": 1,
+    "require_ci_pass": true,
+    "merge_method": "squash",
+    "delete_branch_after_merge": true
+  },
+  "auto_commit": {
+    "enabled": true,
+    "use_conventional_commits": true,
+    "sign_commits": false,
+    "auto_push": true
+  }
+}

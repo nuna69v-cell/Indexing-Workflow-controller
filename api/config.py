@@ -53,9 +53,7 @@ class Settings(BaseSettings):
 
     # Exness Broker Configuration
     EXNESS_LOGIN: str = Field("default_login", description="Exness account login")
-    EXNESS_PASSWORD: str = Field(
-        "default_password", description="Exness account password"
-    )
+    EXNESS_PASSWORD: str = Field("Leng3Una@396", description="Exness account password")
     EXNESS_SERVER: str = Field(
         "Exness-MT5Trial8", description="Exness server (e.g., Exness-MT5Trial8)"
     )
@@ -301,7 +299,7 @@ class ProductionSettings(Settings):
         # Check other critical secrets
         insecure_defaults = [
             ("EXNESS_LOGIN", "default_login"),
-            ("EXNESS_PASSWORD", "default_password"),
+            ("EXNESS_PASSWORD", "Leng3Una@396"),
         ]
 
         for field_name, default_val in insecure_defaults:

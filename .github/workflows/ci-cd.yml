@@ -58,8 +58,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libopenblas-dev
-        if [ -f ta-lib/ta-lib_0.6.4_amd64.deb ]; then
-          sudo dpkg -i ta-lib/ta-lib_0.6.4_amd64.deb || sudo apt-get install -f -y
+        if [ -f ta-lib-binaries/ta-lib_0.6.4_amd64.deb ]; then
+          sudo dpkg -i ta-lib-binaries/ta-lib_0.6.4_amd64.deb || sudo apt-get install -f -y
           sudo ln -s /usr/lib/libta-lib.so /usr/lib/libta_lib.so || true
         fi
     - name: Install dependencies
@@ -67,7 +67,7 @@ jobs:
 
         pip install -r requirements.txt
 
-        export TA_INCLUDE_PATH=/usr/include/ta-lib
+        export TA_INCLUDE_PATH=/usr/include
         export TA_LIBRARY_PATH=/usr/lib
         export LDFLAGS="-L/usr/lib"
         pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock

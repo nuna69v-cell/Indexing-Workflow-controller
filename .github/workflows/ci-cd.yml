@@ -46,11 +46,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Cache pip dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -64,19 +64,12 @@ jobs:
           sudo ln -s /usr/lib/libta-lib.so /usr/lib/libta_lib.so || true
         fi
     - name: Install dependencies
-      run: 'python -m pip install --upgrade pip
-
+      run: |
+        python -m pip install --upgrade pip
         pip install "numpy<2.0.0"
-        TA_INCLUDE_PATH=/usr/include/ta-lib TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install TA-Lib==0.4.32
+        TA_INCLUDE_PATH=/usr/include TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install TA-Lib==0.4.32
         pip install -r requirements.txt
-
-        pip install "numpy<2.0.0"
-        TA_INCLUDE_PATH=/usr/include/ta-lib TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install TA-Lib==0.4.32
-
-
         pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock
-
-        '
     - name: Run tests with coverage
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -86,7 +79,7 @@ jobs:
 
         '
     - name: Upload coverage reports
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         file: ./coverage.xml
         flags: unittests
@@ -98,7 +91,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ env.PYTHON_VERSION }}
     - name: Install linting tools

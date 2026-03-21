@@ -1,6 +1,4 @@
-# Dockerfile for EXNESS Terminal Support Services
-# This container runs supporting services that connect to the native MT5 installation
-
+# Dockerfile for MQL5 Trading Automation System
 FROM python:3.11-slim
 
 # Set working directory
@@ -8,28 +6,29 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    make \
+    git \
+    bash \
     curl \
-    wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy and install Python dependencies
-COPY docker/trading-bridge/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy requirements
+COPY requirements.txt .
 
-# Copy bridge service
-COPY bridge/ ./bridge/
-COPY config/ ./config/
+# Install Python dependencies (if any)
+RUN pip install --no-cache-dir -r requirements.txt || echo "No requirements to install"
 
-# Expose ports
-EXPOSE 5555 8000
+# Copy application files
+COPY . .
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+# Create logs directory
+RUN mkdir -p logs
 
-# Start the bridge service
-CMD ["python", "-m", "bridge.main"]
+# Make scripts executable
+RUN chmod +x scripts/*.py scripts/*.sh 2>/dev/null || true
 
+# Set Python path
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+
+# Default command - run startup orchestrator
+CMD ["python", "scripts/startup_orchestrator.py", "--monitor", "0"]

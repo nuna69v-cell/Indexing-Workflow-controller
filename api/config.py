@@ -59,7 +59,7 @@ class Settings(BaseSettings):
     EXNESS_SERVER: str = Field(
         "Exness-MT5Trial8", description="Exness server (e.g., Exness-MT5Trial8)"
     )
-    EXNESS_ACCOUNT_TYPE: Literal["demo", "live"] = "demo"
+    EXNESS_ACCOUNT_TYPE: Literal["demo", "live"] = "live"
     EXNESS_TERMINAL: Literal["MT4", "MT5"] = "MT5"
 
     # Trading Configuration
@@ -106,7 +106,7 @@ class Settings(BaseSettings):
     FXCM_API_KEY: Optional[str] = None
     FXCM_ACCESS_TOKEN: Optional[str] = None
     FXCM_ACCOUNT_ID: Optional[str] = None
-    FXCM_ENVIRONMENT: str = "demo"
+    FXCM_ENVIRONMENT: str = "real"
 
     # News Services
     NEWSDATA_API_KEY: Optional[str] = None

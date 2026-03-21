@@ -8,7 +8,6 @@ const __dirname = path.dirname(__filename)
 
 export default defineConfig({
   plugins: [react()],
-  base: '/Indexing-Workflow-controller/',
   root: 'client',
   build: {
     outDir: 'dist'

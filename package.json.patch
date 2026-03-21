@@ -1,0 +1,11 @@
+<<<<<<< SEARCH
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+=======
+  "overrides": {
+    "tar": ">=7.5.11",
+    "@tootallnate/once": ">=3.0.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+>>>>>>> REPLACE

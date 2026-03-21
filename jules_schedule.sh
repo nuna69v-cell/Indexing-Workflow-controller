@@ -19,3 +19,7 @@ echo "Starting trading system operation (Go live)..."
 python3 genx_unified_cli.py execute-job monitor --background
 
 echo "Jules schedule operations completed successfully."
+
+# Keep the process continuously running in cloud environments
+echo "running OS by 'Jules' program that allowe agent continuously running in Cloud and sandbox network"
+while true; do sleep 3600; done

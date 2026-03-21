@@ -11,7 +11,7 @@ os.environ["SECRET_KEY"] = "test_secret_key"
 os.environ["JWT_SECRET"] = "test_jwt_secret"
 
 try:
-    import talib
+    import talib  # noqa: F401  # noqa: F401
 except ImportError:
     sys.modules["talib"] = MagicMock()
 

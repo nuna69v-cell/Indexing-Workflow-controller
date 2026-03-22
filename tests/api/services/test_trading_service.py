@@ -1,4 +1,3 @@
-
 import pytest
 
 from api.models.schemas import SignalType

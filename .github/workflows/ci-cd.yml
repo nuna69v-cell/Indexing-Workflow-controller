@@ -73,7 +73,9 @@ jobs:
 
         pip install -r requirements.txt
 
-        TA_INCLUDE_PATH=/usr/include TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock
+        pip install fastapi pydantic-settings joblib psutil
+
+        TA_INCLUDE_PATH=/usr/include TA_LIBRARY_PATH=/usr/lib LDFLAGS="-L/usr/lib" pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock backtrader aiohttp cryptography
 
         '
     - name: Run tests with coverage

@@ -63,24 +63,20 @@ jobs:
           sudo ln -s /usr/lib/libta-lib.so /usr/lib/libta_lib.so || true
         fi
     - name: Install dependencies
-      run: 'python -m pip install --upgrade pip
-
+      run: |
+        python -m pip install --upgrade pip
         pip install -r requirements.txt
-
         export TA_INCLUDE_PATH=/usr/include/ta-lib
         export TA_LIBRARY_PATH=/usr/lib
         export LDFLAGS="-L/usr/lib"
         pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock
-
-        '
     - name: Run tests with coverage
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         BYBIT_API_KEY: ${{ secrets.BYBIT_API_KEY }}
         FXCM_API_TOKEN: ${{ secrets.FXCM_API_TOKEN }}
-      run: 'python -m pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
-
-        '
+      run: |
+        python -m pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
     - name: Upload coverage reports
       uses: codecov/codecov-action@v3
       with:
@@ -98,15 +94,15 @@ jobs:
       with:
         python-version: ${{ env.PYTHON_VERSION }}
     - name: Install linting tools
-      run: 'pip install black flake8 isort bandit safety mypy
-
-        '
+      run: |
+        pip install black flake8 isort bandit safety mypy
     - name: Run Black formatter check
       run: black --check --diff . --exclude="forexconnect_env_37|venv|.venv|node_modules"
     - name: Run Flake8 linter
       run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=forexconnect_env_37,venv,.venv,node_modules
     - name: Run import sorting check
-      run: isort --check-only --diff --profile black --skip forexconnect_env_37 --skip venv --skip .venv --skip node_modules .
+      run: isort --check-only --diff --profile black --skip forexconnect_env_37 --skip
+        venv --skip .venv --skip node_modules .
     - name: Run Bandit security linter
       run: bandit -c .bandit.yml -r . -ll
     - name: Run Safety security check
@@ -118,7 +114,8 @@ jobs:
     - security-scan
     - test
     - lint
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref
+      == 'refs/heads/develop')
     outputs:
       image-tag: ${{ steps.meta.outputs.tags }}
       image-digest: ${{ steps.build.outputs.digest }}
@@ -137,7 +134,8 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+        images: ${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME
+          }}
         tags: 'type=ref,event=branch
 
           type=ref,event=pr
@@ -171,8 +169,8 @@ jobs:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         REDIS_URL: ${{ secrets.REDIS_URL }}
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      run: "echo '\U0001F680 Deploying to staging environment'\necho 'Image: ${{ needs.build.outputs.image-tag }}'\necho 'Environment:\
-        \ staging'\n"
+      run: "echo '\U0001F680 Deploying to staging environment'\necho 'Image: ${{ needs.build.outputs.image-tag\
+        \ }}'\necho 'Environment: staging'\n"
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
@@ -188,11 +186,12 @@ jobs:
         BYBIT_API_KEY: ${{ secrets.BYBIT_API_KEY }}
         BYBIT_API_SECRET: ${{ secrets.BYBIT_API_SECRET }}
         FXCM_API_TOKEN: ${{ secrets.FXCM_API_TOKEN }}
-      run: "echo '\U0001F680 Deploying to production environment'\necho 'Image: ${{ needs.build.outputs.image-tag }}'\necho\
-        \ 'Environment: production'\necho '\u2705 Production deployment completed'\n"
+      run: "echo '\U0001F680 Deploying to production environment'\necho 'Image: ${{\
+        \ needs.build.outputs.image-tag }}'\necho 'Environment: production'\necho\
+        \ '\u2705 Production deployment completed'\n"
     - name: Health check
-      run: "echo '\U0001F3E5 Running health checks...'\necho '\u2705 All services healthy'\n"
-  
+      run: "echo '\U0001F3E5 Running health checks...'\necho '\u2705 All services\
+        \ healthy'\n"
   cleanup-old-images:
     name: Cleanup Old Docker Images
     runs-on: ubuntu-latest
@@ -209,4 +208,4 @@ jobs:
         package-type: container
         min-versions-to-keep: 10
         delete-only-untagged-versions: false
-        ignore-versions: '^(latest|main|develop)$'
+        ignore-versions: ^(latest|main|develop)$

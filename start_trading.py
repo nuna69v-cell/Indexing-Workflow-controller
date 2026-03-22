@@ -10,11 +10,13 @@ import subprocess
 import time
 import sys
 
+
 def setup_directories():
     print("🚀 Starting GenX FX Trading System...")
     os.makedirs("logs", exist_ok=True)
     os.makedirs("backups", exist_ok=True)
     os.makedirs("signal_output", exist_ok=True)
+
 
 def start_web_server():
     print("🌐 Starting web server for signal distribution...")
@@ -22,16 +24,24 @@ def start_web_server():
         # Start web server in background
         with open("logs/web_server.log", "w") as log_file:
             process = subprocess.Popen(
-                [sys.executable, "-m", "http.server", "8080", "--directory", "signal_output"],
+                [
+                    sys.executable,
+                    "-m",
+                    "http.server",
+                    "8080",
+                    "--directory",
+                    "signal_output",
+                ],
                 stdout=log_file,
                 stderr=log_file,
-                start_new_session=True # Detach from parent
+                start_new_session=True,  # Detach from parent
             )
             with open("logs/web_server.pid", "w") as pid_file:
                 pid_file.write(str(process.pid))
             print(f"Web server started (PID: {process.pid})")
     except Exception as e:
         print(f"Error starting web server: {e}")
+
 
 def start_signal_generation():
     print("📊 Starting automatic signal generation...")
@@ -59,7 +69,7 @@ done
                 ["./signal_loop.sh"],
                 stdout=log_file,
                 stderr=log_file,
-                start_new_session=True # Detach from parent
+                start_new_session=True,  # Detach from parent
             )
 
             with open("logs/signal_loop.pid", "w") as pid_file:
@@ -68,6 +78,7 @@ done
 
     except Exception as e:
         print(f"Error starting signal generation: {e}")
+
 
 if __name__ == "__main__":
     # In python we can activate virtual env by simply doing this if we want to run script inside it,

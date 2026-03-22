@@ -10,6 +10,7 @@ name: GenX FX CI/CD Pipeline
     - develop
   workflow_dispatch: null
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   PYTHON_VERSION: '3.13'
   NODE_VERSION: '18'
   DOCKER_REGISTRY: ghcr.io
@@ -75,6 +76,7 @@ jobs:
         '
     - name: Run tests with coverage
       env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         BYBIT_API_KEY: ${{ secrets.BYBIT_API_KEY }}
         FXCM_API_TOKEN: ${{ secrets.FXCM_API_TOKEN }}
@@ -168,6 +170,7 @@ jobs:
     steps:
     - name: Deploy to staging
       env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         REDIS_URL: ${{ secrets.REDIS_URL }}
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -182,6 +185,7 @@ jobs:
     steps:
     - name: Deploy to production
       env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         REDIS_URL: ${{ secrets.REDIS_URL }}
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

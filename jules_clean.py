@@ -4,10 +4,10 @@ Jules Clean: Automated Code Quality & Maintenance Script
 Standard maintenance for GenX FX and Jule-compatible repositories.
 """
 
+import argparse
 import os
 import subprocess
 import sys
-import argparse
 
 
 def run_command(command, description):

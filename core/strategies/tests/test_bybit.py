@@ -12,7 +12,7 @@ class TestBybitAPI(unittest.TestCase):
         utils.config.BYBIT_API_KEY = "test_api_key"
         utils.config.BYBIT_SECRET = "test_api_secret"
 
-    @patch("requests.get")
+    @patch("core.execution.bybit.HTTP.get_kline")
     def test_get_market_data(self, mock_get):
         # Mock the API response
         mock_response = Mock()
@@ -25,12 +25,12 @@ class TestBybitAPI(unittest.TestCase):
 
         # Assert that the correct URL was called
         self.assertTrue(mock_get.called)
-        self.assertIn("https://api.bybit.com/v5/market/kline", mock_get.call_args[0][0])
+        self.assertEqual(mock_get.call_args[1]["symbol"], "BTCUSDT")
 
         # Assert that the response is handled correctly
-        self.assertEqual(data, {"result": {"list": [1, 2, 3]}})
+        self.assertEqual(data.json(), {"result": {"list": [1, 2, 3]}})
 
-    @patch("requests.post")
+    @patch("core.execution.bybit.HTTP.place_order")
     def test_execute_order(self, mock_post):
         # Mock the API response
         mock_response = Mock()
@@ -43,12 +43,10 @@ class TestBybitAPI(unittest.TestCase):
 
         # Assert that the correct URL was called
         self.assertTrue(mock_post.called)
-        self.assertIn(
-            "https://api.bybit.com/v5/order/create", mock_post.call_args[0][0]
-        )
+        self.assertEqual(mock_post.call_args[1]["symbol"], "BTCUSDT")
 
         # Assert that the response is handled correctly
-        self.assertEqual(result, {"result": {"orderId": "12345"}})
+        self.assertEqual(result.json(), {"result": {"orderId": "12345"}})
 
 
 if __name__ == "__main__":

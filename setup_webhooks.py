@@ -5,10 +5,11 @@ Automates the creation of webhooks on forge.mql5.io.
 Target Repository: https://forge.mql5.io/LengKundee/A6-9V_VL6-N9.git
 """
 
-import os
-import requests
 import argparse
+import os
 import sys
+
+import requests
 
 
 def setup_webhook(api_token, repo_owner, repo_name, webhook_url, events=None):

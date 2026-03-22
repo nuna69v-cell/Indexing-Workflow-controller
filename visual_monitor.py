@@ -4,11 +4,12 @@ Visual Monitoring Service
 Periodically captures screenshots of the dashboard and sends them to Matrix/Telegram.
 """
 
-import os
-import time
-import subprocess
 import logging
+import os
+import subprocess
+import time
 from datetime import datetime
+
 from services.notifier import send_image, send_status_update
 
 # Configure logging

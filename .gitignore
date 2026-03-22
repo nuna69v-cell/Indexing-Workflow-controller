@@ -51,3 +51,8 @@ data/
 /tmp/jules_tmp/
 .jules/*.log
 .jules/cache/
+
+# Generated scripts by start_trading.py
+signal_loop.sh
+status.sh
+stop_trading.sh

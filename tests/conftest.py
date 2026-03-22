@@ -13,7 +13,71 @@ os.environ["JWT_SECRET"] = "test_jwt_secret"
 try:
     import talib
 except ImportError:
-    sys.modules["talib"] = MagicMock()
+    import numpy as np
+    import pandas as pd
+
+    class MockTalib:
+        def SMA(self, arr, timeperiod=None):
+            if isinstance(arr, pd.Series):
+                arr = arr.values
+            return np.zeros_like(arr)
+
+        def RSI(self, arr, timeperiod=None):
+            return pd.Series(
+                np.zeros_like(arr)
+                if isinstance(arr, np.ndarray)
+                else np.zeros(len(arr))
+            )
+
+        def MACD(self, arr):
+            res = pd.Series(
+                np.zeros_like(arr)
+                if isinstance(arr, np.ndarray)
+                else np.zeros(len(arr))
+            )
+            return res, res, res
+
+        def ATR(self, h, l, c, timeperiod=None):
+            return pd.Series(
+                np.zeros_like(c) if isinstance(c, np.ndarray) else np.zeros(len(c))
+            )
+
+        def ADX(self, h, l, c, timeperiod=None):
+            return pd.Series(
+                np.zeros_like(c) if isinstance(c, np.ndarray) else np.zeros(len(c))
+            )
+
+        def BBANDS(self, arr):
+            res = pd.Series(
+                np.zeros_like(arr)
+                if isinstance(arr, np.ndarray)
+                else np.zeros(len(arr))
+            )
+            return res, res, res
+
+        def STOCH(self, h, l, c):
+            res = pd.Series(
+                np.zeros_like(c) if isinstance(c, np.ndarray) else np.zeros(len(c))
+            )
+            return res, res
+
+        def CDL2CROWS(self, o, h, l, c):
+            return pd.Series(
+                np.zeros_like(c) if isinstance(c, np.ndarray) else np.zeros(len(c))
+            )
+
+        def __getattr__(self, name):
+            if name.startswith("CDL"):
+                return lambda o, h, l, c: pd.Series(
+                    np.zeros_like(c) if isinstance(c, np.ndarray) else np.zeros(len(c))
+                )
+            return lambda *args, **kwargs: pd.Series(
+                np.zeros_like(args[0])
+                if isinstance(args[0], np.ndarray)
+                else np.zeros(len(args[0]))
+            )
+
+    sys.modules["talib"] = MockTalib()
 
 
 @pytest.fixture(autouse=True)

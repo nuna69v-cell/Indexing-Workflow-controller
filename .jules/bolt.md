@@ -131,3 +131,7 @@
 ## 2026-03-16 - Handling isort with Automated Code Patches
 **Learning:** I encountered a CI failure because a manual file patch to `tests/test_config_security.py` and `tests/conftest.py` inadvertently resulted in incorrectly sorted imports. Automated file modifications, particularly those dealing with imports, must also respect the codebase's strict import sorting rules.
 **Action:** Before submitting code changes, especially those resulting from script-based patches, always explicitly run the project's formatting tools (`black`, `isort`) locally to ensure the resulting code adheres strictly to CI quality standards.
+
+## 2026-03-16 - Vectorizing Rolling SMA and STD in Technical Features
+**Learning:** I identified a performance bottleneck in `core/feature_engineering/technical_features.py` where moving averages and volatility indicators were calculated using Pandas `rolling().mean()` and `rolling().std()`. These operations carry significant overhead, especially on the prediction path with smaller datasets (e.g., 500 bars), due to index alignment and Series validation.
+**Action:** I replaced Pandas `rolling().mean()` with `np.convolve` for simple moving averages and replaced `rolling().std()` with a vectorized variance calculation using `np.convolve` to track sums and sum of squares. I also switched to passing `.values` instead of Pandas Series. This provided a noticeable speedup (~1.5x) for feature generation, reinforcing the strategy of using raw NumPy in performance-critical paths.

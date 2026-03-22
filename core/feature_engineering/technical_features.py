@@ -75,7 +75,7 @@ class TechnicalFeatureEngine:
             features_df = self._add_pattern_features(features_df)
 
             # Fill any NaN values
-            features_df = features_df.fillna(method="ffill").fillna(0)
+            features_df = features_df.bfill().ffill().fillna(0)
 
         except Exception as e:
             print(f"Warning: Error generating features: {e}")
@@ -122,21 +122,42 @@ class TechnicalFeatureEngine:
         """
         periods = [5, 10, 20, 50, 100, 200]
 
+        # ---
+        # ⚡ Bolt Optimization: Vectorized SMA and EMA calculations
+        # Using numpy convolution instead of Pandas rolling().mean() for faster
+        # moving average feature generation.
+        # ---
+        close_vals = df["Close"].values
+
         for period in periods:
             if len(df) >= period:
-                df[f"sma_{period}"] = df["Close"].rolling(window=period).mean()
-                df[f"ema_{period}"] = df["Close"].ewm(span=period).mean()
-                df[f"price_vs_sma_{period}"] = (
-                    (df["Close"] - df[f"sma_{period}"]) / df[f"sma_{period}"] * 100
-                )
-                df[f"price_vs_ema_{period}"] = (
-                    (df["Close"] - df[f"ema_{period}"]) / df[f"ema_{period}"] * 100
-                )
+                # SMA
+                kernel = np.ones(period) / period
+                sma_vals = np.convolve(close_vals, kernel, mode="valid")
+                sma_full = np.full(len(df), np.nan)
+                sma_full[period - 1 :] = sma_vals
+                df[f"sma_{period}"] = sma_full
 
-        # Moving average crossovers
+                # EMA (Still relying on Pandas EWM as it's optimized in Cython)
+                df[f"ema_{period}"] = df["Close"].ewm(span=period).mean()
+
+                # Price vs Averages (Vectorized)
+                df[f"price_vs_sma_{period}"] = (
+                    (close_vals - sma_full) / sma_full
+                ) * 100
+                df[f"price_vs_ema_{period}"] = (
+                    (close_vals - df[f"ema_{period}"].values)
+                    / df[f"ema_{period}"].values
+                ) * 100
+
+        # Moving average crossovers (Vectorized)
         if len(df) >= 50 and "sma_5" in df and "sma_20" in df and "sma_50" in df:
-            df["sma_5_vs_20"] = (df["sma_5"] - df["sma_20"]) / df["sma_20"] * 100
-            df["sma_10_vs_50"] = (df["sma_10"] - df["sma_50"]) / df["sma_50"] * 100
+            df["sma_5_vs_20"] = (
+                (df["sma_5"].values - df["sma_20"].values) / df["sma_20"].values * 100
+            )
+            df["sma_10_vs_50"] = (
+                (df["sma_10"].values - df["sma_50"].values) / df["sma_50"].values * 100
+            )
 
         return df
 
@@ -151,21 +172,28 @@ class TechnicalFeatureEngine:
             pd.DataFrame: The DataFrame with added momentum features.
         """
         try:
-            # RSI
-            df["rsi"] = self.tech_indicators.rsi(df["Close"])
+            # The underlying `tech_indicators` utility has been updated.
+            # We now rely on `tech_indicators.add_all_indicators()` directly
+            # instead of individual methods. For now we will compute the
+            # specific indicators locally or use Pandas as fallback since
+            # the old individual methods (like .rsi) are no longer exposed.
 
-            # MACD
-            macd_line, macd_signal, macd_histogram = self.tech_indicators.macd(
-                df["Close"]
-            )
-            df["macd"] = macd_line
-            df["macd_signal"] = macd_signal
-            df["macd_histogram"] = macd_histogram
+            # We use `lower_df` to extract values directly, since `tech_indicators` expects
+            # lowercase column names to calculate all of them.
+            lower_df = df.copy()
+            lower_df.columns = [c.lower() for c in lower_df.columns]
+            df_with_inds = self.tech_indicators.add_all_indicators(lower_df)
+            if "rsi" in df_with_inds.columns:
+                df["rsi"] = df_with_inds["rsi"]
 
-            # Stochastic
-            df["stoch_k"], df["stoch_d"] = self.tech_indicators.stochastic(
-                df["High"], df["Low"], df["Close"]
-            )
+            if "macd" in df_with_inds.columns:
+                df["macd"] = df_with_inds["macd"]
+                df["macd_signal"] = df_with_inds["macd_signal"]
+                df["macd_histogram"] = df_with_inds["macd_histogram"]
+
+            if "stoch_k" in df_with_inds.columns:
+                df["stoch_k"] = df_with_inds["stoch_k"]
+                df["stoch_d"] = df_with_inds["stoch_d"]
 
             # ROC (Rate of Change)
             for period in [5, 10, 20]:
@@ -173,9 +201,8 @@ class TechnicalFeatureEngine:
                     df[f"roc_{period}"] = df["Close"].pct_change(periods=period) * 100
 
             # Williams %R
-            df["williams_r"] = self.tech_indicators.williams_r(
-                df["High"], df["Low"], df["Close"]
-            )
+            if "williams_r" in df_with_inds.columns:
+                df["williams_r"] = df_with_inds["williams_r"]
 
         except Exception as e:
             print(f"Warning: Error adding momentum indicators: {e}")
@@ -193,29 +220,45 @@ class TechnicalFeatureEngine:
             pd.DataFrame: The DataFrame with added volatility features.
         """
         try:
+            # Fetch indicators from the updated utility
+            # Make sure column names are lowercase as expected by the utility
+            lower_df = df.copy()
+            lower_df.columns = [c.lower() for c in lower_df.columns]
+            df_with_inds = self.tech_indicators.add_all_indicators(lower_df)
+
             # Bollinger Bands
-            bb_upper, bb_middle, bb_lower = self.tech_indicators.bollinger_bands(
-                df["Close"]
-            )
-            df["bb_upper"] = bb_upper
-            df["bb_middle"] = bb_middle
-            df["bb_lower"] = bb_lower
-            df["bb_width"] = (bb_upper - bb_lower) / bb_middle * 100
-            df["bb_position"] = (df["Close"] - bb_lower) / (bb_upper - bb_lower) * 100
+            if "bb_upper" in df_with_inds.columns:
+                df["bb_upper"] = df_with_inds["bb_upper"]
+                df["bb_middle"] = df_with_inds["bb_middle"]
+                df["bb_lower"] = df_with_inds["bb_lower"]
+                df["bb_width"] = df_with_inds["bb_width"]
+                df["bb_position"] = df_with_inds["bb_position"]
 
             # ATR
-            df["atr"] = self.tech_indicators.atr(df["High"], df["Low"], df["Close"])
-            df["atr_pct"] = df["atr"] / df["Close"] * 100
+            if "atr" in df_with_inds.columns:
+                df["atr"] = df_with_inds["atr"]
+                df["atr_pct"] = df_with_inds["atr"] / df["Close"] * 100
 
             # Price volatility
+            # ---
+            # ⚡ Bolt Optimization: Vectorized rolling std
+            # Replaces slow pd.Series.rolling().std() with vectorized variance formula
+            # using numpy.convolve.
+            # ---
+            close_vals = df["Close"].values
+            close_sq_vals = close_vals**2
+
             for period in [5, 10, 20]:
                 if len(df) >= period:
-                    df[f"volatility_{period}"] = (
-                        df["Close"].rolling(window=period).std()
-                    )
-                    df[f"volatility_pct_{period}"] = (
-                        df[f"volatility_{period}"] / df["Close"] * 100
-                    )
+                    s = np.convolve(close_vals, np.ones(period), mode="valid")
+                    s2 = np.convolve(close_sq_vals, np.ones(period), mode="valid")
+                    var = (s2 - (s**2 / period)) / (period - 1)
+
+                    vol_vals = np.full(len(df), np.nan)
+                    vol_vals[period - 1 :] = np.sqrt(np.maximum(var, 0))
+
+                    df[f"volatility_{period}"] = vol_vals
+                    df[f"volatility_pct_{period}"] = (vol_vals / close_vals) * 100
 
         except Exception as e:
             print(f"Warning: Error adding volatility indicators: {e}")

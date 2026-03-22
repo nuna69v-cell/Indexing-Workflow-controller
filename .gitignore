@@ -51,3 +51,8 @@ data/
 /tmp/jules_tmp/
 .jules/*.log
 .jules/cache/
+
+# Trading script tracking files
+signal_loop.sh
+logs/web_server.pid
+logs/signal_loop.pid

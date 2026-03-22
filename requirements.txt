@@ -22,3 +22,8 @@ pydantic-settings
 joblib
 aiohttp
 backtrader
+redis
+scikit-learn
+TA-Lib
+scipy
+psutil

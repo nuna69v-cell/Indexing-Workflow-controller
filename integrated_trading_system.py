@@ -8,7 +8,6 @@ import asyncio
 import logging
 import signal
 import sys
-import os
 from datetime import datetime, timedelta
 
 # Import all our custom services

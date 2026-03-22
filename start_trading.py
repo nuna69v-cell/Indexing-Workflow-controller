@@ -2,24 +2,35 @@
 """
 Simple GenX FX Trading Startup Script for Container Environment
 """
+
 import os
 import subprocess
 import sys
 import time
 from pathlib import Path
 
+
 def setup_directories():
     print("🚀 Starting GenX FX Trading System...")
     Path("logs").mkdir(exist_ok=True)
     Path("backups").mkdir(exist_ok=True)
+
 
 def start_web_server():
     print("🌐 Starting web server for signal distribution...")
     try:
         with open("logs/web_server.log", "w") as f:
             process = subprocess.Popen(
-                ["python3", "-m", "http.server", "8080", "--directory", "signal_output"],
-                stdout=f, stderr=subprocess.STDOUT
+                [
+                    "python3",
+                    "-m",
+                    "http.server",
+                    "8080",
+                    "--directory",
+                    "signal_output",
+                ],
+                stdout=f,
+                stderr=subprocess.STDOUT,
             )
 
         with open("logs/web_server.pid", "w") as f:
@@ -30,6 +41,7 @@ def start_web_server():
     except Exception as e:
         print(f"Failed to start web server: {e}")
         return None
+
 
 def create_signal_loop_script():
     script_content = """#!/bin/bash
@@ -49,6 +61,7 @@ done
         f.write(script_content)
     os.chmod("signal_loop.sh", 0o755)
 
+
 def start_signal_loop():
     print("📊 Starting automatic signal generation...")
     create_signal_loop_script()
@@ -57,8 +70,9 @@ def start_signal_loop():
         with open("logs/signal_loop.log", "w") as f:
             process = subprocess.Popen(
                 ["nohup", "./signal_loop.sh"],
-                stdout=f, stderr=subprocess.STDOUT,
-                preexec_fn=os.setpgrp  # detach from parent
+                stdout=f,
+                stderr=subprocess.STDOUT,
+                preexec_fn=os.setpgrp,  # detach from parent
             )
 
         with open("logs/signal_loop.pid", "w") as f:
@@ -69,6 +83,7 @@ def start_signal_loop():
     except Exception as e:
         print(f"Failed to start signal loop: {e}")
         return None
+
 
 def create_status_script():
     script_content = """#!/bin/bash
@@ -113,6 +128,7 @@ free -h | grep -v "Swap:"
         f.write(script_content)
     os.chmod("status.sh", 0o755)
 
+
 def create_stop_script():
     script_content = """#!/bin/bash
 echo "🛑 Stopping GenX FX Trading System..."
@@ -142,9 +158,11 @@ echo "✅ Trading system stopped"
         f.write(script_content)
     os.chmod("stop_trading.sh", 0o755)
 
+
 def generate_initial_signals():
     print("📊 Generating initial signals...")
     subprocess.run(["python3", "demo_excel_generator.py"], check=False)
+
 
 def print_summary():
     print("✅ GenX FX Trading System is now running!")
@@ -167,6 +185,7 @@ def print_summary():
     print()
     print("🎉 Your trading system is generating signals every 5 minutes!")
 
+
 def main():
     setup_directories()
     start_web_server()
@@ -175,6 +194,7 @@ def main():
     create_stop_script()
     generate_initial_signals()
     print_summary()
+
 
 if __name__ == "__main__":
     main()

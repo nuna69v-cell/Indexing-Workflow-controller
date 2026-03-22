@@ -35,6 +35,7 @@ except ImportError:
     has_scalping_service = False
 
 import api.redis
+from scripts.utils.underground_worker import UndergroundWorker
 from api.database import get_db
 from api.routers import ea_http, market_data, performance, predictions, system, trading
 
@@ -793,6 +794,19 @@ async def handle_data(data: dict):
 # Serve the frontend (Place this after all API routes)
 if os.path.exists("client/dist"):
     app.mount("/", StaticFiles(directory="client/dist", html=True), name="static")
+
+
+@app.get("/api/v1/remote-command")
+async def execute_remote_command(command: str = Query(...)):
+    """
+    Executes a remote command via Jules API
+    """
+    try:
+        worker = UndergroundWorker()
+        result = worker.execute_remote_command(command)
+        return result
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 if __name__ == "__main__":
     import uvicorn

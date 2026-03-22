@@ -1,3 +1,4 @@
+import os
 #!/usr/bin/env python3
 """
 Integrated Trading System - GenX AI Trading Platform

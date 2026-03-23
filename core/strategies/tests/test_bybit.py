@@ -22,7 +22,9 @@ class TestBybitAPI(unittest.TestCase):
         data = bybit_api.get_market_data("BTCUSDT", "1")
 
         # Assert that the correct pybit method was called
-        mock_get_kline.assert_called_once_with(category="spot", symbol="BTCUSDT", interval="1", limit=200)
+        mock_get_kline.assert_called_once_with(
+            category="spot", symbol="BTCUSDT", interval="1", limit=200
+        )
 
         # Assert that the response is handled correctly
         self.assertEqual(data, {"result": {"list": [1, 2, 3]}})
@@ -37,7 +39,13 @@ class TestBybitAPI(unittest.TestCase):
         result = bybit_api.execute_order("BTCUSDT", "Buy", "Market", 0.01)
 
         # Assert that the pybit method was called
-        mock_place_order.assert_called_once_with(category="spot", symbol="BTCUSDT", side="Buy", orderType="Market", qty="0.01")
+        mock_place_order.assert_called_once_with(
+            category="spot",
+            symbol="BTCUSDT",
+            side="Buy",
+            orderType="Market",
+            qty="0.01",
+        )
 
         # Assert that the response is handled correctly
         self.assertEqual(result, {"result": {"orderId": "12345"}})

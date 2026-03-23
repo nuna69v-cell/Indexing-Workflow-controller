@@ -1,7 +1,6 @@
 import pytest
 from cryptography.fernet import Fernet
 
-import api.config
 from utils.encryption import EncryptionManager
 
 
@@ -30,19 +29,13 @@ def test_empty_string():
     assert manager.decrypt("") == ""
 
 
-def test_missing_key():
-    # Save original key
-    original_key = api.config.settings.CRYPTION_KEY
+def test_missing_key(monkeypatch):
     # Force settings to None
-    api.config.settings.CRYPTION_KEY = None
+    monkeypatch.setattr("utils.encryption.settings.CRYPTION_KEY", None)
 
-    try:
-        manager = EncryptionManager(key=None)
-        with pytest.raises(ValueError, match="Encryption key is not configured"):
-            manager.encrypt("data")
-    finally:
-        # Restore original key
-        api.config.settings.CRYPTION_KEY = original_key
+    manager = EncryptionManager(key=None)
+    with pytest.raises(ValueError, match="Encryption key is not configured"):
+        manager.encrypt("data")
 
 
 def test_invalid_key_format():

@@ -5,7 +5,7 @@ import sys  # noqa: E402
 from unittest.mock import MagicMock  # noqa: E402
 
 # Mock third-party dependencies required for tests
-for mod in ['backtrader', 'fastapi', 'fastapi.testclient', 'pydantic_settings', 'joblib', 'aiohttp', 'pandas', 'numpy']:
+for mod in ['backtrader', 'fastapi', 'fastapi.testclient', 'pydantic_settings', 'joblib', 'aiohttp', 'pandas', 'numpy', 'fastapi.security', 'fastapi.middleware', 'fastapi.middleware.cors', 'pydantic', 'cryptography', 'cryptography.fernet', 'sklearn', 'sklearn.preprocessing', 'fastapi.middleware.gzip', 'fastapi.staticfiles', 'fastapi.responses', 'ai_models', 'ai_models.feature_engineer', 'fastapi.middleware.trustedhost', 'redis', 'redis.asyncio']:
     if mod not in sys.modules:
         sys.modules[mod] = MagicMock()
 

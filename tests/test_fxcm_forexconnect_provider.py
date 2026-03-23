@@ -1,15 +1,13 @@
+import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-import pytest
-
+# Provide a mock for 'fx' module before importing the provider
 import core.data_sources.fxcm_forexconnect_provider as provider_module
 
-# Create a mock for the 'fx' module and add it to the provider module
-# so that the test can find it.
 mock_fx = MagicMock()
 provider_module.fx = mock_fx
 
-from core.data_sources.fxcm_forexconnect_provider import (
+from core.data_sources.fxcm_forexconnect_provider import (  # noqa: E402
     FXCMForexConnectProvider,
 )
 

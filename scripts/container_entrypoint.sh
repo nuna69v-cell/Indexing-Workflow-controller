@@ -26,14 +26,14 @@ if [ ! -d "$MT5_DIR" ]; then
      cp -r "/home/jules/.wine/drive_c/Program Files/MetaTrader 5/"* "$MT5_DIR/"
   else
      echo "Downloading and installing MT5..."
-     mkdir -p "/tmp/mt5"
-     cd "/tmp/mt5"
-     wget -O mt5setup.exe "https://download.mql5.com/cdn/web/metaquotes.software.corp/mt5/mt5setup.exe"
-     wine mt5setup.exe /auto
-     sleep 10
+     mkdir -p "$MT5_DIR"
+     cd "$MT5_DIR"
+     wget -O terminal64.exe "https://download.mql5.com/cdn/web/metaquotes.software.corp/mt5/terminal64.exe"
+     sleep 2
      cd /app
   fi
 fi
+
 
 if [ -f "$MT5_DIR/terminal64.exe" ]; then
   echo "Running terminal64.exe..."

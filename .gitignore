@@ -51,3 +51,6 @@ data/
 /tmp/jules_tmp/
 .jules/*.log
 .jules/cache/
+.env
+config/.env*
+*.log

@@ -90,6 +90,7 @@ def test_get_settings_production():
 def test_get_settings_development():
     """Test that get_settings returns DevelopmentSettings by default."""
     import api.config
+
     with patch.dict(os.environ, {"ENVIRONMENT": "development"}):
         settings_obj = api.config.get_settings()
         assert isinstance(settings_obj, DevelopmentSettings)

@@ -5,10 +5,10 @@ Automates cloning and migrating repositories to Forgejo (forge.mql5.io).
 Reference: https://replit.com/@Meizhuxie4/Forgejo-Mugration
 """
 
+import argparse
 import os
 import subprocess
 import sys
-import argparse
 
 
 def run_command(command, description):

@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List
 
 import pandas as pd
@@ -189,16 +189,37 @@ class SignalAnalyzer:
         Filters signals to include only those generated within a recent time window.
         Handles both timezone-aware and timezone-naive timestamps.
         """
-        cutoff_time = pd.Timestamp.now('UTC') - pd.Timedelta(hours=24)
+        cutoff_time = datetime.now(timezone.utc) - timedelta(hours=24)
         filtered_signals = []
         for s in signals:
             try:
-                # Convert timestamp to UTC-aware pandas Timestamp
-                ts = pd.to_datetime(s['timestamp'], utc=True)
+                raw_ts = s.get("timestamp")
+                if raw_ts is None:
+                    continue
+
+                # Parse if string
+                if isinstance(raw_ts, str):
+                    try:
+                        ts = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
+                    except ValueError:
+                        # Fallback for pandas parsing if isoformat fails
+                        ts = pd.to_datetime(raw_ts).to_pydatetime()
+                elif isinstance(raw_ts, pd.Timestamp):
+                    ts = raw_ts.to_pydatetime()
+                elif isinstance(raw_ts, datetime):
+                    ts = raw_ts
+                else:
+                    continue
+
+                # Ensure it is timezone-aware and in UTC
+                if ts.tzinfo is None:
+                    ts = ts.replace(tzinfo=timezone.utc)
+                else:
+                    ts = ts.astimezone(timezone.utc)
+
                 if ts >= cutoff_time:
                     filtered_signals.append(s)
-            except Exception:
-                # If timestamp is completely invalid, drop the signal
+            except (ValueError, TypeError, KeyError, AttributeError):
                 continue
         return filtered_signals
 
@@ -246,14 +267,37 @@ class SignalAnalyzer:
         self.signal_history.extend(signals)
 
         # Keep only signals from the last 7 days
-        cutoff_time = pd.Timestamp.now('UTC') - pd.Timedelta(days=7)
+        cutoff_time = datetime.now(timezone.utc) - timedelta(days=7)
         pruned_history = []
         for s in self.signal_history:
             try:
-                ts = pd.to_datetime(s["timestamp"], utc=True)
+                raw_ts = s.get("timestamp")
+                if raw_ts is None:
+                    continue
+
+                # Parse if string
+                if isinstance(raw_ts, str):
+                    try:
+                        ts = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
+                    except ValueError:
+                        # Fallback for pandas parsing if isoformat fails
+                        ts = pd.to_datetime(raw_ts).to_pydatetime()
+                elif isinstance(raw_ts, pd.Timestamp):
+                    ts = raw_ts.to_pydatetime()
+                elif isinstance(raw_ts, datetime):
+                    ts = raw_ts
+                else:
+                    continue
+
+                # Ensure it is timezone-aware and in UTC
+                if ts.tzinfo is None:
+                    ts = ts.replace(tzinfo=timezone.utc)
+                else:
+                    ts = ts.astimezone(timezone.utc)
+
                 if ts >= cutoff_time:
                     pruned_history.append(s)
-            except Exception:
+            except (ValueError, TypeError, KeyError, AttributeError):
                 pass
 
         self.signal_history = pruned_history

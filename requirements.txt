@@ -17,3 +17,21 @@ schedule>=1.1.0
 # AI & Data
 google-generativeai>=0.3.0
 yfinance>=0.2.0
+pandas
+numpy
+backtrader
+fastapi
+pydantic-settings
+cryptography
+joblib
+aiohttp
+pytest-asyncio
+pytest-mock
+redis
+scikit-learn
+psutil
+supabase
+scipy
+pybit
+httpx
+praw

@@ -18,16 +18,16 @@ mock_talib.MOM.return_value = np.random.rand(100)
 mock_talib.ROC.return_value = np.random.rand(100)
 sys.modules["talib"] = mock_talib
 sys.modules["talib.abstract"] = mock_talib
-import sys
-import unittest
+import sys  # noqa: E402
+import unittest  # noqa: E402
 
-import numpy as np
-import pandas as pd
-import talib
+import numpy as np  # noqa: E402
+import pandas as pd  # noqa: E402
+import talib  # noqa: E402
 
 # Set PYTHONPATH
 sys.path.append(".")
-from ai_models.feature_engineer import FeatureEngineer
+from ai_models.feature_engineer import FeatureEngineer  # noqa: E402
 
 
 class TestFeatureEngineerOptimized(unittest.TestCase):

@@ -18,18 +18,18 @@ mock_talib.MOM.return_value = np.random.rand(100)
 mock_talib.ROC.return_value = np.random.rand(100)
 sys.modules["talib"] = mock_talib
 sys.modules["talib.abstract"] = mock_talib
-import sys
-import unittest
-from unittest.mock import MagicMock, patch
+import sys  # noqa: E402
+import unittest  # noqa: E402
+from unittest.mock import MagicMock, patch  # noqa: E402
 
-import numpy as np
-import pandas as pd
+import numpy as np  # noqa: E402
+import pandas as pd  # noqa: E402
 
 # Mock talib if not installed
 if "talib" not in sys.modules:
     sys.modules["talib"] = MagicMock()
 
-from api.services.scalping_service import ScalpingService
+from api.services.scalping_service import ScalpingService  # noqa: E402
 
 
 class TestScalpingService(unittest.TestCase):

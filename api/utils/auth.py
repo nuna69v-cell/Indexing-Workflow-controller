@@ -29,8 +29,7 @@ def get_current_user(
 
     This function is used in path operations to protect endpoints. It extracts
     the bearer token, decodes it, and returns the user's information.
-    In a testing environment (if `os.getenv("TESTING")` is set), it returns a
-    mock user.
+
 
     Args:
         credentials (Optional[HTTPAuthorizationCredentials]): The bearer token
@@ -42,12 +41,8 @@ def get_current_user(
 
     Raises:
         HTTPException: If the token is invalid, credentials are not provided
-                       (outside of testing), or the token cannot be decoded.
+                       or the token cannot be decoded.
     """
-
-    # For testing, return a mock user if credentials are missing
-    if os.getenv("TESTING") and not credentials:
-        return {"username": "testuser", "exp": None}
 
     if not credentials:
         raise HTTPException(

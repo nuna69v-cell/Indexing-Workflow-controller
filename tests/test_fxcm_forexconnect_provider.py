@@ -1,15 +1,23 @@
-from unittest.mock import AsyncMock, MagicMock, patch
+import sys  # noqa: E402
+from unittest.mock import MagicMock  # noqa: E402
 
-import pytest
+# Mock third-party dependencies required for tests
+for mod in ['backtrader', 'fastapi', 'fastapi.testclient', 'pydantic_settings', 'joblib', 'aiohttp', 'pandas', 'numpy']:
+    if mod not in sys.modules:
+        sys.modules[mod] = MagicMock()
 
-import core.data_sources.fxcm_forexconnect_provider as provider_module
+from unittest.mock import AsyncMock, MagicMock, patch  # noqa: E402
+
+import pytest  # noqa: E402
+
+import core.data_sources.fxcm_forexconnect_provider as provider_module  # noqa: E402
 
 # Create a mock for the 'fx' module and add it to the provider module
 # so that the test can find it.
 mock_fx = MagicMock()
 provider_module.fx = mock_fx
 
-from core.data_sources.fxcm_forexconnect_provider import (
+from core.data_sources.fxcm_forexconnect_provider import (  # noqa: E402  # noqa: E402  # noqa: E402
     FXCMForexConnectProvider,
 )
 

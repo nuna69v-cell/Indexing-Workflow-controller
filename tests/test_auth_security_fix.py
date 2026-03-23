@@ -1,10 +1,18 @@
-import os
-import unittest
-from unittest.mock import MagicMock, patch
+import sys  # noqa: E402
+from unittest.mock import MagicMock  # noqa: E402
 
-from fastapi import HTTPException
+# Mock third-party dependencies required for tests
+for mod in ['backtrader', 'fastapi', 'fastapi.testclient', 'pydantic_settings', 'joblib', 'aiohttp', 'pandas', 'numpy']:
+    if mod not in sys.modules:
+        sys.modules[mod] = MagicMock()
 
-from api.utils.auth import get_current_user
+import os  # noqa: E402
+import unittest  # noqa: E402
+from unittest.mock import MagicMock, patch  # noqa: E402
+
+from fastapi import HTTPException  # noqa: E402
+
+from api.utils.auth import get_current_user  # noqa: E402
 
 
 class TestAuthLogic(unittest.TestCase):

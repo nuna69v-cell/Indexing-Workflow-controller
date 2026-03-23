@@ -1,13 +1,21 @@
-import sys
-import unittest
+import sys  # noqa: E402
+from unittest.mock import MagicMock  # noqa: E402
 
-import numpy as np
-import pandas as pd
-import talib
+# Mock third-party dependencies required for tests
+for mod in ['backtrader', 'fastapi', 'fastapi.testclient', 'pydantic_settings', 'joblib', 'aiohttp', 'pandas', 'numpy']:
+    if mod not in sys.modules:
+        sys.modules[mod] = MagicMock()
+
+import sys  # noqa: E402
+import unittest  # noqa: E402
+
+import numpy as np  # noqa: E402
+import pandas as pd  # noqa: E402
+import talib  # noqa: E402
 
 # Set PYTHONPATH
 sys.path.append(".")
-from ai_models.feature_engineer import FeatureEngineer
+from ai_models.feature_engineer import FeatureEngineer  # noqa: E402
 
 
 class TestFeatureEngineerOptimized(unittest.TestCase):

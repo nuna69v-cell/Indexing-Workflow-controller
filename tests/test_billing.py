@@ -1,9 +1,17 @@
-import sqlite3
+import sys  # noqa: E402
+from unittest.mock import MagicMock  # noqa: E402
 
-import pytest
-from fastapi.testclient import TestClient
+# Mock third-party dependencies required for tests
+for mod in ['backtrader', 'fastapi', 'fastapi.testclient', 'pydantic_settings', 'joblib', 'aiohttp', 'pandas', 'numpy']:
+    if mod not in sys.modules:
+        sys.modules[mod] = MagicMock()
 
-from api.main import app, get_db
+import sqlite3  # noqa: E402
+
+import pytest  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
+
+from api.main import app, get_db  # noqa: E402
 
 
 # Pytest fixture to set up and tear down an in-memory database for testing

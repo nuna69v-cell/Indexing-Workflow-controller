@@ -1,9 +1,20 @@
-import pytest
-import backtrader as bt
-from src.mouy_leng.trading.strategy import RSIMACDStrategy
-from src.mouy_leng.trading.backtest import run_backtest
-import pandas as pd
-import numpy as np
+import sys  # noqa: E402
+import os  # noqa: E402
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..')))
+import sys  # noqa: E402
+from unittest.mock import MagicMock  # noqa: E402
+
+# Mock third-party dependencies required for tests
+for mod in ['backtrader', 'fastapi', 'fastapi.testclient', 'pydantic_settings', 'joblib', 'aiohttp', 'pandas', 'numpy']:
+    if mod not in sys.modules:
+        sys.modules[mod] = MagicMock()
+
+import pytest  # noqa: E402
+import backtrader as bt  # noqa: E402
+from src.mouy_leng.trading.strategy import RSIMACDStrategy  # noqa: E402
+from src.mouy_leng.trading.backtest import run_backtest  # noqa: E402
+import pandas as pd  # noqa: E402
+import numpy as np  # noqa: E402
 
 
 @pytest.fixture

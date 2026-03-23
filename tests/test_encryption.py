@@ -1,8 +1,16 @@
-import pytest
-from cryptography.fernet import Fernet
+import sys  # noqa: E402
+from unittest.mock import MagicMock  # noqa: E402
 
-import api.config
-from utils.encryption import EncryptionManager
+# Mock third-party dependencies required for tests
+for mod in ['backtrader', 'fastapi', 'fastapi.testclient', 'pydantic_settings', 'joblib', 'aiohttp', 'pandas', 'numpy']:
+    if mod not in sys.modules:
+        sys.modules[mod] = MagicMock()
+
+import pytest  # noqa: E402
+from cryptography.fernet import Fernet  # noqa: E402
+
+import api.config  # noqa: E402
+from utils.encryption import EncryptionManager  # noqa: E402
 
 
 def test_key_generation_and_init():

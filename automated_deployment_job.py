@@ -5,24 +5,32 @@ Complete deployment orchestration with monitoring, rollback, and verification
 Integrated with Ali & Jules CLI contributions and Cursor AI assistance
 """
 
-import logging
+import asyncio
+import json
 import os
+import sys
 import subprocess
-from datetime import datetime
+import shutil
 from pathlib import Path
-from typing import Any, Dict, Tuple
+from typing import Dict, List, Optional, Union, Any, Tuple
+from datetime import datetime, timedelta
+import logging
+import tempfile
+import time
 
 import typer
 from rich.console import Console
+from rich.table import Table
 from rich.panel import Panel
 from rich.progress import (
-    BarColumn,
     Progress,
     SpinnerColumn,
     TextColumn,
+    BarColumn,
     TimeElapsedColumn,
 )
-from rich.prompt import Confirm
+from rich.prompt import Confirm, Prompt, IntPrompt
+from rich.syntax import Syntax
 
 # Configure logging
 logging.basicConfig(
@@ -211,7 +219,7 @@ def deploy(
 
     # Create deployment plan
     try:
-        deployment_job.create_deployment_plan(target, environment)
+        plan = deployment_job.create_deployment_plan(target, environment)
     except ValueError as e:
         console.print(f"❌ {e}", style="red")
         available = ", ".join(deployment_job.deployment_targets.keys())

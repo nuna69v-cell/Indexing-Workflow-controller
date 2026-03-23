@@ -7,6 +7,7 @@ imports and runs the main Typer application from 'amp_cli.py'.
 """
 
 import sys
+import os
 from pathlib import Path
 
 # Add current directory to Python path

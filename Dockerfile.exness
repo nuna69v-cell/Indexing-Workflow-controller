@@ -1,10 +1,10 @@
-# Improved Dockerfile for Exness MT4/MT5 EA Deployment
+# Dockerfile for Exness MT4/MT5 EA Deployment
 FROM python:3.9-slim
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies in a single layer to reduce image size
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     wget \
     unzip \
@@ -16,9 +16,8 @@ RUN apt-get update && apt-get install -y \
     make \
     && rm -rf /var/lib/apt/lists/*
 
-# Install TA-Lib C library with better error handling
-RUN set -ex && \
-    wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
+# Install TA-Lib C library
+RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
     tar -xzf ta-lib-0.4.0-src.tar.gz && \
     cd ta-lib/ && \
     ./configure --prefix=/usr && \
@@ -29,12 +28,11 @@ RUN set -ex && \
     ldconfig
 
 # Copy requirements and install Python dependencies
-COPY requirements-prod.txt requirements.txt ./
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application files (only what's needed)
-COPY main.py ./
+# Copy EA files and trading system (only existing directories)
+COPY expert-advisors/ ./expert-advisors/
 COPY core/ ./core/
 COPY config/ ./config/
 COPY utils/ ./utils/
@@ -42,19 +40,14 @@ COPY api/ ./api/
 COPY services/ ./services/
 COPY shared/ ./shared/
 COPY database/ ./database/
-COPY expert-advisors/ ./expert-advisors/
+COPY main.py .
 
-# Copy deployment scripts if they exist (using wildcard to avoid failure if file missing)
-COPY deploy/exness_deploy.s[h] ./deploy/
-RUN [ -f ./deploy/exness_deploy.sh ] && chmod +x ./deploy/exness_deploy.sh || echo "No deploy script to make executable"
+# Copy deployment scripts
+COPY deploy/exness_deploy.sh ./deploy/exness_deploy.sh
+RUN chmod +x ./deploy/exness_deploy.sh
 
-# Create necessary directories
+# Create directories for logs and data
 RUN mkdir -p /app/logs /app/data /app/signals
-
-# Create a non-root user for security
-RUN adduser --disabled-password --gecos '' --uid 1000 appuser && \
-    chown -R appuser:appuser /app
-USER appuser
 
 # Expose port for the trading API
 EXPOSE 8080
@@ -63,11 +56,10 @@ EXPOSE 8080
 ENV PYTHONPATH=/app
 ENV TRADING_MODE=exness
 ENV BROKER=exness
-ENV PYTHONUNBUFFERED=1
 
-# Health check with timeout
+# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
 # Start the trading system
-CMD ["python", "main.py", "--mode", "live", "--broker", "exness"]
+CMD ["python", "main.py", "--mode", "live", "--broker", "exness"] 

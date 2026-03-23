@@ -1,43 +1,63 @@
 version: '3.8'
 
 services:
-  # Light version (Python only)
-  mql5-automation:
+  api:
     build:
       context: .
       dockerfile: Dockerfile
-    image: mouyleng/mql5-trading-automation:latest
-    container_name: mql5-trading-automation
-    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
     volumes:
-      - ./config:/app/config
-      - ./logs:/app/logs
-      - ./mt5:/app/mt5
-    environment:
-      - PYTHONUNBUFFERED=1
-      - TZ=UTC
-    networks:
-      - mql5-network
+      - .:/app
 
-  # Full version (MT5 + Wine + Python)
-  # Use: docker-compose up mql5-ea-full
-  mql5-ea-full:
+  discord_bot:
     build:
       context: .
-      dockerfile: Dockerfile.mt5
-    image: mouyleng/mql5-ea-container:latest
-    container_name: mql5-ea-full
-    restart: always
-    environment:
-      - TZ=UTC
-      - DISPLAY=:99
+      dockerfile: Dockerfile
+    command: python services/discord_bot.py
+    env_file:
+      - .env
     volumes:
-      - ./config:/app/config
-      - ./logs:/app/logs
-      - ./mt5:/app/mt5
-    networks:
-      - mql5-network
+      - .:/app
 
-networks:
-  mql5-network:
-    driver: bridge
+  telegram_bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python services/telegram_bot.py
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+
+  notifier:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python services/notifier.py
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python services/scheduler.py
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+
+  websocket_feed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python services/websocket_feed.py
+    env_file:
+      - .env
+    volumes:
+      - .:/app

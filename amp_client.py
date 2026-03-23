@@ -3,12 +3,10 @@
 AMP Client - Simple client to communicate with AMP services
 """
 
-import json
-from typing import Any, Dict, Optional
-
 import requests
-
-from amp_auth import check_auth, get_auth_headers
+import json
+from typing import Dict, Any, Optional
+from amp_auth import get_auth_headers, check_auth
 
 
 class AMPClient:
@@ -56,13 +54,13 @@ class AMPClient:
 
         try:
             if method.upper() == "GET":
-                response = requests.get(url, headers=headers, timeout=30)
+                response = requests.get(url, headers=headers)
             elif method.upper() == "POST":
-                response = requests.post(url, headers=headers, json=data, timeout=30)
+                response = requests.post(url, headers=headers, json=data)
             elif method.upper() == "PUT":
-                response = requests.put(url, headers=headers, json=data, timeout=30)
+                response = requests.put(url, headers=headers, json=data)
             elif method.upper() == "DELETE":
-                response = requests.delete(url, headers=headers, timeout=30)
+                response = requests.delete(url, headers=headers)
             else:
                 return {"error": f"Unsupported method: {method}"}
 
@@ -204,7 +202,7 @@ def main():
             print("❌ Unknown command")
             continue
 
-        print("\nResponse:")
+        print(f"\nResponse:")
         print(json.dumps(result, indent=2))
 
 

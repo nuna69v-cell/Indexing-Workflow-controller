@@ -4,22 +4,24 @@ GenX FX CLI - Comprehensive Trading System Management
 Complete command-line interface for managing the GenX FX trading platform
 """
 
+import asyncio
 import json
-import logging
 import os
-import shutil
-import subprocess
 import sys
-from datetime import datetime
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List, Optional, Union
+from datetime import datetime
+import logging
+import subprocess
+import shutil
 
 import typer
 from rich.console import Console
-from rich.panel import Panel
-from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
-from rich.prompt import Confirm, Prompt
 from rich.table import Table
+from rich.panel import Panel
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
+from rich.prompt import Confirm, Prompt
+from rich.syntax import Syntax
 from rich.tree import Tree
 
 # Configure logging
@@ -389,9 +391,10 @@ def config():
         risk_percentage = Prompt.ask("Risk percentage per trade", default="2.0")
 
         # Write to .env file
+        env_content = []
         if cli.env_file.exists():
             with open(cli.env_file, "r") as f:
-                f.readlines()
+                env_content = f.readlines()
 
         # Update or add variables
         updated_vars = {
@@ -711,34 +714,6 @@ def onedrive_sync():
 
     except Exception as e:
         console.print(f"[bold red]❌ Error: {e}[/bold red]")
-
-
-@app.command("verify-vps")
-def verify_vps():
-    """Run comprehensive VPS verification checks"""
-    console.print("[bold green]🔍 Running VPS verification checks...[/bold green]")
-
-    try:
-        # Run the verification script
-        result = subprocess.run(
-            [sys.executable, "scripts/deployment/verify-setup.py"],
-            capture_output=True,
-            text=True,
-            cwd=str(Path.cwd()),
-        )
-
-        console.print(result.stdout)
-        if result.stderr:
-            console.print("[yellow]Warnings/Errors during verification:[/yellow]")
-            console.print(result.stderr)
-
-        if result.returncode == 0:
-            console.print("\n[bold green]✅ VPS verification completed![/bold green]")
-        else:
-            console.print("\n[bold red]❌ VPS verification found issues![/bold red]")
-
-    except Exception as e:
-        console.print(f"[bold red]❌ Error running verification: {e}[/bold red]")
 
 
 if __name__ == "__main__":

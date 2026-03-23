@@ -8,7 +8,8 @@ import json
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Dict, List, Any, Optional
+import asyncio
 
 from amp_auth import check_auth, get_user_info
 from amp_scheduler import get_scheduler_status
@@ -296,7 +297,7 @@ class AMPMonitor:
 
                 # Authentication Status
                 auth = status["authentication"]
-                print("\n🔐 AUTHENTICATION:")
+                print(f"\n🔐 AUTHENTICATION:")
                 print(
                     f"   Status: {'✅ Authenticated' if auth['status'] == 'authenticated' else '❌ Not Authenticated'}"
                 )
@@ -305,7 +306,7 @@ class AMPMonitor:
 
                 # Scheduler Status
                 scheduler = status["scheduler"]
-                print("\n⏰ SCHEDULER:")
+                print(f"\n⏰ SCHEDULER:")
                 print(
                     f"   Running: {'✅ Yes' if scheduler.get('is_running') else '❌ No'}"
                 )
@@ -319,7 +320,7 @@ class AMPMonitor:
 
                 # Job Status
                 jobs = status["jobs"]
-                print("\n📊 JOBS:")
+                print(f"\n📊 JOBS:")
                 print(f"   Total Jobs: {jobs.get('total_jobs', 0)}")
                 print(f"   Success Rate: {jobs.get('success_rate', 0.0):.1f}%")
                 if jobs.get("last_job"):
@@ -329,7 +330,7 @@ class AMPMonitor:
 
                 # Performance
                 perf = status["performance"]
-                print("\n⚡ PERFORMANCE:")
+                print(f"\n⚡ PERFORMANCE:")
                 uptime_hours = perf.get("uptime_seconds", 0) / 3600
                 print(f"   Uptime: {uptime_hours:.1f} hours")
                 print(f"   Logs Size: {perf.get('logs_size_mb', 0)} MB")
@@ -337,7 +338,7 @@ class AMPMonitor:
                 # Alerts
                 alerts = status["alerts"]
                 if alerts:
-                    print("\n🚨 ALERTS:")
+                    print(f"\n🚨 ALERTS:")
                     for alert in alerts:
                         level_icon = (
                             "🔴"
@@ -346,7 +347,7 @@ class AMPMonitor:
                         )
                         print(f"   {level_icon} {alert['message']}")
                 else:
-                    print("\n✅ No active alerts")
+                    print(f"\n✅ No active alerts")
 
                 print(f"\n{'=' * 60}")
                 print("Press Ctrl+C to exit")

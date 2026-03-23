@@ -1,51 +1,48 @@
+modules = ["nodejs-20", "web", "python-3.11", "postgresql-16"]
+run = "npm run dev"
+hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
+
 [nix]
-packages = ["unzipNLS", "nodePackages.pnpm"]
+channel = "stable-24_05"
+packages = ["cairo", "cargo", "ffmpeg-full", "freetype", "ghostscript", "glibcLocales", "gobject-introspection", "gtk3", "libiconv", "libxcrypt", "libyaml", "ocl-icd", "opencl-headers", "openssl", "pkg-config", "qhull", "rustc", "tcl", "tk", "xcodebuild", "xsimd", "zlib"]
 
-[workflows]
-runButton = "Development Server"
+[[ports]]
+localPort = 5000
+externalPort = 80
 
-[[workflows.workflow]]
-name = "Development Server"
-author = 44802328
-mode = "parallel"
+[[ports]]
+localPort = 5173
+externalPort = 5173
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "pnpm install"
+[[ports]]
+localPort = 5174
+externalPort = 3001
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "pnpm run dev"
-
-[[workflows.workflow]]
-name = "Test System"
-author = 44802328
-mode = "sequential"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "pnpm run test"
-
-[[workflows.workflow]]
-name = "Production Build"
-author = 44802328
-mode = "sequential"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "pnpm install"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "pnpm run build"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "pnpm run db:migrate"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "pnpm start"
+[env]
+PORT = "5000"
 
 [deployment]
-run = ["sh", "-c", "pnpm start"]
+deploymentTarget = "autoscale"
+run = ["node", "./dist/index.cjs"]
+build = ["npm", "run", "build"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000

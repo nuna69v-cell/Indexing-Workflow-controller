@@ -6,11 +6,12 @@ Enhanced CLI with Typer for better user experience
 
 import asyncio
 import json
-import logging
 import os
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional
+from datetime import datetime
+import logging
 
 import typer
 from rich.console import Console
@@ -24,8 +25,10 @@ try:
 except Exception:
     pass
 os.environ.setdefault("PYTHONIOENCODING", "utf-8")
-from rich.panel import Panel
 from rich.table import Table
+from rich.panel import Panel
+from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.prompt import Confirm
 
 # Configure logging
 logging.basicConfig(
@@ -601,7 +604,7 @@ def auth(
 ):
     """Manage authentication"""
     try:
-        from amp_auth import authenticate_user, check_auth, get_user_info, logout_user
+        from amp_auth import authenticate_user, check_auth, logout_user, get_user_info
 
         if logout:
             logout_user()
@@ -641,9 +644,9 @@ def schedule(
     """Manage automated job scheduling"""
     try:
         from amp_scheduler import (
-            get_scheduler_status,
             start_scheduler,
             stop_scheduler,
+            get_scheduler_status,
             update_scheduler_config,
         )
 
@@ -655,7 +658,7 @@ def schedule(
             stop_scheduler()
         elif status:
             status_info = get_scheduler_status()
-            console.print("📊 [bold blue]Scheduler Status:")
+            console.print(f"📊 [bold blue]Scheduler Status:")
             console.print(f"   Running: {'✅' if status_info['is_running'] else '❌'}")
             console.print(
                 f"   Enabled: {'✅' if status_info['config']['enabled'] else '❌'}"
@@ -696,14 +699,14 @@ def monitor(
 ):
     """Monitor system performance and status"""
     try:
-        from amp_monitor import display_dashboard, generate_report, get_system_status
+        from amp_monitor import get_system_status, generate_report, display_dashboard
 
         if dashboard:
             console.print("📊 [bold blue]Starting AMP Monitoring Dashboard...")
             display_dashboard()
         elif status:
             status_info = get_system_status()
-            console.print("📊 [bold blue]System Status:")
+            console.print(f"📊 [bold blue]System Status:")
 
             # Authentication
             auth = status_info["authentication"]
@@ -737,7 +740,7 @@ def monitor(
             if alerts_list:
                 console.print(f"   🚨 Alerts: {len(alerts_list)} active")
             else:
-                console.print("   ✅ No alerts")
+                console.print(f"   ✅ No alerts")
 
         elif report:
             report_file = generate_report()
@@ -749,7 +752,7 @@ def monitor(
             status_info = get_system_status()
             alerts_list = status_info["alerts"]
             if alerts_list:
-                console.print("🚨 [bold red]Active Alerts:")
+                console.print(f"🚨 [bold red]Active Alerts:")
                 for alert in alerts_list:
                     level_icon = (
                         "🔴"

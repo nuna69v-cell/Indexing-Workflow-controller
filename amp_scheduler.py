@@ -5,13 +5,13 @@ Handles automated job scheduling and execution
 """
 
 import asyncio
+import schedule
+import time
+from datetime import datetime, timedelta
+from pathlib import Path
 import json
 import logging
-import time
-from pathlib import Path
-from typing import Any, Dict, Optional
-
-import schedule
+from typing import Optional, Dict, Any
 
 from amp_auth import check_auth, get_user_info
 from amp_job_runner import AMPJobRunner
@@ -30,47 +30,41 @@ class AMPScheduler:
     Handles automated job scheduling and execution for the AMP system.
 
     This class uses the 'schedule' library to run jobs at specified intervals.
-
-    Attributes:
-        scheduler_config (Path): The path to the scheduler's configuration file.
-        job_runner (AMPJobRunner): An instance of the job runner to execute tasks.
-        is_running (bool): True if the scheduler's main loop is active.
-        config (Dict): The loaded scheduler configuration.
     """
 
     def __init__(self):
         """Initializes the AMPScheduler."""
-        self.scheduler_config = Path("amp_scheduler_config.json")
+        self.config_file = Path("amp_config.json")
         self.job_runner = AMPJobRunner()
         self.is_running = False
 
-        self.default_schedule = {
+        self.default_config = {
             "market_open": "09:00",
             "market_close": "17:00",
             "interval_minutes": 30,
-            "timezone": "UTC",
-            "enabled": True,
+            "is_enabled": True,
+            "symbols": ["BTCUSDT", "ETHUSDT", "EURUSD", "GBPUSD"]
         }
         self.config: Dict[str, Any] = {}
         self.load_config()
 
     def load_config(self):
         """Loads the scheduler configuration from a JSON file, or creates a default."""
-        if self.scheduler_config.exists():
+        if self.config_file.exists():
             try:
-                with open(self.scheduler_config, "r") as f:
+                with open(self.config_file, "r") as f:
                     self.config = json.load(f)
             except Exception as e:
                 logger.error(f"Error loading scheduler config: {e}")
-                self.config = self.default_schedule
+                self.config = self.default_config
         else:
-            self.config = self.default_schedule
+            self.config = self.default_config
             self.save_config()
 
     def save_config(self):
         """Saves the current scheduler configuration to a JSON file."""
         try:
-            with open(self.scheduler_config, "w") as f:
+            with open(self.config_file, "w") as f:
                 json.dump(self.config, f, indent=2)
         except Exception as e:
             logger.error(f"Error saving scheduler config: {e}")
@@ -78,19 +72,11 @@ class AMPScheduler:
     async def run_scheduled_job(self):
         """
         Executes a single scheduled job run.
-
-        This method checks for authentication and then triggers the job runner.
         """
         try:
-            if not check_auth():
-                logger.warning("User not authenticated. Skipping scheduled job.")
-                return
-
-            user_info = get_user_info()
-            logger.info(f"Running scheduled job for user: {user_info.get('user_id')}")
-
+            # Check if within market hours if needed (logic can be added here)
+            # For now just run
             await self.job_runner.run_next_job()
-
             logger.info("Scheduled job completed successfully.")
         except Exception as e:
             logger.error(f"Error during scheduled job execution: {e}")
@@ -99,7 +85,7 @@ class AMPScheduler:
         """Sets up the job schedule based on the loaded configuration."""
         schedule.clear()
 
-        if not self.config.get("enabled", True):
+        if not self.config.get("is_enabled", True):
             logger.info("Scheduler is disabled in the configuration.")
             return
 
@@ -136,12 +122,6 @@ class AMPScheduler:
         self.is_running = False
 
     def get_status(self) -> Dict[str, Any]:
-        """
-        Gets the current status of the scheduler.
-
-        Returns:
-            Dict[str, Any]: A dictionary with status information.
-        """
         return {
             "is_running": self.is_running,
             "config": self.config,
@@ -150,12 +130,6 @@ class AMPScheduler:
         }
 
     def get_last_run_time(self) -> Optional[str]:
-        """
-        Gets the timestamp of the last job run by parsing the log file.
-
-        Returns:
-            Optional[str]: The timestamp of the last run, or None if not found.
-        """
         log_file = Path("logs/amp_scheduler.log")
         if not log_file.exists():
             return None
@@ -169,21 +143,12 @@ class AMPScheduler:
         return None
 
     def update_config(self, **kwargs):
-        """
-        Updates the scheduler's configuration and saves it.
-
-        If the scheduler is running, it will be restarted to apply the changes.
-
-        Args:
-            **kwargs: Configuration key-value pairs to update.
-        """
         self.config.update(kwargs)
         self.save_config()
         logger.info(f"Scheduler configuration updated: {kwargs}")
 
         if self.is_running:
             logger.info("Restarting scheduler to apply new configuration...")
-            # This restart logic might be better handled by a process manager
             self.setup_schedule()
 
 
@@ -192,20 +157,19 @@ amp_scheduler = AMPScheduler()
 
 
 def start_scheduler():
-    """A convenience function to start the global AMP scheduler."""
     amp_scheduler.start()
 
 
 def stop_scheduler():
-    """A convenience function to stop the global AMP scheduler."""
     amp_scheduler.stop()
 
 
 def get_scheduler_status() -> Dict[str, Any]:
-    """A convenience function to get the status of the global scheduler."""
     return amp_scheduler.get_status()
 
 
 def update_scheduler_config(**kwargs):
-    """A convenience function to update the global scheduler's configuration."""
     amp_scheduler.update_config(**kwargs)
+
+if __name__ == "__main__":
+    start_scheduler()

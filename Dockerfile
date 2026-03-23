@@ -1,34 +1,43 @@
-# Dockerfile for MQL5 Trading Automation System
-FROM python:3.11-slim
+# Use a slim Debian image as the base
+FROM debian:bookworm-slim
 
-# Set working directory
-WORKDIR /app
+# Install sudo and create a non-root user
+RUN apt-get update && apt-get install -y sudo && rm -rf /var/lib/apt/lists/*
+RUN useradd -m -s /bin/bash jules
+RUN adduser jules sudo
+RUN echo "jules:jules" | chpasswd
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    bash \
+# Switch to the non-root user
+USER jules
+WORKDIR /home/jules
+
+# Install dependencies
+RUN sudo apt-get update && \
+    sudo apt-get install -y \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    openssl \
+    git \
+    msmtp \
+    ca-certificates \
+    libnss3 \
+    davfs2 \
+    && sudo rm -rf /var/lib/apt/lists/*
 
-# Copy requirements
-COPY requirements.txt .
+# Install Node.js and Firebase Tools
+RUN curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash - && \
+    sudo apt-get install -y nodejs && \
+    sudo npm install -g firebase-tools
 
-# Install Python dependencies (if any)
-RUN pip install --no-cache-dir -r requirements.txt || echo "No requirements to install"
+# Install GitHub CLI (gh)
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+    sudo apt-get update && \
+    sudo apt-get install -y gh
 
-# Copy application files
-COPY . .
+# Copy the jules.sh script into the container
+COPY --chown=jules:jules jules.sh .
+RUN sudo chmod +x jules.sh
 
-# Create logs directory
-RUN mkdir -p logs
-
-# Make scripts executable
-RUN chmod +x scripts/*.py scripts/*.sh 2>/dev/null || true
-
-# Set Python path
-ENV PYTHONPATH=/app
-ENV PYTHONUNBUFFERED=1
-
-# Default command - run startup orchestrator
-CMD ["python", "scripts/startup_orchestrator.py", "--monitor", "0"]
+# Set the entrypoint
+ENTRYPOINT ["./jules.sh"]

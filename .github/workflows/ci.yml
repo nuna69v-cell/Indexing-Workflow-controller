@@ -30,8 +30,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           export TA_INCLUDE_PATH=/usr/include/ta-lib
           export TA_LIBRARY_PATH=/usr/lib
-          export LDFLAGS="-L/usr/lib"
-          pip install ruff pytest pytest-cov pytest-asyncio httpx pybit pytest-mock fastapi pydantic-settings cryptography joblib backtrader
+          export LDFLAGS="-L/usr/lib" && pip install ruff pytest pytest-cov pytest-asyncio httpx pybit pytest-mock fastapi pydantic-settings cryptography joblib backtrader redis scikit-learn
 
       - name: Lint with Ruff
         run: |

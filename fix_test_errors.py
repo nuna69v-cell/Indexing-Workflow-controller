@@ -14,15 +14,15 @@ with open("tests/test_api.py", "r") as f:
     content = f.read()
 
 # E402 Module level import not at top of file
-lines = content.split('\n')
+lines = content.split("\n")
 for i, line in enumerate(lines):
-    if line.startswith('from unittest.mock import AsyncMock'):
+    if line.startswith("from unittest.mock import AsyncMock"):
         lines.pop(i)
         lines.insert(0, line)
         break
 
 with open("tests/test_api.py", "w") as f:
-    f.write('\n'.join(lines))
+    f.write("\n".join(lines))
 
 # Fix for test_basic.py
 with open("tests/test_basic.py", "r") as f:
@@ -72,15 +72,15 @@ with open("tests/test_fxcm_credentials_removed.py", "w") as f:
 with open("tests/test_fxcm_forexconnect_provider.py", "r") as f:
     content = f.read()
 
-lines = content.split('\n')
+lines = content.split("\n")
 start_idx = -1
 end_idx = -1
 import_block = []
 for i, line in enumerate(lines):
-    if line.startswith('from core.data_sources.fxcm_forexconnect_provider import ('):
+    if line.startswith("from core.data_sources.fxcm_forexconnect_provider import ("):
         start_idx = i
         import_block.append(line)
-    elif start_idx != -1 and line == ')':
+    elif start_idx != -1 and line == ")":
         end_idx = i
         import_block.append(line)
         break
@@ -89,16 +89,16 @@ for i, line in enumerate(lines):
 
 if start_idx != -1 and end_idx != -1:
     # Delete the old import block
-    del lines[start_idx:end_idx+1]
+    del lines[start_idx : end_idx + 1]
 
     # Insert it at the top after other imports
     insert_idx = 0
     for i, line in enumerate(lines):
-        if line.startswith('import') or line.startswith('from'):
+        if line.startswith("import") or line.startswith("from"):
             insert_idx = i + 1
 
     for i, imp_line in enumerate(import_block):
         lines.insert(insert_idx + i, imp_line)
 
 with open("tests/test_fxcm_forexconnect_provider.py", "w") as f:
-    f.write('\n'.join(lines))
+    f.write("\n".join(lines))

@@ -13,7 +13,6 @@ mock_fx = MagicMock()
 provider_module.fx = mock_fx
 
 
-
 @pytest.mark.asyncio
 @patch("core.data_sources.fxcm_forexconnect_provider.FOREXCONNECT_AVAILABLE", True)
 @patch("core.data_sources.fxcm_forexconnect_provider.aiohttp.ClientSession")

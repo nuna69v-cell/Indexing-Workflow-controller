@@ -204,8 +204,6 @@ def test_v2_users_pagination():
     conn.close()
 
 
-
-
 @pytest.mark.asyncio
 @patch("api.redis.redis_client", new_callable=AsyncMock)
 async def test_trading_pairs_caching(mock_redis_client):

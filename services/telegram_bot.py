@@ -26,7 +26,7 @@ class TelegramBot:
 
     async def send_message(self, chat_id: str, text: str):
         url = f"https://api.telegram.org/bot{self.token}/sendMessage"
-        payload = {'chat_id': chat_id, 'text': text}
+        payload = {"chat_id": chat_id, "text": text}
         async with aiohttp.ClientSession() as session:
             async with session.post(url, json=payload) as resp:
                 return await resp.json()

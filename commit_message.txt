@@ -1,5 +1,0 @@
-🧪 [Add tests for load_env in settings.py]
-
-🎯 What: Added tests to verify the behavior of the `load_env` function in `config/settings.py` for correct configuration loading.
-📊 Coverage: Tested both the successful loading of mock environment variables (`DB_URL`, `API_KEY`) and the handling of missing environment variables gracefully (returning `None`).
-✨ Result: Improved the reliability and testability of the application's configuration loading logic, catching potential mapping regressions.

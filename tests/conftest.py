@@ -12,8 +12,85 @@ os.environ["JWT_SECRET"] = "test_jwt_secret"
 
 try:
     import talib  # noqa: F401
+
+
+
+
+
+
+
 except ImportError:
-    sys.modules["talib"] = MagicMock()
+    import numpy as np
+    import pandas as pd
+
+    class MockMAType:
+        SMA = 0
+        EMA = 1
+        WMA = 2
+        DEMA = 3
+        TEMA = 4
+        TRIMA = 5
+        KAMA = 6
+        MAMA = 7
+        T3 = 8
+
+    class MockAbstract:
+        TA_FUNC_FLAGS = {}
+        TA_OUTPUT_FLAGS = {}
+
+
+    class MockTalib:
+        MA_Type = MockMAType()
+        abstract = MockAbstract()
+        def get_functions(self):
+            return []
+        def SMA(self, arr, timeperiod=None):
+            if isinstance(arr, pd.Series): return pd.Series(np.ones_like(arr.values))
+            return np.ones_like(arr)
+        def EMA(self, arr, timeperiod=None):
+            if isinstance(arr, pd.Series): return pd.Series(np.ones_like(arr.values))
+            return np.ones_like(arr)
+        def RSI(self, arr, timeperiod=None):
+            if isinstance(arr, pd.Series): return pd.Series(np.ones_like(arr.values))
+            return np.ones_like(arr)
+        def MACD(self, arr, fastperiod=None, slowperiod=None, signalperiod=None):
+            if isinstance(arr, pd.Series): return pd.Series(np.ones_like(arr.values)), pd.Series(np.ones_like(arr.values)), pd.Series(np.ones_like(arr.values))
+            return np.ones_like(arr), np.ones_like(arr), np.ones_like(arr)
+        def ATR(self, high, low, close, timeperiod=None):
+            return np.ones_like(close)
+        def NATR(self, high, low, close, timeperiod=None):
+            return np.ones_like(close)
+        def MFI(self, high, low, close, timeperiod=None):
+            return np.ones_like(close)
+        def ADX(self, high, low, close, timeperiod=None):
+            return np.ones_like(close)
+        def PLUS_DI(self, high, low, close, timeperiod=None):
+            return np.ones_like(close)
+        def MINUS_DI(self, high, low, close, timeperiod=None):
+            return np.ones_like(close)
+        def CCI(self, high, low, close, timeperiod=None):
+            return np.ones_like(close)
+        def OBV(self, close, volume, timeperiod=None):
+            return np.ones_like(close)
+        def WILLR(self, high, low, close, timeperiod=None):
+            return np.ones_like(close)
+        def BBANDS(self, close, timeperiod=None, nbdevup=None, nbdevdn=None, matype=None):
+            return np.ones_like(close), np.ones_like(close), np.ones_like(close)
+        def MACDEXT(self, close, fastperiod=None, fastmatype=None, slowperiod=None, slowmatype=None, signalperiod=None, signalmatype=None):
+            return np.ones_like(close), np.ones_like(close), np.ones_like(close)
+        def STOCH(self, high, low, close, fastk_period=None, slowk_period=None, slowk_matype=None, slowd_period=None, slowd_matype=None):
+            return np.ones_like(close), np.ones_like(close)
+        def MOM(self, arr, timeperiod=None):
+            if isinstance(arr, pd.Series): return pd.Series(np.ones_like(arr.values))
+            return np.ones_like(arr)
+        def ROC(self, arr, timeperiod=None):
+            if isinstance(arr, pd.Series): return pd.Series(np.ones_like(arr.values))
+            return np.ones_like(arr)
+        def AD(self, high, low, close, volume):
+            return np.ones_like(close)
+
+    sys.modules["talib"] = MockTalib()
+    sys.modules["talib.abstract"] = MockTalib()
 
 
 @pytest.fixture(autouse=True)

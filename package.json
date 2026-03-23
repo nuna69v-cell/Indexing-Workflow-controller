@@ -33,7 +33,7 @@
     "clsx": "^2.1.1",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
-    "drizzle-orm": "^0.30.10",
+    "drizzle-orm": "^0.45.1",
     "embla-carousel-react": "^8.0.4",
     "express": "^4.19.2",
     "firebase-tools": "^13.9.0",

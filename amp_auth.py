@@ -31,6 +31,8 @@ class AMPAuth:
         self.session_token: Optional[str] = None
         self.user_id: Optional[str] = None
         self.session_hash: Optional[str] = None
+        self.is_logged_in: bool = False
+        self.current_user: Optional[str] = None
 
     def parse_token(self, token: str) -> Dict[str, str]:
         """
@@ -151,6 +153,8 @@ class AMPAuth:
         self.session_token = None
         self.user_id = None
         self.session_hash = None
+        self.is_logged_in = False
+        self.current_user = None
         print("✅ Logged out successfully")
 
     def get_user_info(self) -> Dict[str, Any]:

@@ -31,7 +31,7 @@ jobs:
           export TA_INCLUDE_PATH=/usr/include/ta-lib
           export TA_LIBRARY_PATH=/usr/lib
           export LDFLAGS="-L/usr/lib"
-          pip install ruff pytest pytest-cov
+          pip install ruff pytest pytest-cov pytest-asyncio httpx pybit pytest-mock
 
       - name: Lint with Ruff
         run: |

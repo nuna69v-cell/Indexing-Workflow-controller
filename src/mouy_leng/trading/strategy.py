@@ -1,10 +1,12 @@
 import backtrader as bt
 from typing import Optional
 
+
 class RSIMACDStrategy(bt.Strategy):
     """
     A basic trading strategy using RSI and MACD indicators.
     """
+
     params = (
         ("rsi_period", 14),
         ("rsi_overbought", 70),
@@ -30,9 +32,21 @@ class RSIMACDStrategy(bt.Strategy):
         """Core strategy logic executed on each bar."""
         if not self.position:
             # Buy condition: RSI oversold AND MACD line crosses above Signal line
-            if self.rsi and self.macd and self.rsi[0] < self.params.rsi_oversold and self.macd.macd[0] > self.macd.signal[0]:
+            if (
+                self.rsi
+                and self.macd
+                and self.rsi[0] < self.params.rsi_oversold
+                and self.macd.macd[0] > self.macd.signal[0]
+            ):
                 self.buy()
         else:
             # Sell condition: RSI overbought OR MACD line crosses below Signal line
-            if self.rsi and self.macd and (self.rsi[0] > self.params.rsi_overbought or self.macd.macd[0] < self.macd.signal[0]):
+            if (
+                self.rsi
+                and self.macd
+                and (
+                    self.rsi[0] > self.params.rsi_overbought
+                    or self.macd.macd[0] < self.macd.signal[0]
+                )
+            ):
                 self.sell()

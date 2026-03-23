@@ -1,10 +1,8 @@
 import pytest
 from unittest.mock import patch, MagicMock, AsyncMock
-import os
-import aiohttp
 
 # Import the module to be tested
-from services.telegram_bot import TelegramBot, telegram_bot
+from services.telegram_bot import TelegramBot
 
 @pytest.fixture
 def mock_env(monkeypatch):
@@ -58,7 +56,7 @@ async def test_send_message_success(mock_env, mock_aiohttp_session):
     # Verify aiohttp was called correctly
     mock_session_instance = mock_aiohttp_session['session_instance']
     mock_session_instance.post.assert_called_once_with(
-        f"https://api.telegram.org/bottest_token/sendMessage",
+        "https://api.telegram.org/bottest_token/sendMessage",
         json={'chat_id': chat_id, 'text': text}
     )
 

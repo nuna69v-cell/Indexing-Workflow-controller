@@ -1,9 +1,9 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+class DummySession:
+    def close(self):
+        pass
 
-# This is a dummy for the test
-engine = create_engine("sqlite:///:memory:")
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+def SessionLocal():
+    return DummySession()
 
 def get_db():
     db = SessionLocal()

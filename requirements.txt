@@ -17,3 +17,32 @@ schedule>=1.1.0
 # AI & Data
 google-generativeai>=0.3.0
 yfinance>=0.2.0
+
+# Web & API
+fastapi
+pydantic-settings
+aiohttp
+httpx
+pybit
+
+# Machine Learning & Backtesting
+numpy<2.0.0
+pandas
+scikit-learn
+scipy
+joblib
+backtrader
+TA-Lib
+
+# Other Integrations & Tools
+redis
+supabase
+praw
+cryptography
+psutil
+
+# Testing (will also be installed manually in CI, but good to have)
+pytest
+pytest-cov
+pytest-asyncio
+pytest-mock

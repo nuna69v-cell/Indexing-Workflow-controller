@@ -1,3 +1,7 @@
+import sys
+import unittest.mock
+sys.modules["talib"] = unittest.mock.MagicMock()
+sys.modules["talib.abstract"] = unittest.mock.MagicMock()
 import pytest
 import backtrader as bt
 from src.mouy_leng.trading.strategy import RSIMACDStrategy

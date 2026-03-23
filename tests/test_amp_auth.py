@@ -1,6 +1,6 @@
 import pytest
-from pathlib import Path
 from amp_auth import AMPAuth, logout_user, amp_auth
+
 
 @pytest.fixture
 def auth_instance(tmp_path):
@@ -8,6 +8,7 @@ def auth_instance(tmp_path):
     # Use a temporary file for auth_file so we don't mess with real data
     auth.auth_file = tmp_path / "test_amp_auth.json"
     return auth
+
 
 def test_logout_with_existing_file(auth_instance, capsys):
     # Setup
@@ -35,6 +36,7 @@ def test_logout_with_existing_file(auth_instance, capsys):
     captured = capsys.readouterr()
     assert "✅ Logged out successfully" in captured.out
 
+
 def test_logout_without_existing_file(auth_instance, capsys):
     # Setup
     auth_instance.session_token = "test_token"
@@ -60,9 +62,11 @@ def test_logout_without_existing_file(auth_instance, capsys):
     captured = capsys.readouterr()
     assert "✅ Logged out successfully" in captured.out
 
+
 def test_global_logout_user(monkeypatch):
     # Setup
     logout_called = False
+
     def mock_logout():
         nonlocal logout_called
         logout_called = True

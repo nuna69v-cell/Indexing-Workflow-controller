@@ -203,7 +203,8 @@ def test_v2_users_pagination():
     conn.close()
 
 
-from unittest.mock import AsyncMock
+
+from unittest.mock import AsyncMock  # noqa: E402
 
 
 @pytest.mark.asyncio

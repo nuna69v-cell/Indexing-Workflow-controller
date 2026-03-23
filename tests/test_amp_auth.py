@@ -1,5 +1,5 @@
 from unittest.mock import MagicMock
-import pytest
+
 from amp_auth import AMPAuth
 
 def test_authenticate_success():

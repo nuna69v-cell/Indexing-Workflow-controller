@@ -52,7 +52,7 @@ This is **required** or the EA cannot connect to the server.
 2. In the **Navigator** panel, find your EA under **Expert Advisors**
 3. Drag it onto the chart
 4. In the EA settings dialog:
-   - Set **ServerURL** = your Replit dashboard URL
+   - Set **ServerURL** = `https://vps-forge--mouy-leng.replit.app`
    - **AccountNumber** is pre-filled (169926536 or 530142568)
    - **BrokerServer** is pre-filled
    - Set **EnableAutoTrade** = true
@@ -88,7 +88,7 @@ This is **required** or the EA cannot connect to the server.
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| ServerURL | (your URL) | Your deployed Replit dashboard URL |
+| ServerURL | `https://vps-forge--mouy-leng.replit.app` | Your deployed Replit dashboard URL |
 | RiskPercent | 1.0 | % of balance to risk per trade |
 | DefaultLotSize | 0.01 | Lot size if no SL is given |
 | MaxLotSize | 1.0 | Hard cap on lot size |

@@ -12,7 +12,7 @@
 #include <JSON.mqh>
 
 //--- Input parameters
-input string ServerURL = "http://localhost:3000"; // Server URL
+input string ServerURL = "https://vps-forge--mouy-leng.replit.app"; // Server URL
 input string EAName = "GenZ_Scalping_Bot_MT5"; // EA identification name
 input double LotSize = 0.01; // Trade lot size
 input int MagicNumber = 12345; // Magic number for trades

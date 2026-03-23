@@ -700,7 +700,7 @@ def monitor(
 
         if dashboard:
             console.print("📊 [bold blue]Starting AMP Monitoring Dashboard...")
-            display_dashboard()
+            asyncio.run(display_dashboard())
         elif status:
             status_info = get_system_status()
             console.print("📊 [bold blue]System Status:")

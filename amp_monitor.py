@@ -4,8 +4,8 @@ AMP Monitoring Dashboard
 Real-time monitoring and analytics for the AMP system
 """
 
+import asyncio
 import json
-import time
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List
@@ -275,7 +275,7 @@ class AMPMonitor:
             print(f"Error generating report: {e}")
             return ""
 
-    def display_dashboard(self):
+    async def display_dashboard(self):
         """Displays a real-time monitoring dashboard in the console."""
         print("=" * 60)
         print("🚀 AMP SYSTEM MONITORING DASHBOARD")
@@ -352,14 +352,14 @@ class AMPMonitor:
                 print("Press Ctrl+C to exit")
 
                 # Wait for next update
-                time.sleep(self.config.get("refresh_interval", 30))
+                await asyncio.sleep(self.config.get("refresh_interval", 30))
 
             except KeyboardInterrupt:
                 print("\n\n👋 Dashboard stopped")
                 break
             except Exception as e:
                 print(f"\n❌ Dashboard error: {e}")
-                time.sleep(5)
+                await asyncio.sleep(5)
 
 
 # Global monitor instance
@@ -376,6 +376,6 @@ def generate_report() -> str:
     return amp_monitor.generate_report()
 
 
-def display_dashboard():
+async def display_dashboard():
     """Display monitoring dashboard"""
-    amp_monitor.display_dashboard()
+    await amp_monitor.display_dashboard()

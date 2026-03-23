@@ -31,6 +31,8 @@ class AMPAuth:
         self.session_token: Optional[str] = None
         self.user_id: Optional[str] = None
         self.session_hash: Optional[str] = None
+        self.is_logged_in = False
+        self.current_user = None
 
     def parse_token(self, token: str) -> Dict[str, str]:
         """
@@ -62,42 +64,16 @@ class AMPAuth:
             print(f"Error parsing token: {e}")
             return {}
 
-    def authenticate(self, token: str) -> bool:
-        """
-        Authenticates a user with the provided token and saves the session.
-
-        Args:
-            token (str): The session token for authentication.
-
-        Returns:
-            bool: True if authentication is successful, False otherwise.
-        """
-        print("🔐 Authenticating with token...")
-        token_data = self.parse_token(token)
-        if not token_data:
-            print("❌ Invalid token format")
-            return False
-
-        self.session_token = token_data["full_token"]
-        self.user_id = token_data["user_id"]
-        self.session_hash = token_data["session_hash"]
-
-        auth_data = {
-            "user_id": self.user_id,
-            "session_hash": self.session_hash,
-            "session_token": self.session_token,
-            "authenticated_at": datetime.now().isoformat(),
-            "expires_at": (datetime.now() + timedelta(hours=24)).isoformat(),
-        }
-
-        with open(self.auth_file, "w") as f:
-            json.dump(auth_data, f, indent=2)
-
-        print("✅ Authentication successful!")
-        print(f"   User ID: {self.user_id}")
-        print(f"   Session: {self.session_hash[:16]}...")
-        print(f"   Expires: {auth_data['expires_at']}")
+    def _validate_token(self, parsed_token: dict) -> bool:
         return True
+
+    def authenticate(self, token: str) -> bool:
+        parsed_token = self.parse_token(token)
+        if parsed_token and self._validate_token(parsed_token):
+            self.is_logged_in = True
+            self.current_user = parsed_token.get('user_id')
+            return True
+        return False
 
     def is_authenticated(self) -> bool:
         """

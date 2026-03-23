@@ -1,4 +1,3 @@
-import pytest
 from amp_auth import AMPAuth
 
 def test_parse_token_valid_no_prefix():

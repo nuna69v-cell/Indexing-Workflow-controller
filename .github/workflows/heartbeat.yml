@@ -1,0 +1,41 @@
+---
+name: Heartbeat Service
+
+"on":
+  schedule:
+    - cron: '*/30 * * * *'  # Run every 30 minutes
+  workflow_dispatch:
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Heartbeat to Forgejo-runner-windows-builder
+        run: |
+          curl -X POST \
+               -H "Accept: application/vnd.github.v3+json" \
+               -H "Authorization: token ${{ secrets.GH_PAT }}" \
+               "https://api.github.com/repos/nuna69v-cell/\
+          Forgejo-runner-windows-builder/dispatches" \
+               -d '{"event_type": "heartbeat", \
+          "client_payload": {"source": "Indexing-Workflow-controller"}}'
+
+      - name: Send Heartbeat to FXPRO-broker
+        run: |
+          curl -X POST \
+               -H "Accept: application/vnd.github.v3+json" \
+               -H "Authorization: token ${{ secrets.GH_PAT }}" \
+               "https://api.github.com/repos/nuna69v-cell/\
+          FXPRO-broker/dispatches" \
+               -d '{"event_type": "heartbeat", \
+          "client_payload": {"source": "Indexing-Workflow-controller"}}'
+
+      - name: Send Heartbeat to Autonomous-trading-Exness
+        run: |
+          curl -X POST \
+               -H "Accept: application/vnd.github.v3+json" \
+               -H "Authorization: token ${{ secrets.GH_PAT }}" \
+               "https://api.github.com/repos/nuna69v-cell/\
+          Autonomous-trading-Exness/dispatches" \
+               -d '{"event_type": "heartbeat", \
+          "client_payload": {"source": "Indexing-Workflow-controller"}}'

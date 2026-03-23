@@ -16,7 +16,7 @@
 //---    and add your server URL to the "Allow WebRequest for listed URL" list.
 
 //--- Server settings (edit ServerURL to match your deployed Replit URL)
-input string   ServerURL        = "https://YOUR-REPLIT-APP.replit.app"; // Dashboard server URL
+input string   ServerURL        = "https://vps-forge--mouy-leng.replit.app"; // Dashboard server URL
 input string   BrokerID         = "exness";                              // Broker identifier
 input string   AccountNumber    = "169926536";                           // MT5 account number
 input string   BrokerServer     = "Exness-MT5Real24";                   // Broker server name

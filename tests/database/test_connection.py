@@ -2,13 +2,14 @@ import pytest
 from unittest.mock import patch, MagicMock
 from database.connection import get_db
 
+
 def test_get_db_success():
     """Test that get_db yields a session and closes it afterward."""
     # Create a mock session object
     mock_session = MagicMock()
 
     # Patch SessionLocal to return our mock session
-    with patch('database.connection.SessionLocal', return_value=mock_session):
+    with patch("database.connection.SessionLocal", return_value=mock_session):
         # get_db is a generator, so we need to iterate it
         db_generator = get_db()
 
@@ -28,11 +29,12 @@ def test_get_db_success():
         # Now close should have been called
         mock_session.close.assert_called_once()
 
+
 def test_get_db_exception():
     """Test that get_db closes the session even if an exception occurs during use."""
     mock_session = MagicMock()
 
-    with patch('database.connection.SessionLocal', return_value=mock_session):
+    with patch("database.connection.SessionLocal", return_value=mock_session):
         db_generator = get_db()
 
         # Get the yielded value

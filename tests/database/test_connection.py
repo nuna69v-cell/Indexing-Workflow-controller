@@ -23,7 +23,7 @@ def test_get_db_success():
 
         # Trigger the finally block by stopping iteration
         with pytest.raises(StopIteration):
-            next(db_generator)
+            yielded_db = next(db_generator)
 
         # Now close should have been called
         mock_session.close.assert_called_once()
@@ -36,7 +36,7 @@ def test_get_db_exception():
         db_generator = get_db()
 
         # Get the yielded value
-        yielded_db = next(db_generator)
+        _yielded_db = next(db_generator)
 
         # Simulate an exception happening while the caller is using the db
         with pytest.raises(ValueError):

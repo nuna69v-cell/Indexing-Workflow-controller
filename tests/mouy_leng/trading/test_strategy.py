@@ -1,5 +1,8 @@
 import pytest
-import backtrader as bt
+try:
+    import backtrader as bt
+except ImportError:
+    pytest.skip('backtrader missing', allow_module_level=True)
 from src.mouy_leng.trading.strategy import RSIMACDStrategy
 from src.mouy_leng.trading.backtest import run_backtest
 import pandas as pd

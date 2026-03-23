@@ -1,6 +1,6 @@
 import subprocess
-import time
 import sys
+import time
 
 
 def run_command(cmd):

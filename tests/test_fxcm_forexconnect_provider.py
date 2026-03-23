@@ -3,6 +3,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 # Provide a mock for 'fx' module before importing the provider
 import core.data_sources.fxcm_forexconnect_provider as provider_module
+
 mock_fx = MagicMock()
 provider_module.fx = mock_fx
 

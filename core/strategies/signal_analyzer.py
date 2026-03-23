@@ -187,12 +187,20 @@ class SignalAnalyzer:
     def _filter_by_time(self, signals: List[Dict]) -> List[Dict]:
         """
         Filters signals to include only those generated within a recent time window.
-
-        FIXME: This filter is currently disabled.
+        Handles both timezone-aware and timezone-naive timestamps.
         """
-        # cutoff_time = datetime.now() - timedelta(hours=24)
-        # return [s for s in signals if s['timestamp'] >= cutoff_time]
-        return signals  # FIXME: Re-enable this filter with proper timezone handling.
+        cutoff_time = pd.Timestamp.now('UTC') - pd.Timedelta(hours=24)
+        filtered_signals = []
+        for s in signals:
+            try:
+                # Convert timestamp to UTC-aware pandas Timestamp
+                ts = pd.to_datetime(s['timestamp'], utc=True)
+                if ts >= cutoff_time:
+                    filtered_signals.append(s)
+            except Exception:
+                # If timestamp is completely invalid, drop the signal
+                continue
+        return filtered_signals
 
     def _filter_by_confluence(self, signals: List[Dict]) -> List[Dict]:
         """
@@ -238,7 +246,14 @@ class SignalAnalyzer:
         self.signal_history.extend(signals)
 
         # Keep only signals from the last 7 days
-        cutoff_time = datetime.now() - timedelta(days=7)
-        self.signal_history = [
-            s for s in self.signal_history if s["timestamp"] >= cutoff_time
-        ]
+        cutoff_time = pd.Timestamp.now('UTC') - pd.Timedelta(days=7)
+        pruned_history = []
+        for s in self.signal_history:
+            try:
+                ts = pd.to_datetime(s["timestamp"], utc=True)
+                if ts >= cutoff_time:
+                    pruned_history.append(s)
+            except Exception:
+                pass
+
+        self.signal_history = pruned_history

@@ -19,9 +19,9 @@ class DriveManager:
                 if os.path.exists(drive):
                     try:
                         # Try to get volume label
-                        cmd = f"vol {letter}:"
-                        # shell=True is required for Windows internal command 'vol'
-                        output = subprocess.check_output(cmd, shell=True)  # nosec
+                        # Use list format to avoid shell=True command injection risks
+                        cmd = ["cmd.exe", "/c", "vol", f"{letter}:"]
+                        output = subprocess.check_output(cmd)  # nosec
                         label = output.decode().split()[-1]
                     except Exception:
                         label = "Unknown"

@@ -1,12 +1,13 @@
+import sys
 from unittest.mock import AsyncMock, MagicMock, patch
-
 import pytest
+
+# Mock forexconnect to avoid requiring the actual C++ library
+mock_fx = MagicMock()
+sys.modules["forexconnect"] = mock_fx
 
 import core.data_sources.fxcm_forexconnect_provider as provider_module
 
-# Create a mock for the 'fx' module and add it to the provider module
-# so that the test can find it.
-mock_fx = MagicMock()
 provider_module.fx = mock_fx
 
 from core.data_sources.fxcm_forexconnect_provider import (

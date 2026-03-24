@@ -32,3 +32,4 @@ logs/
 .replit
 replit.nix
 .cache
+node_modules/

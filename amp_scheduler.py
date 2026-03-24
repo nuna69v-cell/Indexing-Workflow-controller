@@ -43,7 +43,7 @@ class AMPScheduler:
             "market_close": "17:00",
             "interval_minutes": 30,
             "is_enabled": True,
-            "symbols": ["BTCUSDT", "ETHUSDT", "EURUSD", "GBPUSD"]
+            "symbols": ["BTCUSDT", "ETHUSDT", "EURUSD", "GBPUSD"],
         }
         self.config: Dict[str, Any] = {}
         self.load_config()
@@ -170,6 +170,7 @@ def get_scheduler_status() -> Dict[str, Any]:
 
 def update_scheduler_config(**kwargs):
     amp_scheduler.update_config(**kwargs)
+
 
 if __name__ == "__main__":
     start_scheduler()

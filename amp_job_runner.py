@@ -134,7 +134,9 @@ class AMPJobRunner:
         if "websocket" in services:
             try:
                 # Subscribe to configured symbols or defaults
-                symbols = self.config.get("symbols", ["BTCUSDT", "ETHUSDT", "EURUSD", "GBPUSD"])
+                symbols = self.config.get(
+                    "symbols", ["BTCUSDT", "ETHUSDT", "EURUSD", "GBPUSD"]
+                )
                 logger.info(f"Subscribing to symbols: {symbols}")
                 for symbol in symbols:
                     await services["websocket"].subscribe_to_symbol("bybit", symbol)

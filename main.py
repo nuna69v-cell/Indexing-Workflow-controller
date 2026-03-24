@@ -116,7 +116,7 @@ class GenXTradingSystem:
 
         try:
             # Initialize trading engine
-            self.trading_engine = TradingEngine(self.config)
+            self.trading_engine = TradingEngine(self.config_manager.config_path)
 
             # Start the engine
             await self.trading_engine.start()
@@ -266,7 +266,7 @@ class GenXTradingSystem:
 
             # Test signal generation
             logger.info("Testing signal generation...")
-            self.trading_engine = TradingEngine(self.config)
+            self.trading_engine = TradingEngine(self.config_manager.config_path)
             test_signals = await self.trading_engine.force_signal_generation(["EURUSD"])
 
             if test_signals:
@@ -293,7 +293,7 @@ class GenXTradingSystem:
         logger.info(f"🎲 Generating {count} sample signals")
 
         try:
-            self.trading_engine = TradingEngine(self.config)
+            self.trading_engine = TradingEngine(self.config_manager.config_path)
             await self.trading_engine.data_provider.connect()
             await self.trading_engine.ensemble_predictor.initialize()
             await self.trading_engine.spreadsheet_manager.initialize()

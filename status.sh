@@ -10,7 +10,7 @@ SIGNAL_PID=$(cat logs/signal_loop.pid 2>/dev/null)
 echo "🌐 Web Server:"
 if kill -0 $WEB_PID 2>/dev/null; then
     echo "  ✅ Running (PID: $WEB_PID)"
-    echo "  📡 URL: http://34.71.143.222:8080"
+    echo "  📡 URL: http://localhost:8080"
 else
     echo "  ❌ Not running"
 fi

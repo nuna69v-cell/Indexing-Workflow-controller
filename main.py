@@ -74,13 +74,39 @@ def load_symbols_config():
 
 
 def check_mt5_connection():
-    """Check if MT5 terminal directory is accessible"""
+    """Check if MT5 terminal directory is accessible and can connect to MT5"""
     mt5_path = os.getenv("MT5_TERMINAL_PATH", "/mt5")
-    if os.path.exists(mt5_path):
+    path_exists = os.path.exists(mt5_path)
+
+    if path_exists:
         logger.info(f"MT5 terminal path accessible: {mt5_path}")
-        return True
     else:
         logger.warning(f"MT5 terminal path not found: {mt5_path}")
+        return False
+
+    try:
+        import MetaTrader5 as mt5
+        # Attempt to initialize
+        if not mt5.initialize(path=mt5_path):
+            error_code = mt5.last_error()
+            logger.error(f"MT5 initialization failed, error code = {error_code}")
+            return False
+
+        # Optional: check if connected to terminal/server
+        terminal_info = mt5.terminal_info()
+        if terminal_info is None or not terminal_info.connected:
+            logger.error("MT5 terminal is not connected to broker")
+            mt5.shutdown()
+            return False
+
+        logger.info("Successfully connected to MT5 terminal")
+        mt5.shutdown()
+        return True
+    except ImportError:
+        logger.warning("MetaTrader5 package not installed or not supported on this OS. Relying on path check only.")
+        return True
+    except Exception as e:
+        logger.error(f"Error checking MT5 connection: {e}")
         return False
 
 

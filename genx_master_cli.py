@@ -582,9 +582,7 @@ def health_check():
     if overall_health:
         console.print("\n🎉 [bold green]Platform Health: EXCELLENT[/bold green]")
     else:
-        console.print(
-            "\n⚠️ [bold yellow]Platform Health: NEEDS ATTENTION[/bold yellow]"
-        )
+        console.print("\n⚠️ [bold yellow]Platform Health: NEEDS ATTENTION[/bold yellow]")
 
 
 if __name__ == "__main__":

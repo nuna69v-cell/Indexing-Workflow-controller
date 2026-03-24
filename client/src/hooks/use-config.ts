@@ -4,4 +4,4 @@ export const useBotStatus = () => ({
   isLoading: false,
   refetch: () => {}
 });
-export const useRunJob = () => ({ mutate: (arg?: any) => { console.log(arg); }, isPending: false });
+export const useRunJob = () => ({ mutate: (arg?: any, options?: any) => { console.log(arg, options); }, isPending: false });

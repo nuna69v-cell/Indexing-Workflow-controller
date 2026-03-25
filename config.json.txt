@@ -1,0 +1,1 @@
+{"dl":"https://forge.mql5.io/api/packages/A6-9V/cargo/api/v1/crates","api":"https://forge.mql5.io/api/packages/A6-9V/cargo","auth-required":false}

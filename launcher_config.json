@@ -1,0 +1,8 @@
+{
+    "teams": {
+        "dev-team": [
+            "https://github.com",
+            "https://stackoverflow.com"
+        ]
+    }
+}

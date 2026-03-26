@@ -2,16 +2,22 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import core.data_sources.fxcm_forexconnect_provider as provider_module
+try:
+    import core.data_sources.fxcm_forexconnect_provider as provider_module
+except ImportError:
+    pytest.skip('aiohttp missing', allow_module_level=True)
 
 # Create a mock for the 'fx' module and add it to the provider module
 # so that the test can find it.
 mock_fx = MagicMock()
 provider_module.fx = mock_fx
 
-from core.data_sources.fxcm_forexconnect_provider import (
-    FXCMForexConnectProvider,
-)
+try:
+    from core.data_sources.fxcm_forexconnect_provider import (  # noqa: E402
+        FXCMForexConnectProvider,
+    )
+except ImportError:
+    pytest.skip('aiohttp missing', allow_module_level=True)
 
 
 @pytest.mark.asyncio

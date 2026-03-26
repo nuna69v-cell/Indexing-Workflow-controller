@@ -1,8 +1,12 @@
+import pytest
 import os
 import unittest
 from unittest.mock import MagicMock, patch
 
-from fastapi import HTTPException
+try:
+    from fastapi import HTTPException
+except ImportError:
+    pytest.skip('fastapi missing', allow_module_level=True)
 
 from api.utils.auth import get_current_user
 

@@ -1,0 +1,159 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and system access levels",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "operator", "viewer"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "TradingNode": {
+      "title": "Trading Node",
+      "description": "Configuration and health of a distributed trading node",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["FOREX", "CRYPTO"] },
+        "broker": { "type": "string" },
+        "status": { "type": "string", "enum": ["ONLINE", "OFFLINE", "TRADING", "ERROR"] },
+        "lastSeen": { "type": "string", "format": "date-time" },
+        "latency": { "type": "number" },
+        "cpu": { "type": "number" },
+        "memory": { "type": "number" },
+        "ownerUid": { "type": "string" }
+      },
+      "required": ["id", "name", "type", "status", "ownerUid"]
+    },
+    "Trade": {
+      "title": "Trade",
+      "description": "Executed trade record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "nodeId": { "type": "string" },
+        "symbol": { "type": "string" },
+        "side": { "type": "string", "enum": ["BUY", "SELL"] },
+        "entry": { "type": "number" },
+        "exit": { "type": "number" },
+        "size": { "type": "number" },
+        "pnl": { "type": "number" },
+        "status": { "type": "string", "enum": ["OPEN", "CLOSED", "CANCELLED"] },
+        "ownerUid": { "type": "string" }
+      },
+      "required": ["id", "timestamp", "nodeId", "symbol", "side", "entry", "status", "ownerUid"]
+    },
+    "RiskSettings": {
+      "title": "Risk Settings",
+      "description": "Global risk management parameters",
+      "type": "object",
+      "properties": {
+        "maxDrawdown": { "type": "number" },
+        "maxDailyLoss": { "type": "number" },
+        "maxLeverage": { "type": "number" },
+        "maxConcentration": { "type": "number" },
+        "killSwitchActive": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "updatedBy": { "type": "string" }
+      },
+      "required": ["maxDrawdown", "maxDailyLoss", "killSwitchActive"]
+    },
+    "Strategy": {
+      "title": "Strategy",
+      "description": "Trading strategy configuration",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "type": { "type": "string", "enum": ["SCALPING", "TREND_FOLLOWING", "GRID", "ARBITRAGE"] },
+        "params": { "type": "object" },
+        "active": { "type": "boolean" },
+        "assignedNodes": { "type": "array", "items": { "type": "string" } },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "ownerUid": { "type": "string" }
+      },
+      "required": ["id", "name", "type", "active", "ownerUid"]
+    },
+    "NodeCommand": {
+      "title": "Node Command",
+      "description": "Control command for a specific node",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nodeId": { "type": "string" },
+        "command": { "type": "string", "enum": ["RESTART", "STOP", "START", "UPDATE_CONFIG"] },
+        "payload": { "type": "object" },
+        "status": { "type": "string", "enum": ["PENDING", "EXECUTED", "FAILED"] },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "issuerUid": { "type": "string" }
+      },
+      "required": ["id", "nodeId", "command", "status", "timestamp", "issuerUid"]
+    },
+    "Personnel": {
+      "title": "Personnel",
+      "description": "Personal and financial documentation",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "fullName": { "type": "string" },
+        "gender": { "type": "string" },
+        "nationality": { "type": "string" },
+        "dob": { "type": "string" },
+        "pob": { "type": "string" },
+        "passportNumber": { "type": "string" },
+        "passportIssue": { "type": "string" },
+        "passportExpiry": { "type": "string" },
+        "passportAuthority": { "type": "string" },
+        "address": { "type": "string" },
+        "languages": { "type": "array", "items": { "type": "string" } },
+        "bankName": { "type": "string" },
+        "bankAddress": { "type": "string" },
+        "cardType": { "type": "string" },
+        "cardNumber": { "type": "string" },
+        "cardExpiry": { "type": "string" },
+        "cvv": { "type": "string" },
+        "customerService": { "type": "string" },
+        "ownerUid": { "type": "string" }
+      },
+      "required": ["id", "fullName", "ownerUid"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/nodes/{nodeId}": {
+      "schema": "TradingNode",
+      "description": "Trading node configurations"
+    },
+    "/trades/{tradeId}": {
+      "schema": "Trade",
+      "description": "Trade execution history"
+    },
+    "/settings/risk": {
+      "schema": "RiskSettings",
+      "description": "Global risk settings"
+    },
+    "/strategies/{strategyId}": {
+      "schema": "Strategy",
+      "description": "Trading strategy configurations"
+    },
+    "/commands/{commandId}": {
+      "schema": "NodeCommand",
+      "description": "Node control commands"
+    },
+    "/personnel/{personId}": {
+      "schema": "Personnel",
+      "description": "Personnel identity and financial records"
+    }
+  }
+}

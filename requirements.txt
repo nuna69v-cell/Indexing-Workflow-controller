@@ -1,19 +1,15 @@
-# Core Python dependencies for MQL5 Trading Automation
+# GenX VisionOps Python Dependencies
+# Core
+logging
+time
+os
+json
 
-# Telegram Bot
-python-telegram-bot>=20.0
-
-# HTTP Server
-flask>=3.0.0
-gunicorn>=21.2.0
-
-# Utilities
-markdown>=3.5.0
-requests>=2.31.0
-pyyaml>=6.0
-python-dotenv>=1.0.0
-schedule>=1.1.0
-
-# AI & Data
-google-generativeai>=0.3.0
-yfinance>=0.2.0
+# Potential Future Integrations
+requests
+pandas
+numpy
+ccxt
+MetaTrader5
+firebase-admin
+python-dotenv

@@ -1,0 +1,5 @@
+{
+  "name": "GenX VisionOps",
+  "description": "Distributed Trading Infrastructure Platform with GKE orchestration and Google Cloud Workstations (Web IDE) for autonomous vision-based trading.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,233 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {uid}
+    // Fields:
+    //   - uid: string (required)
+    //   - email: string (required, email format)
+    //   - displayName: string (optional)
+    //   - role: string (required, ['admin', 'operator', 'viewer'])
+    //   - createdAt: string (required, date-time)
+    //
+    // Collection: nodes
+    // Document ID: {nodeId}
+    // Fields:
+    //   - id: string (required)
+    //   - name: string (required, size 1-50)
+    //   - type: string (required, ['FOREX', 'CRYPTO'])
+    //   - broker: string (required)
+    //   - status: string (required, ['ONLINE', 'OFFLINE', 'TRADING', 'ERROR'])
+    //   - lastSeen: string (required, date-time)
+    //   - latency: number (required)
+    //   - cpu: number (required)
+    //   - memory: number (required)
+    //   - ownerUid: string (required, immutable)
+    //
+    // Collection: trades
+    // Document ID: {tradeId}
+    // Fields:
+    //   - id: string (required)
+    //   - timestamp: string (required, date-time)
+    //   - nodeId: string (required)
+    //   - symbol: string (required)
+    //   - side: string (required, ['BUY', 'SELL'])
+    //   - entry: number (required)
+    //   - exit: number (optional)
+    //   - size: number (required)
+    //   - pnl: number (optional)
+    //   - status: string (required, ['OPEN', 'CLOSED', 'CANCELLED'])
+    //   - ownerUid: string (required, immutable)
+    //
+    // Collection: settings
+    // Document ID: risk
+    // Fields:
+    //   - maxDrawdown: number (required)
+    //   - maxDailyLoss: number (required)
+    //   - maxLeverage: number (required)
+    //   - maxConcentration: number (required)
+    //   - killSwitchActive: bool (required)
+    //   - updatedAt: string (required, date-time)
+    //   - updatedBy: string (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "nuna69v@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isOperator() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'operator']);
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidDateString(dateStr) {
+      return dateStr is string && dateStr.matches("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.*Z?$");
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidUser(data) {
+      return hasOnlyAllowedFields(['uid', 'email', 'displayName', 'role', 'createdAt']) &&
+             data.uid is string && data.uid == request.auth.uid &&
+             isValidEmail(data.email) &&
+             data.role in ['admin', 'operator', 'viewer'] &&
+             isValidDateString(data.createdAt);
+    }
+
+    function isValidNode(data) {
+      return hasOnlyAllowedFields(['id', 'name', 'type', 'broker', 'status', 'lastSeen', 'latency', 'cpu', 'memory', 'ownerUid']) &&
+             data.id is string && data.id.size() > 0 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 50 &&
+             data.type in ['FOREX', 'CRYPTO'] &&
+             data.status in ['ONLINE', 'OFFLINE', 'TRADING', 'ERROR'] &&
+             isValidDateString(data.lastSeen) &&
+             data.latency is number &&
+             data.cpu is number &&
+             data.memory is number &&
+             data.ownerUid == request.auth.uid;
+    }
+
+    function isValidTrade(data) {
+      return hasOnlyAllowedFields(['id', 'timestamp', 'nodeId', 'symbol', 'side', 'entry', 'exit', 'size', 'pnl', 'status', 'ownerUid']) &&
+             data.id is string &&
+             isValidDateString(data.timestamp) &&
+             data.nodeId is string &&
+             data.symbol is string &&
+             data.side in ['BUY', 'SELL'] &&
+             data.entry is number &&
+             data.size is number &&
+             data.status in ['OPEN', 'CLOSED', 'CANCELLED'] &&
+             data.ownerUid == request.auth.uid;
+    }
+
+    function isValidRiskSettings(data) {
+      return hasOnlyAllowedFields(['maxDrawdown', 'maxDailyLoss', 'maxLeverage', 'maxConcentration', 'killSwitchActive', 'updatedAt', 'updatedBy']) &&
+             data.maxDrawdown is number &&
+             data.maxDailyLoss is number &&
+             data.maxLeverage is number &&
+             data.maxConcentration is number &&
+             data.killSwitchActive is bool &&
+             isValidDateString(data.updatedAt) &&
+             data.updatedBy == request.auth.uid;
+    }
+
+    function isValidStrategy(data) {
+      return hasOnlyAllowedFields(['id', 'name', 'version', 'type', 'params', 'active', 'assignedNodes', 'updatedAt', 'ownerUid']) &&
+             data.id is string &&
+             data.name is string && data.name.size() > 0 &&
+             data.type in ['SCALPING', 'TREND_FOLLOWING', 'GRID', 'ARBITRAGE'] &&
+             data.active is bool &&
+             data.assignedNodes is list &&
+             isValidDateString(data.updatedAt) &&
+             data.ownerUid == request.auth.uid;
+    }
+
+    function isValidCommand(data) {
+      return hasOnlyAllowedFields(['id', 'nodeId', 'command', 'payload', 'status', 'timestamp', 'issuerUid', 'executedAt']) &&
+             data.id is string &&
+             data.nodeId is string &&
+             data.command in ['RESTART', 'STOP', 'START', 'UPDATE_CONFIG'] &&
+             data.status in ['PENDING', 'EXECUTED', 'FAILED'] &&
+             isValidDateString(data.timestamp) &&
+             (request.auth == null || data.issuerUid == request.auth.uid || (resource != null && data.issuerUid == resource.data.issuerUid));
+    }
+
+    function isValidPersonnel(data) {
+      return hasOnlyAllowedFields(['id', 'fullName', 'gender', 'nationality', 'dob', 'pob', 'passportNumber', 'passportIssue', 'passportExpiry', 'passportAuthority', 'address', 'languages', 'bankName', 'bankAddress', 'cardType', 'cardNumber', 'cardExpiry', 'cvv', 'customerService', 'ownerUid']) &&
+             data.id is string &&
+             data.fullName is string && data.fullName.size() > 0 &&
+             data.ownerUid == request.auth.uid;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && isValidUser(request.resource.data) && (request.resource.data.role == 'viewer' || isAdmin());
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) && (request.resource.data.role == resource.data.role || isAdmin());
+    }
+
+    match /nodes/{nodeId} {
+      allow read: if isAuthenticated() && (resource.data.ownerUid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && isValidNode(request.resource.data);
+      allow update: if isAuthenticated() && (resource.data.ownerUid == request.auth.uid || isAdmin()) && isValidNode(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /trades/{tradeId} {
+      allow read: if isAuthenticated() && (resource.data.ownerUid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && isValidTrade(request.resource.data);
+      allow update: if isAuthenticated() && (resource.data.ownerUid == request.auth.uid || isAdmin()) && isValidTrade(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /settings/risk {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() && isValidRiskSettings(request.resource.data);
+    }
+
+    match /strategies/{strategyId} {
+      allow read: if isAuthenticated() && (resource.data.ownerUid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && isValidStrategy(request.resource.data);
+      allow update: if isAuthenticated() && (resource.data.ownerUid == request.auth.uid || isAdmin()) && isValidStrategy(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /commands/{commandId} {
+      allow read: if (isAuthenticated() && (resource.data.issuerUid == request.auth.uid || isAdmin())) || (resource.data.status == 'PENDING');
+      allow create: if isAuthenticated() && isValidCommand(request.resource.data);
+      allow update: if (isAuthenticated() && isAdmin()) || (resource.data.status == 'PENDING' && request.resource.data.status == 'EXECUTED' && isValidCommand(request.resource.data));
+      allow delete: if isAdmin();
+    }
+
+    match /personnel/{personId} {
+      allow read: if isAuthenticated() && (resource.data.ownerUid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && isValidPersonnel(request.resource.data);
+      allow update: if isAuthenticated() && (resource.data.ownerUid == request.auth.uid || isAdmin()) && isValidPersonnel(request.resource.data);
+      allow delete: if isAuthenticated() && (resource.data.ownerUid == request.auth.uid || isAdmin());
+    }
+
+    match /test/connection {
+      allow read: if true;
+    }
+    
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

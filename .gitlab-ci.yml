@@ -1,36 +1,44 @@
 stages:
-  - build
-  - push
+  - validate
+  - plan
+  - apply
 
 variables:
-  DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: "/certs"
+  TF_ROOT: ${CI_PROJECT_DIR}/terraform
+  TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/gke-notebook-cluster
 
-build:
-  stage: build
-  image: docker:latest
-  services:
-    - docker:dind
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+before_script:
+  - cd ${TF_ROOT}
+
+validate:
+  stage: validate
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint: [""]
   script:
-    - docker build -f Dockerfile.production -t keamouyleng/genx_docker:$CI_COMMIT_SHA .
-    - docker tag keamouyleng/genx_docker:$CI_COMMIT_SHA keamouyleng/genx_docker:latest
+    - terraform init -backend=false
+    - terraform validate
+
+plan:
+  stage: plan
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint: [""]
+  script:
+    - terraform init
+    - terraform plan -out=tfplan
+  artifacts:
+    paths:
+      - ${TF_ROOT}/tfplan
+
+apply:
+  stage: apply
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint: [""]
+  script:
+    - terraform init
+    - terraform apply -auto-approve tfplan
+  when: manual
   only:
     - main
-    - master
-
-push:
-  stage: push
-  image: docker:latest
-  services:
-    - docker:dind
-  before_script:
-    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-  script:
-    - docker push keamouyleng/genx_docker:$CI_COMMIT_SHA
-    - docker push keamouyleng/genx_docker:latest
-  only:
-    - main
-    - master 

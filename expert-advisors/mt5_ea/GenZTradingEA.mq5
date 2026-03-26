@@ -12,7 +12,9 @@
 #include <JSON.mqh>
 
 //--- Input parameters
-input string ServerURL = "http://localhost:3000"; // Server URL
+input string IPAddress = "127.0.0.1"; // Server IP Address
+input int Port = 5555; // Server Port
+input string API_KEY = ""; // API Key
 input string EAName = "GenZ_Scalping_Bot_MT5"; // EA identification name
 input double LotSize = 0.01; // Trade lot size
 input int MagicNumber = 12345; // Magic number for trades
@@ -99,8 +101,8 @@ void OnTick()
 //+------------------------------------------------------------------+
 bool RegisterWithServer()
 {
-    string url = ServerURL + "/api/mt45/register";
-    string headers = "Content-Type: application/json\r\n";
+    string url = ("http://" + IPAddress + ":" + IntegerToString(Port)) + "/api/mt45/register";
+    string headers = "Content-Type: application/json\r\nX-API-Key: " + API_KEY + "\r\n";
     
     // Create JSON data
     CJAVal json;
@@ -140,8 +142,8 @@ bool RegisterWithServer()
 //+------------------------------------------------------------------+
 void UnregisterFromServer()
 {
-    string url = ServerURL + "/api/mt45/unregister";
-    string headers = "Content-Type: application/json\r\n";
+    string url = ("http://" + IPAddress + ":" + IntegerToString(Port)) + "/api/mt45/unregister";
+    string headers = "Content-Type: application/json\r\nX-API-Key: " + API_KEY + "\r\n";
     
     CJAVal json;
     json["connectionId"] = connectionId;
@@ -161,8 +163,8 @@ void UnregisterFromServer()
 //+------------------------------------------------------------------+
 void SendHeartbeat()
 {
-    string url = ServerURL + "/api/mt45/heartbeat";
-    string headers = "Content-Type: application/json\r\n";
+    string url = ("http://" + IPAddress + ":" + IntegerToString(Port)) + "/api/mt45/heartbeat";
+    string headers = "Content-Type: application/json\r\nX-API-Key: " + API_KEY + "\r\n";
     
     CJAVal json;
     json["connectionId"] = connectionId;
@@ -187,13 +189,14 @@ void SendHeartbeat()
 //+------------------------------------------------------------------+
 void CheckForSignals()
 {
-    string url = ServerURL + "/api/mt45/signals/" + connectionId;
+    string url = ("http://" + IPAddress + ":" + IntegerToString(Port)) + "/api/mt45/signals/" + connectionId;
     
     char result[];
     string resultHeaders;
     
     int timeout = 5000;
-    int res = WebRequest("GET", url, NULL, timeout, NULL, result, resultHeaders);
+    string headers = "Content-Type: application/json\r\nX-API-Key: " + API_KEY + "\r\n";
+    int res = WebRequest("GET", url, headers, timeout, NULL, result, resultHeaders);
     
     if(res == 200)
     {
@@ -340,8 +343,8 @@ void ExecuteSellOrder(double entryPrice, double stopLoss, double takeProfit)
 //+------------------------------------------------------------------+
 void SendTradeConfirmation(CJAVal &originalSignal, string status)
 {
-    string url = ServerURL + "/api/mt45/trade-confirmation";
-    string headers = "Content-Type: application/json\r\n";
+    string url = ("http://" + IPAddress + ":" + IntegerToString(Port)) + "/api/mt45/trade-confirmation";
+    string headers = "Content-Type: application/json\r\nX-API-Key: " + API_KEY + "\r\n";
     
     CJAVal json;
     json["connectionId"] = connectionId;

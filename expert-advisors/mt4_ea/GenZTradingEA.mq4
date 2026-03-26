@@ -12,7 +12,9 @@
 #include <WinInet.mqh>
 
 //--- Input parameters
-input string ServerURL = "http://localhost:3000"; // Server URL
+input string IPAddress = "127.0.0.1"; // Server IP Address
+input int Port = 5555; // Server Port
+input string API_KEY = ""; // API Key
 input string EAName = "GenZ_Scalping_Bot"; // EA identification name
 input double LotSize = 0.01; // Trade lot size
 input int MagicNumber = 12345; // Magic number for trades
@@ -92,8 +94,8 @@ void OnTick()
 //+------------------------------------------------------------------+
 bool RegisterWithServer()
 {
-    string url = ServerURL + "/api/mt45/register";
-    string headers = "Content-Type: application/json\r\n";
+    string url = ("http://" + IPAddress + ":" + IntegerToString(Port)) + "/api/mt45/register";
+    string headers = "Content-Type: application/json\r\nX-API-Key: " + API_KEY + "\r\n";
     string data = StringFormat(
         "{\"eaName\":\"%s\",\"connectionId\":\"%s\",\"accountNumber\":%d,\"symbol\":\"%s\",\"timeframe\":%d}",
         EAName, connectionId, AccountNumber(), Symbol(), Period()
@@ -115,8 +117,8 @@ bool RegisterWithServer()
 //+------------------------------------------------------------------+
 void UnregisterFromServer()
 {
-    string url = ServerURL + "/api/mt45/unregister";
-    string headers = "Content-Type: application/json\r\n";
+    string url = ("http://" + IPAddress + ":" + IntegerToString(Port)) + "/api/mt45/unregister";
+    string headers = "Content-Type: application/json\r\nX-API-Key: " + API_KEY + "\r\n";
     string data = StringFormat("{\"connectionId\":\"%s\"}", connectionId);
     
     HttpRequest(url, "POST", headers, data);
@@ -127,8 +129,8 @@ void UnregisterFromServer()
 //+------------------------------------------------------------------+
 void SendHeartbeat()
 {
-    string url = ServerURL + "/api/mt45/heartbeat";
-    string headers = "Content-Type: application/json\r\n";
+    string url = ("http://" + IPAddress + ":" + IntegerToString(Port)) + "/api/mt45/heartbeat";
+    string headers = "Content-Type: application/json\r\nX-API-Key: " + API_KEY + "\r\n";
     string data = StringFormat(
         "{\"connectionId\":\"%s\",\"status\":\"active\",\"balance\":%.2f,\"equity\":%.2f}",
         connectionId, AccountBalance(), AccountEquity()
@@ -142,8 +144,9 @@ void SendHeartbeat()
 //+------------------------------------------------------------------+
 void CheckForSignals()
 {
-    string url = ServerURL + "/api/mt45/signals/" + connectionId;
-    string response = HttpRequest(url, "GET", "", "");
+    string url = ("http://" + IPAddress + ":" + IntegerToString(Port)) + "/api/mt45/signals/" + connectionId;
+    string headers = "Content-Type: application/json\r\nX-API-Key: " + API_KEY + "\r\n";
+    string response = HttpRequest(url, "GET", headers, "");
     
     if(StringLen(response) > 0 && StringFind(response, "\"signals\"") >= 0)
     {
@@ -265,8 +268,8 @@ void ExecuteSellOrder(double entryPrice, double stopLoss, double takeProfit)
 //+------------------------------------------------------------------+
 void SendTradeConfirmation(string originalSignal, string status)
 {
-    string url = ServerURL + "/api/mt45/trade-confirmation";
-    string headers = "Content-Type: application/json\r\n";
+    string url = ("http://" + IPAddress + ":" + IntegerToString(Port)) + "/api/mt45/trade-confirmation";
+    string headers = "Content-Type: application/json\r\nX-API-Key: " + API_KEY + "\r\n";
     string data = StringFormat(
         "{\"connectionId\":\"%s\",\"originalSignal\":%s,\"status\":\"%s\",\"timestamp\":\"%s\"}",
         connectionId, originalSignal, status, TimeToString(TimeCurrent())

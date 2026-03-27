@@ -1,9 +1,13 @@
-import pytest
-import backtrader as bt
-from src.mouy_leng.trading.strategy import RSIMACDStrategy
-from src.mouy_leng.trading.backtest import run_backtest
-import pandas as pd
-import numpy as np
+import sys
+import unittest.mock
+sys.modules["talib"] = unittest.mock.MagicMock()
+sys.modules["talib.abstract"] = unittest.mock.MagicMock()
+import pytest  # noqa: E402
+import backtrader as bt  # noqa: E402
+from src.mouy_leng.trading.strategy import RSIMACDStrategy  # noqa: E402
+from src.mouy_leng.trading.backtest import run_backtest  # noqa: E402
+import pandas as pd  # noqa: E402
+import numpy as np  # noqa: E402
 
 @pytest.fixture
 def mock_data(tmp_path):

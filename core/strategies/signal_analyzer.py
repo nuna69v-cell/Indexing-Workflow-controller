@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List
 
 import pandas as pd
@@ -187,12 +187,41 @@ class SignalAnalyzer:
     def _filter_by_time(self, signals: List[Dict]) -> List[Dict]:
         """
         Filters signals to include only those generated within a recent time window.
-
-        FIXME: This filter is currently disabled.
+        Handles both timezone-aware and timezone-naive timestamps.
         """
-        # cutoff_time = datetime.now() - timedelta(hours=24)
-        # return [s for s in signals if s['timestamp'] >= cutoff_time]
-        return signals  # FIXME: Re-enable this filter with proper timezone handling.
+        cutoff_time = datetime.now(timezone.utc) - timedelta(hours=24)
+        filtered_signals = []
+        for s in signals:
+            try:
+                raw_ts = s.get("timestamp")
+                if raw_ts is None:
+                    continue
+
+                # Parse if string
+                if isinstance(raw_ts, str):
+                    try:
+                        ts = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
+                    except ValueError:
+                        # Fallback for pandas parsing if isoformat fails
+                        ts = pd.to_datetime(raw_ts).to_pydatetime()
+                elif isinstance(raw_ts, pd.Timestamp):
+                    ts = raw_ts.to_pydatetime()
+                elif isinstance(raw_ts, datetime):
+                    ts = raw_ts
+                else:
+                    continue
+
+                # Ensure it is timezone-aware and in UTC
+                if ts.tzinfo is None:
+                    ts = ts.replace(tzinfo=timezone.utc)
+                else:
+                    ts = ts.astimezone(timezone.utc)
+
+                if ts >= cutoff_time:
+                    filtered_signals.append(s)
+            except (ValueError, TypeError, KeyError, AttributeError):
+                continue
+        return filtered_signals
 
     def _filter_by_confluence(self, signals: List[Dict]) -> List[Dict]:
         """
@@ -238,7 +267,37 @@ class SignalAnalyzer:
         self.signal_history.extend(signals)
 
         # Keep only signals from the last 7 days
-        cutoff_time = datetime.now() - timedelta(days=7)
-        self.signal_history = [
-            s for s in self.signal_history if s["timestamp"] >= cutoff_time
-        ]
+        cutoff_time = datetime.now(timezone.utc) - timedelta(days=7)
+        pruned_history = []
+        for s in self.signal_history:
+            try:
+                raw_ts = s.get("timestamp")
+                if raw_ts is None:
+                    continue
+
+                # Parse if string
+                if isinstance(raw_ts, str):
+                    try:
+                        ts = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
+                    except ValueError:
+                        # Fallback for pandas parsing if isoformat fails
+                        ts = pd.to_datetime(raw_ts).to_pydatetime()
+                elif isinstance(raw_ts, pd.Timestamp):
+                    ts = raw_ts.to_pydatetime()
+                elif isinstance(raw_ts, datetime):
+                    ts = raw_ts
+                else:
+                    continue
+
+                # Ensure it is timezone-aware and in UTC
+                if ts.tzinfo is None:
+                    ts = ts.replace(tzinfo=timezone.utc)
+                else:
+                    ts = ts.astimezone(timezone.utc)
+
+                if ts >= cutoff_time:
+                    pruned_history.append(s)
+            except (ValueError, TypeError, KeyError, AttributeError):
+                pass
+
+        self.signal_history = pruned_history

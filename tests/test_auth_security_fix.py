@@ -11,9 +11,10 @@ class TestAuthLogic(unittest.TestCase):
 
     @patch.dict(os.environ, {"TESTING": "1"})
     def test_testing_mode_bypass(self):
-        # When TESTING is set, missing credentials should return mock user
-        user = get_current_user(credentials=None)
-        self.assertEqual(user, {"username": "testuser", "exp": None})
+        # When TESTING is set, missing credentials should raise 401 instead of returning mock user
+        with self.assertRaises(HTTPException) as cm:
+            get_current_user(credentials=None)
+        self.assertEqual(cm.exception.status_code, 401)
 
     @patch.dict(os.environ, {}, clear=True)
     def test_production_mode_enforcement(self):

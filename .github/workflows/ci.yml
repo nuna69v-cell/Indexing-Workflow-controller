@@ -31,7 +31,10 @@ jobs:
           export TA_INCLUDE_PATH=/usr/include/ta-lib
           export TA_LIBRARY_PATH=/usr/lib
           export LDFLAGS="-L/usr/lib"
-          pip install ruff pytest pytest-cov
+          pip install ruff pytest pytest-cov pytest-asyncio pytest-mock \
+            fastapi backtrader numpy pandas redis scikit-learn joblib \
+            psutil pydantic-settings supabase praw cryptography httpx \
+            scipy aiohttp pybit ai-models
 
       - name: Lint with Ruff
         run: |

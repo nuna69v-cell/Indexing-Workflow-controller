@@ -385,7 +385,7 @@ class RedditService:
         Returns:
             Dict[str, int]: A dictionary mapping tickers to their mention frequency.
         """
-        ticker_pattern = r"\b[A-Z]{2,5}\b"
+        ticker_pattern = re.compile(r"\b[A-Z]{2,5}\b")
         ticker_counts: Dict[str, int] = {}
 
         # Common words to exclude to reduce false positives
@@ -438,7 +438,7 @@ class RedditService:
 
         for post in posts:
             text = f"{post['title']} {post['selftext']}"
-            tickers = re.findall(ticker_pattern, text)
+            tickers = ticker_pattern.findall(text)
 
             for ticker in tickers:
                 if ticker not in exclude_words and len(ticker) <= 5:

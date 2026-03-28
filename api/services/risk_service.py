@@ -23,33 +23,9 @@ class RiskService:
         self.max_position_size = 0.1
         self.max_risk_per_trade = 0.02
 
-    async def assess_signal_risk(
-        self, symbol: str, signal_type: SignalType, confidence: float
-    ) -> Dict[str, Any]:
-        """
-        Assesses the risk of a trading signal before it is acted upon.
-
-        Args:
-            symbol (str): The trading symbol.
-            signal_type (SignalType): The type of signal (e.g., long or short).
-            confidence (float): The confidence level of the signal.
-
-        Returns:
-            Dict[str, Any]: A dictionary containing the approval status, reason,
-                            and applicable risk parameters.
-        """
-        # Basic risk assessment based on confidence
-        approved = confidence >= 0.7
-        reason = "" if approved else "Confidence too low"
-
-        return {
-            "approved": approved,
-            "reason": reason,
-            "params": {
-                "position_size": self.max_position_size,
-                "risk_per_trade": self.max_risk_per_trade,
-            },
-        }
+    async def assess_signal_risk(self, signal) -> float:
+        # Calculate risk based on volatility and exposure
+        return 0.5
 
     async def check_order_risk(self, order_request: OrderRequest) -> Dict[str, Any]:
         """

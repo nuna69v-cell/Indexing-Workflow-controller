@@ -1,5 +1,6 @@
 import sys
-
+import os
+import json
 import pytest
 
 
@@ -11,9 +12,7 @@ def test_python_version():
 def test_imports():
     """Test that basic imports work"""
     try:
-        import asyncio
-        import json
-        import os
+        import asyncio  # noqa: F401
 
         assert True
     except ImportError as e:
@@ -22,8 +21,6 @@ def test_imports():
 
 def test_environment():
     """Test basic environment setup"""
-    import os
-
     # Test that we can set and get environment variables
     os.environ["TEST_VAR"] = "test_value"
     assert os.environ.get("TEST_VAR") == "test_value"
@@ -31,8 +28,6 @@ def test_environment():
 
 def test_json_handling():
     """Test basic JSON operations"""
-    import json
-
     test_data = {"key": "value", "number": 42}
     json_str = json.dumps(test_data)
     parsed_data = json.loads(json_str)

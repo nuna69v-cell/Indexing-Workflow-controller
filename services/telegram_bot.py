@@ -5,6 +5,7 @@ Sends trading signals and notifications to Telegram channels
 
 import logging
 import os
+import aiohttp
 from typing import Dict
 
 logger = logging.getLogger(__name__)
@@ -22,6 +23,13 @@ class TelegramBot:
             logger.info("Telegram bot initialized")
         else:
             logger.warning("Telegram bot not configured - TELEGRAM_TOKEN not set")
+
+    async def send_message(self, chat_id: str, text: str):
+        url = f"https://api.telegram.org/bot{self.token}/sendMessage"
+        payload = {"chat_id": chat_id, "text": text}
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, json=payload) as resp:
+                return await resp.json()
 
     def send_signal(self, signal: Dict) -> bool:
         """Send a trading signal to Telegram"""

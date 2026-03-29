@@ -5,6 +5,7 @@ Sends trading signals and notifications to Discord channels
 
 import logging
 import os
+import aiohttp
 from typing import Dict
 
 logger = logging.getLogger(__name__)
@@ -22,6 +23,12 @@ class DiscordBot:
             logger.info("Discord bot initialized")
         else:
             logger.warning("Discord bot not configured - DISCORD_TOKEN not set")
+
+    async def send_webhook(self, url: str, content: str):
+        payload = {'content': content}
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, json=payload) as resp:
+                return resp.status == 204
 
     def send_signal(self, signal: Dict) -> bool:
         """Send a trading signal to Discord"""

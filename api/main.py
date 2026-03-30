@@ -189,7 +189,7 @@ MT5_INFO_RESPONSE = {
 # Add Trusted Host middleware
 app.add_middleware(
     TrustedHostMiddleware,
-    allowed_hosts=["localhost", "127.0.0.1", "0.0.0.0", "genx-fx.com", "testserver"],
+    allowed_hosts=["localhost", "127.0.0.1", "0.0.0.0", "genx-fx.com", "testserver", "ais-dev-p6ls2apj45yfyzqqohgdjb-544691164749.asia-southeast1.run.app"],
 )
 
 # --------------------------------------------------------------------------
@@ -257,6 +257,7 @@ app.add_middleware(
         "http://localhost:8080",
         "https://genx-fx.com",
         "https://a-333-time-3-2--genxav69.replit.app",
+        "https://ais-dev-p6ls2apj45yfyzqqohgdjb-544691164749.asia-southeast1.run.app",
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],

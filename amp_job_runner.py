@@ -37,6 +37,7 @@ class AMPJobRunner:
 
     def __init__(self):
         """Initializes the AMPJobRunner."""
+        self.logger = logging.getLogger(__name__)
         self.project_root = Path.cwd()
         self.config_file = self.project_root / "amp_config.json"
         self.config = self.load_config()
@@ -49,8 +50,12 @@ class AMPJobRunner:
             Dict: The loaded configuration, or an empty dict if not found.
         """
         if self.config_file.exists():
-            with open(self.config_file, "r") as f:
-                return json.load(f)
+            try:
+                with open(self.config_file, "r") as f:
+                    return json.load(f)
+            except FileNotFoundError:
+                self.logger.warning("Config file not found, using defaults")
+                return {}
         return {}
 
     async def run_next_job(self):

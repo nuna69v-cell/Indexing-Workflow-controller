@@ -115,3 +115,52 @@ def test_add_payment_method_invalid_data(db_override):
         assert (
             response.status_code == 422
         ), f"Failed on payload: {description}. Got {response.status_code} with body: {response.text}"
+
+
+def test_payment_method_valid():
+    """Test creating a valid PaymentMethod directly."""
+    from api.main import PaymentMethod
+
+    pm = PaymentMethod(
+        cardholderName="John Doe",
+        cardNumber="1234-5678-9012-3456",
+        expiryDate="12/25",
+        cvc="123",
+    )
+    assert pm.cardholderName == "John Doe"
+
+
+def test_payment_method_cardholder_name_validation():
+    """Test direct validation of cardholder_name."""
+    from pydantic import ValidationError
+
+    from api.main import PaymentMethod
+
+    # Valid name
+    pm = PaymentMethod(
+        cardholderName="Jane Doe",
+        cardNumber="1234-5678-9012-3456",
+        expiryDate="12/25",
+        cvc="123",
+    )
+    assert pm.cardholderName == "Jane Doe"
+
+    # Empty string
+    with pytest.raises(ValidationError) as exc_info:
+        PaymentMethod(
+            cardholderName="",
+            cardNumber="1234-5678-9012-3456",
+            expiryDate="12/25",
+            cvc="123",
+        )
+    assert "Cardholder name must not be empty" in str(exc_info.value)
+
+    # Whitespace only string
+    with pytest.raises(ValidationError) as exc_info:
+        PaymentMethod(
+            cardholderName="   ",
+            cardNumber="1234-5678-9012-3456",
+            expiryDate="12/25",
+            cvc="123",
+        )
+    assert "Cardholder name must not be empty" in str(exc_info.value)

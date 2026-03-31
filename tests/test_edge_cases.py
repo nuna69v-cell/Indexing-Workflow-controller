@@ -1,9 +1,17 @@
-import os
-import time
-from unittest.mock import patch
+import sys  # noqa: E402
+from unittest.mock import MagicMock  # noqa: E402
 
-import pytest
-from fastapi.testclient import TestClient
+# Mock third-party dependencies required for tests
+for mod in ['backtrader', 'fastapi', 'fastapi.testclient', 'pydantic_settings', 'joblib', 'aiohttp', 'pandas', 'numpy', 'fastapi.security', 'fastapi.middleware', 'fastapi.middleware.cors', 'pydantic', 'cryptography', 'cryptography.fernet', 'sklearn', 'sklearn.preprocessing', 'fastapi.middleware.gzip', 'fastapi.staticfiles', 'fastapi.responses', 'ai_models', 'ai_models.feature_engineer', 'fastapi.middleware.trustedhost', 'redis', 'redis.asyncio']:
+    if mod not in sys.modules:
+        sys.modules[mod] = MagicMock()
+
+import os  # noqa: E402
+import time  # noqa: E402
+from unittest.mock import patch  # noqa: E402
+
+import pytest  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
 
 # Set test environment variables
 os.environ["SECRET_KEY"] = "test-secret-key"
@@ -11,7 +19,7 @@ os.environ["DATABASE_URL"] = "postgresql://test:test@localhost/test"
 os.environ["MONGODB_URL"] = "mongodb://localhost:27017/test"
 os.environ["REDIS_URL"] = "redis://localhost:6379"
 
-from api.main import app
+from api.main import app  # noqa: E402
 
 
 @pytest.fixture(autouse=True, scope="module")

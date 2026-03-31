@@ -63,24 +63,20 @@ jobs:
           sudo ln -s /usr/lib/libta-lib.so /usr/lib/libta_lib.so || true
         fi
     - name: Install dependencies
-      run: 'python -m pip install --upgrade pip
-
+      run: |
+        python -m pip install --upgrade pip
         pip install -r requirements.txt
-
-        export TA_INCLUDE_PATH=/usr/include/ta-lib
+        export TA_INCLUDE_PATH=/usr/include
         export TA_LIBRARY_PATH=/usr/lib
         export LDFLAGS="-L/usr/lib"
-        pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock
-
-        '
+        pip install pytest pytest-cov pytest-asyncio httpx pybit pytest-mock backtrader fastapi pydantic-settings joblib aiohttp numpy pandas redis
     - name: Run tests with coverage
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         BYBIT_API_KEY: ${{ secrets.BYBIT_API_KEY }}
         FXCM_API_TOKEN: ${{ secrets.FXCM_API_TOKEN }}
-      run: 'python -m pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
-
-        '
+      run: |
+        python -m pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
     - name: Upload coverage reports
       uses: codecov/codecov-action@v3
       with:
@@ -98,9 +94,8 @@ jobs:
       with:
         python-version: ${{ env.PYTHON_VERSION }}
     - name: Install linting tools
-      run: 'pip install black flake8 isort bandit safety mypy
-
-        '
+      run: |
+        pip install black flake8 isort bandit safety mypy
     - name: Run Black formatter check
       run: black --check --diff . --exclude="forexconnect_env_37|venv|.venv|node_modules"
     - name: Run Flake8 linter

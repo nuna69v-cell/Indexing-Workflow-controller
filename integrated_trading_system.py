@@ -7,6 +7,7 @@ Orchestrates all components: FXCM API, AI models, EA communication, and asset ma
 import asyncio
 import logging
 import signal
+import os
 import sys
 from datetime import datetime, timedelta
 

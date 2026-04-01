@@ -53,18 +53,21 @@ class TradingService:
             List[TradeSignal]: A list of active signals. Returns a mock signal.
         """
         # Mock signals for now
-        return [
-            TradeSignal(
-                symbol="BTCUSDT",
-                signal_type=SignalType.LONG,
-                entry_price=50000.0,
-                stop_loss=49000.0,
-                take_profit=52000.0,
-                confidence=0.85,
-                risk_reward_ratio=2.0,
-                timestamp=datetime.now(),
-            )
-        ]
+        signal = TradeSignal(
+            symbol="BTCUSDT",
+            signal_type=SignalType.LONG,
+            entry_price=50000.0,
+            stop_loss=49000.0,
+            take_profit=52000.0,
+            confidence=0.85,
+            risk_reward_ratio=2.0,
+            timestamp=datetime.now(),
+        )
+
+        if symbol and symbol != "BTCUSDT":
+            return []
+
+        return [signal]
 
     async def create_signal(
         self, symbol: str, signal_type: SignalType, confidence: float, risk_params: Dict

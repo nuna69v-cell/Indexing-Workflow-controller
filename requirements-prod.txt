@@ -42,7 +42,7 @@ fastapi==0.116.1
 uvicorn==0.24.0
 
 # Time Series Analysis (essential only)
-statsmodels==0.14.5
+statsmodels==0.14.6
 
 # Web server for health checks
 gunicorn==23.0.0
